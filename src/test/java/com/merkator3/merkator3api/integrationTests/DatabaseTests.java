@@ -10,14 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class databaseTests {
+public class DatabaseTests {
 
     @Autowired
     private UserRepository userRepository;
     private User testUser;
     @BeforeEach
     void createUser() {
-        testUser = new User("testUser");
+        if (userRepository.findByUserName("testUser") == null) {
+            testUser = new User("testUser");
+        }
+    }
+
+    void createRoute() {
+
     }
 
     @AfterEach
