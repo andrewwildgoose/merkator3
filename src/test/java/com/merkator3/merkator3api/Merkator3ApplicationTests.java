@@ -10,10 +10,4 @@ class Merkator3ApplicationTests {
     @Test
     void contextLoads() {
     }
-
-    @Test
-    void userInsertedTest(){
-
-    }
-
 }

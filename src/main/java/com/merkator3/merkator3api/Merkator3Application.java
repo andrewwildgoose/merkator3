@@ -27,7 +27,6 @@ public class Merkator3Application implements CommandLineRunner {
             userRepository.save(new User("wildgoose"));
             userRepository.save(new User("campbell"));
         }
-        userRepository.save(new User("ratcliffe"));
 
         for (User user : userRepository.findAll()){
             System.out.println(user.getUserName());
