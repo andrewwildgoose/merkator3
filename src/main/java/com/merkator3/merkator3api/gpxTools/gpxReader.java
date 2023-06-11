@@ -15,7 +15,7 @@ public class gpxReader {
                             .addPoint(p -> p.lat(48.20126).lon(16.31601).ele(274))))
             .build();
 
-
+    // Reading GPX 1.0 file.
 
 
 
