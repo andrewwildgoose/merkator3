@@ -31,7 +31,5 @@ public class Merkator3Application implements CommandLineRunner {
         for (User user : userRepository.findAll()){
             System.out.println(user.getUserName());
         }
-
-
     }
 }
