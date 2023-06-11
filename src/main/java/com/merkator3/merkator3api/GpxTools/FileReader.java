@@ -1,4 +1,4 @@
-package com.merkator3.merkator3api.gpxTools;
+package com.merkator3.merkator3api.GpxTools;
 
 public interface FileReader {
 
