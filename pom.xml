@@ -55,6 +55,12 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jenetics/jpx -->
+        <dependency>
+            <groupId>io.jenetics</groupId>
+            <artifactId>jpx</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
