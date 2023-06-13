@@ -26,6 +26,16 @@ public class GpxToolsTests {
                 .build();
     }
 
+    @AfterEach
+    void deleteTestFile() {
+        Path path = Path.of("src/test/TestFiles/GPX/test.gpx");
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            System.out.println("Failed to delete the file: " + e.getMessage());
+        }
+    }
+
 
 
     @Test
@@ -42,7 +52,19 @@ public class GpxToolsTests {
         testWriteGPXToFile();
         int expectedSize = 3;
         GpxReader gpxReader = new GpxReader();
-        List<Point> gpxPoints = gpxReader.gpxToPointList("src/test/TestFiles/GPX/test.gpx");
+        List<WayPoint> gpxPoints = gpxReader.gpxToPointList("src/test/TestFiles/GPX/test.gpx");
         Assertions.assertEquals(expectedSize, gpxPoints.size());
     }
+
+    @Test
+    void testBuildWaypoints() throws IOException {
+        testWriteGPXToFile();
+        GpxReader gpxReader = new GpxReader();
+        List<WayPoint> gpxPoints = gpxReader.gpxToPointList("src/test/TestFiles/GPX/test.gpx");
+        GpxBuilder gpxBuilder = new GpxBuilder();
+        GPX gpxTest = gpxBuilder.gpxBuilder(gpxPoints);
+        Track track = gpx.getTracks().get(0);
+        TrackSegment segment = track.getSegments().get(0);
+        Assertions.assertEquals(segment.getPoints(), gpxTest.getWayPoints());
+        }
 }
