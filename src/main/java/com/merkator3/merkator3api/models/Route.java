@@ -1,5 +1,6 @@
 package com.merkator3.merkator3api.models;
 
+import io.jenetics.jpx.GPX;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,6 +11,10 @@ public class Route {
     private Long id;
     private String routeName;
     private String routeDescription;
+
+
+
+    private GPX routeGpx;
 
     public Route(String routeName) {
         this.routeName = routeName;
@@ -35,5 +40,11 @@ public class Route {
         this.routeDescription = routeDescription;
     }
 
+    public GPX getRouteGpx() {
+        return routeGpx;
+    }
 
+    public void setRouteGpx(GPX routeGpx) {
+        this.routeGpx = routeGpx;
+    }
 }

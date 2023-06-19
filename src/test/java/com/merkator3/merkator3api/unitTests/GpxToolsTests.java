@@ -97,6 +97,6 @@ public class GpxToolsTests {
         GpxDistanceCalculator gpxDistCalc = new GpxDistanceCalculator();
         Length distance = gpxDistCalc.calculateDistance(lbl);
         Double distToKM = gpxDistCalc.lengthToKm(distance);
-        Assertions.assertEquals(201.48760385260044, distToKM);
+        Assertions.assertEquals(201.49, distToKM);
     }
 }

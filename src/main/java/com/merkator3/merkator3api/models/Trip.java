@@ -18,5 +18,29 @@ public class Trip {
         this.tripName = tripName;
     };
 
+    public String getTripName() {
+        return tripName;
+    }
+
+    public void setTripName(String tripName) {
+        this.tripName = tripName;
+    }
+
+    public String getTripDescription() {
+        return tripDescription;
+    }
+
+    public void setTripDescription(String tripDescription) {
+        this.tripDescription = tripDescription;
+    }
+
+    public List<Route> getTripRoutes() {
+        return tripRoutes;
+    }
+
+    public void setTripRoutes(List<Route> tripRoutes) {
+        this.tripRoutes = tripRoutes;
+    }
+
 
 }

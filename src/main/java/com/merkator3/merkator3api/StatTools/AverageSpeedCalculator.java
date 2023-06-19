@@ -1,6 +1,5 @@
 package com.merkator3.merkator3api.StatTools;
 
-import static com.merkator3.merkator3api.StatTools.TotalCalculator.calculateTotal;
 import org.apache.commons.math3.util.Precision;
 
 import java.util.Map;
