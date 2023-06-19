@@ -3,6 +3,7 @@ package com.merkator3.merkator3api.unitTests;
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import com.merkator3.merkator3api.GpxTools.GpxReader;
 import com.merkator3.merkator3api.GpxTools.GpxWriter;
+import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import io.jenetics.jpx.*;
 import org.junit.jupiter.api.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 public class GpxToolsTests {
 
     public GPX gpx;
+    public GPX lbl;
 
     @BeforeEach
     void createTestFile(){
@@ -24,6 +26,12 @@ public class GpxToolsTests {
                                 .addPoint(p -> p.lat(48.20112).lon(16.31639).ele(278))
                                 .addPoint(p -> p.lat(48.20126).lon(16.31601).ele(274))))
                 .build();
+    }
+
+    @BeforeEach
+    void creatLBLGPX() throws IOException {
+        Path path = Path.of("src/test/TestFiles/GPX/London to Brighton Return.gpx");
+        lbl = GPX.read(path);
     }
 
     @AfterEach
@@ -41,8 +49,8 @@ public class GpxToolsTests {
     @Test
     void testWriteGPXToFile() throws IOException {
         Path path = Path.of("src/test/TestFiles/GPX/test.gpx");
-        GpxWriter gpxToolKit = new GpxWriter();
-        gpxToolKit.gpxWriter(gpx, path);
+        GpxWriter gpxWriter = new GpxWriter();
+        gpxWriter.gpxWriter(gpx, path);
         Assertions.assertTrue(Files.exists(path), "GPX file has not been created");
     }
 
@@ -56,15 +64,39 @@ public class GpxToolsTests {
         Assertions.assertEquals(expectedSize, gpxPoints.size());
     }
 
+    // Test for the GpxBuidler class to ensure it adds Waypoints directly into a segment in a GPX object.
     @Test
     void testBuildWaypoints() throws IOException {
         testWriteGPXToFile();
         GpxReader gpxReader = new GpxReader();
         List<WayPoint> gpxPoints = gpxReader.gpxToPointList("src/test/TestFiles/GPX/test.gpx");
+
         GpxBuilder gpxBuilder = new GpxBuilder();
-        GPX gpxTest = gpxBuilder.gpxBuilder(gpxPoints);
-        Track track = gpx.getTracks().get(0);
-        TrackSegment segment = track.getSegments().get(0);
-        Assertions.assertEquals(segment.getPoints(), gpxTest.getWayPoints());
-        }
+        GPX builderTest = gpxBuilder.gpxBuilder(gpxPoints);
+
+        List<WayPoint> gpxFilePoints = gpx.getTracks().get(0)
+                .getSegments().get(0)
+                .getPoints();
+
+        List<WayPoint> builderTestPoints = builderTest.getTracks().get(0)
+                .getSegments().get(0)
+                .getPoints();
+
+        Assertions.assertEquals(gpxFilePoints, builderTestPoints);
+    }
+
+    @Test
+    void testDistanceCalulator(){
+        GpxDistanceCalculator gpxDistCalc = new GpxDistanceCalculator();
+        Length distance = gpxDistCalc.calculateDistance(lbl);
+        Assertions.assertEquals("201487.60385260044 m", distance.toString());
+    }
+
+    @Test
+    void testLengthToKm() {
+        GpxDistanceCalculator gpxDistCalc = new GpxDistanceCalculator();
+        Length distance = gpxDistCalc.calculateDistance(lbl);
+        Double distToKM = gpxDistCalc.lengthToKm(distance);
+        Assertions.assertEquals(201.48760385260044, distToKM);
+    }
 }
