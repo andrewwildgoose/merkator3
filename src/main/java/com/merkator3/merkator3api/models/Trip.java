@@ -42,5 +42,8 @@ public class Trip {
         this.tripRoutes = tripRoutes;
     }
 
+    public void addRoute(Route route){
+        tripRoutes.add(route);
+    }
 
 }

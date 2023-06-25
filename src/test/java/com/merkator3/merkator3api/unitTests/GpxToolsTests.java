@@ -1,6 +1,8 @@
 package com.merkator3.merkator3api.unitTests;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
+import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxReader;
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import io.jenetics.jpx.*;
@@ -96,5 +98,19 @@ public class GpxToolsTests {
         Length distance = gpxDistCalc.calculateDistance(lbl);
         Double distToKM = gpxDistCalc.lengthToKm(distance);
         Assertions.assertEquals(201.49, distToKM);
+    }
+
+    @Test
+    void testElevationCalculator() {
+        GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
+        int elevation = gpxElevCalc.calculateElevation(lbl);
+        Assertions.assertEquals(elevation, 2526.0);
+    }
+
+    @Test
+    void testElevationCalculator2() {
+        GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
+        int elevation1 = gpxElevCalc.calculateElevation(gpx);
+        Assertions.assertEquals(0, elevation1);
     }
 }
