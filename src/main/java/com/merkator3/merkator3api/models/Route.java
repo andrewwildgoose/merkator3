@@ -11,9 +11,6 @@ public class Route {
     private Long id;
     private String routeName;
     private String routeDescription;
-
-
-
     private GPX routeGpx;
 
     public Route(String routeName) {

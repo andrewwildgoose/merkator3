@@ -2,7 +2,6 @@ package com.merkator3.merkator3api.unitTests;
 
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import com.merkator3.merkator3api.GpxTools.GpxReader;
-import com.merkator3.merkator3api.GpxTools.GpxWriter;
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import io.jenetics.jpx.*;
 import org.junit.jupiter.api.*;
@@ -49,8 +48,7 @@ public class GpxToolsTests {
     @Test
     void testWriteGPXToFile() throws IOException {
         Path path = Path.of("src/test/TestFiles/GPX/test.gpx");
-        GpxWriter gpxWriter = new GpxWriter();
-        gpxWriter.gpxWriter(gpx, path);
+        GPX.write(gpx, path);
         Assertions.assertTrue(Files.exists(path), "GPX file has not been created");
     }
 
