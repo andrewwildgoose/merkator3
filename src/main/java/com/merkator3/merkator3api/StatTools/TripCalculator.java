@@ -24,10 +24,17 @@ public class TripCalculator {
                 .sum();
     }
 
-    public Double totalElevation() {
+    public Double totalElevationGain() {
         GpxElevationCalculator elevCalc = new GpxElevationCalculator();
         return tripRoutes.stream()
-                .mapToDouble(route -> elevCalc.calculateElevation(route.getRouteGpx()))
+                .mapToDouble(route -> elevCalc.calculateElevationGain(route.getRouteGpx()))
+                .sum();
+    }
+
+    public Double totalElevationLoss() {
+        GpxElevationCalculator elevCalc = new GpxElevationCalculator();
+        return tripRoutes.stream()
+                .mapToDouble(route -> elevCalc.calculateElevationLoss(route.getRouteGpx()))
                 .sum();
     }
 }

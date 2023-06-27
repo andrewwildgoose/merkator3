@@ -101,16 +101,23 @@ public class GpxToolsTests {
     }
 
     @Test
-    void testElevationCalculator() {
+    void testElevationGainCalculator1() {
         GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
-        int elevation = gpxElevCalc.calculateElevation(lbl);
-        Assertions.assertEquals(elevation, 2526.0);
+        int elevationGain1 = gpxElevCalc.calculateElevationGain(lbl);
+        Assertions.assertEquals(2526.0, elevationGain1);
     }
 
     @Test
-    void testElevationCalculator2() {
+    void testElevationGainCalculator2() {
         GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
-        int elevation1 = gpxElevCalc.calculateElevation(gpx);
-        Assertions.assertEquals(0, elevation1);
+        int elevationGain2 = gpxElevCalc.calculateElevationGain(gpx);
+        Assertions.assertEquals(0, elevationGain2);
+    }
+
+    @Test
+    void testElevationLossCalculator() {
+        GpxElevationCalculator gpxElevClac = new GpxElevationCalculator();
+        int elevationLoss1 = gpxElevClac.calculateElevationLoss(lbl);
+        Assertions.assertEquals(2526.0, elevationLoss1);
     }
 }

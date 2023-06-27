@@ -1,6 +1,5 @@
 package com.merkator3.merkator3api.unitTests;
 
-import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
 import com.merkator3.merkator3api.StatTools.TripCalculator;
 import com.merkator3.merkator3api.models.Route;
 import com.merkator3.merkator3api.models.Trip;
@@ -49,16 +48,18 @@ public class TripTests {
     }
 
     @Test
-    void testCalculateTripElevation() {
+    void testCalculateTripElevationGain() {
         TripCalculator tripCalculator = new TripCalculator(testTrip1);
-        Double tripElev = tripCalculator.totalElevation();
-        Assertions.assertEquals(0, tripElev);
+        Double tripElevGain = tripCalculator.totalElevationGain();
+        Assertions.assertEquals(660, tripElevGain);
     }
 
     @Test
-    void testElevationCalculator2() {
-        GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
-        int elevation1 = gpxElevCalc.calculateElevation(testRoute1.getRouteGpx());
-        Assertions.assertEquals(370, elevation1);
+    void testCalculateTripElevationLoss() {
+        TripCalculator tripCalculator = new TripCalculator(testTrip1);
+        Double tripElevLoss = tripCalculator.totalElevationLoss();
+        Assertions.assertEquals(684.0, tripElevLoss);
     }
+
+
 }
