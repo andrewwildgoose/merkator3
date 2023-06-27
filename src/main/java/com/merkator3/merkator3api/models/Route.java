@@ -1,23 +1,24 @@
 package com.merkator3.merkator3api.models;
 
 import io.jenetics.jpx.GPX;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 
 @Document(collection = "routes")
 public class Route {
-    @Id
-    private Long id;
-    private String routeName;
-    private String routeDescription;
-    private GPX routeGpx;
+    @Id private ObjectId id;
+    @Field("routeName") private String routeName;
+    @Field("routeDescription") private String routeDescription;
+    @Field("routeGPX") private GPX routeGpx;
 
     public Route(String routeName) {
         this.routeName = routeName;
     }
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 

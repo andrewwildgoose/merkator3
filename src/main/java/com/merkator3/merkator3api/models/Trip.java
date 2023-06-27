@@ -1,22 +1,27 @@
 package com.merkator3.merkator3api.models;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
 @Document(collection = "trips")
 public class Trip {
 
-    @Id
-    private Long id;
-    private String tripName;
-    private String tripDescription;
-    private List<Route> tripRoutes;
+    @Id private ObjectId id;
+    @Field("tripName") private String tripName;
+    @Field("tripDescription") private String tripDescription;
+    @Field("tripRoutes") private List<Route> tripRoutes;
 
     public Trip(String tripName){
         this.tripName = tripName;
     };
+
+    public ObjectId getId() {
+        return id;
+    }
 
     public String getTripName() {
         return tripName;

@@ -38,6 +38,4 @@ public class DatabaseTests {
         userRepository.save(testUser);
         Assertions.assertEquals(userRepository.findByUserName("testUser").getUserName(),"testUser");
     }
-
-
-    }
+}
