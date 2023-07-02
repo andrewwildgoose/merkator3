@@ -22,10 +22,6 @@ public class DatabaseTests {
         }
     }
 
-    void createRoute() {
-
-    }
-
     @AfterEach
     void removeUser() {
         if (userRepository.findByUserName("testUser")!=null){

@@ -1,6 +1,6 @@
 package com.merkator3.merkator3api.models;
 
-import org.apache.logging.log4j.ThreadContext;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -19,8 +19,6 @@ public class User {
 
     public User(String userName) {
         this.userName = userName;
-        this.userRoutes = new ArrayList<>();
-        this.userTrips = new ArrayList<>();
     }
 
     public String getUserName() {
@@ -41,6 +39,9 @@ public class User {
     }
 
     public void addRoute(ObjectId routeId) {
+        if (userRoutes == null){
+            userRoutes = new ArrayList<>();
+        }
         userRoutes.add(routeId);
     }
 
@@ -49,6 +50,9 @@ public class User {
     }
 
     public void addTrip(ObjectId tripId) {
+        if (userTrips == null) {
+            userTrips = new ArrayList<>();
+        }
         userTrips.add(tripId);
     }
 
