@@ -7,11 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/merkator/user")
 public class UserController {
 
     @Autowired
     UserService userService;
+
+    @GetMapping("/")
+    public String getUserHomeMessage() {
+        return "Welcome to merkator";
+    }
 
     @PostMapping("/create")
     public User createUser(@RequestBody String username) {
