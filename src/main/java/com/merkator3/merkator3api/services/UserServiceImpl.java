@@ -1,6 +1,6 @@
 package com.merkator3.merkator3api.services;
 
-import com.merkator3.merkator3api.models.User;
+import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +21,14 @@ public class UserServiceImpl implements UserService{
 
     // CREATE
     @Override
-    public User createUser(String userName) {
-        User user = new User(userName);
-        return userRepository.save(user);
+    public MerkatorUser createUser(String userName) {
+        MerkatorUser merkatorUser = new MerkatorUser(userName);
+        return userRepository.save(merkatorUser);
     }
 
     // READ
     @Override
-    public User getUser(ObjectId userId) {
+    public MerkatorUser getUser(ObjectId userId) {
         return userRepository.findById(userId);
     }
 

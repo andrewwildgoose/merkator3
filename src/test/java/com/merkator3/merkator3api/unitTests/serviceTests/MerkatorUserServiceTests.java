@@ -1,8 +1,6 @@
 package com.merkator3.merkator3api.unitTests.serviceTests;
 
-import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.Trip;
-import com.merkator3.merkator3api.models.User;
+import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import com.merkator3.merkator3api.services.UserService;
 import com.merkator3.merkator3api.services.UserServiceImpl;
@@ -10,10 +8,9 @@ import org.bson.types.ObjectId;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.event.annotation.AfterTestExecution;
 
 @SpringBootTest
-public class UserServiceTests {
+public class MerkatorUserServiceTests {
 
     @Autowired
     private UserRepository userRepository;
@@ -37,14 +34,14 @@ public class UserServiceTests {
     @Test
     void createUserTest() {
         userService.createUser("merkatorUser1");
-        Assertions.assertEquals(userRepository.findByUserName("merkatorUser1").getUserName(), "merkatorUser1");
+        Assertions.assertEquals(userRepository.findByUserName("merkatorUser1").getUsername(), "merkatorUser1");
     }
 
     @Test
     void getUserTest() {
         userService.createUser("merkatorUser2");
         ObjectId testUserId = userRepository.findByUserName("merkatorUser2").getId();
-        User testUser = userService.getUser(testUserId);
-        Assertions.assertEquals(testUser.getId(),  testUserId);
+        MerkatorUser testMerkatorUser = userService.getUser(testUserId);
+        Assertions.assertEquals(testMerkatorUser.getId(),  testUserId);
     }
 }

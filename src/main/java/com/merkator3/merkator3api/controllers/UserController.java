@@ -1,6 +1,6 @@
 package com.merkator3.merkator3api.controllers;
 
-import com.merkator3.merkator3api.models.User;
+import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.services.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public User createUser(@RequestBody String username) {
+    public MerkatorUser createUser(@RequestBody String username) {
         return userService.createUser(username);
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") ObjectId id) {
+    public MerkatorUser getUser(@PathVariable("id") ObjectId id) {
         return userService.getUser(id);
     }
 }

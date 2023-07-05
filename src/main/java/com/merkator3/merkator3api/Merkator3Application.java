@@ -1,13 +1,11 @@
 package com.merkator3.merkator3api;
 
-import com.merkator3.merkator3api.models.User;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Configuration;
 
 @SpringBootApplication
 public class Merkator3Application {

@@ -1,32 +1,32 @@
 package com.merkator3.merkator3api.unitTests;
 
 
+import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.models.Route;
 import com.merkator3.merkator3api.models.Trip;
-import com.merkator3.merkator3api.models.User;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
 @SpringBootTest
-public class UserTests {
+public class MerkatorUserTests {
 
-    User testUser;
+    MerkatorUser testMerkatorUser;
     @BeforeEach
     void createUser() {
-        testUser = new User("testUser");
+        testMerkatorUser = new MerkatorUser("testUser");
     }
 
     @Test
     void testUserCreated() {
-        Assertions.assertEquals(testUser.getUserName(), "testUser");
+        Assertions.assertEquals(testMerkatorUser.getUsername(), "testUser");
     }
 
     @Test
     void testUserRouteAdded() {
         Route testRoute = new Route("testRoute");
-        testUser.addRoute(testRoute.getId());
-        Assertions.assertEquals(testRoute.getId(), testUser.getUserRoutes().get(0));
+        testMerkatorUser.addRoute(testRoute.getId());
+        Assertions.assertEquals(testRoute.getId(), testMerkatorUser.getUserRoutes().get(0));
     }
 
     @Test
@@ -34,8 +34,8 @@ public class UserTests {
         Route testRoute1 = new Route("testRoute1");
         Route testRoute2 = new Route("testRoute2");
         Trip testTrip = new Trip("testTrip");
-        testUser.addTrip(testTrip.getId());
-        Assertions.assertEquals(testTrip.getId(), testUser.getUserTrips().get(0));
+        testMerkatorUser.addTrip(testTrip.getId());
+        Assertions.assertEquals(testTrip.getId(), testMerkatorUser.getUserTrips().get(0));
     }
 
 }

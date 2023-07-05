@@ -1,6 +1,6 @@
 package com.merkator3.merkator3api.integrationTests;
 
-import com.merkator3.merkator3api.models.User;
+import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -14,24 +14,24 @@ public class DatabaseTests {
 
     @Autowired
     private UserRepository userRepository;
-    private User testUser;
+    private MerkatorUser testMerkatorUser;
     @BeforeEach
     void createUser() {
         if (userRepository.findByUserName("testUser") == null) {
-            testUser = new User("testUser");
+            testMerkatorUser = new MerkatorUser("testUser");
         }
     }
 
     @AfterEach
     void removeUser() {
         if (userRepository.findByUserName("testUser")!=null){
-            userRepository.delete(testUser);
+            userRepository.delete(testMerkatorUser);
         }
     }
 
     @Test
     void userInserted() {
-        userRepository.save(testUser);
-        Assertions.assertEquals(userRepository.findByUserName("testUser").getUserName(),"testUser");
+        userRepository.save(testMerkatorUser);
+        Assertions.assertEquals(userRepository.findByUserName("testUser").getUsername(),"testUser");
     }
 }
