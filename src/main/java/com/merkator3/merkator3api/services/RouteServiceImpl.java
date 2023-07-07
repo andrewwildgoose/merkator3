@@ -1,0 +1,40 @@
+package com.merkator3.merkator3api.services;
+
+import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.repositories.RouteRepository;
+import com.merkator3.merkator3api.repositories.UserRepository;
+import io.jenetics.jpx.GPX;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+@DependsOn({"routeRepository", "userRepository"})
+public class RouteServiceImpl implements RouteService{
+
+    @Autowired
+    private RouteRepository routeRepository;
+    private UserRepository userRepository;
+
+    @Override
+    public ObjectId addRoute(ObjectId userID, String routeName, GPX file) {
+        // create and save the route to the repo
+        Route route = new Route(routeName);
+        route.setRouteGpx(file);
+        route = routeRepository.insert(route);
+
+        // add the route to the user's routes
+        MerkatorUser user = userRepository.findById(userID);
+        user.addRoute(route.getId());
+        return route.getId();
+    }
+
+    @Override
+    public Route getRoute(ObjectId id) {
+        return routeRepository.findById(id);
+    }
+}
