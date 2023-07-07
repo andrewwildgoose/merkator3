@@ -5,26 +5,22 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Document(collection = "user")
-public class MerkatorUser extends User {
+public class MerkatorUser {
 
     @Id private ObjectId id;
     @Field("userName") private String username;
     @Field("userRoutes") private List<ObjectId> userRoutes;
     @Field("userTrips") private List<ObjectId> userTrips;
 
-    public MerkatorUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+    public MerkatorUser(String username) {
+        this.username = username;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }

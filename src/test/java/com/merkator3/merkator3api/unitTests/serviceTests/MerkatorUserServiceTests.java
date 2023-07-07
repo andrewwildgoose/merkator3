@@ -23,24 +23,24 @@ public class MerkatorUserServiceTests {
 
     @AfterEach
     void deleteTestUsers() {
-        if (userRepository.findByUserName("merkatorUser1")!=null){
-            userRepository.delete(userRepository.findByUserName("merkatorUser1"));
+        if (userRepository.findByUsername("merkatorUser1")!=null){
+            userRepository.delete(userRepository.findByUsername("merkatorUser1"));
         }
-        if (userRepository.findByUserName("merkatorUser2")!=null){
-            userRepository.delete(userRepository.findByUserName("merkatorUser2"));
+        if (userRepository.findByUsername("merkatorUser2")!=null){
+            userRepository.delete(userRepository.findByUsername("merkatorUser2"));
         }
     }
 
     @Test
     void createUserTest() {
         userService.createUser("merkatorUser1");
-        Assertions.assertEquals(userRepository.findByUserName("merkatorUser1").getUsername(), "merkatorUser1");
+        Assertions.assertEquals(userRepository.findByUsername("merkatorUser1").getUsername(), "merkatorUser1");
     }
 
     @Test
     void getUserTest() {
         userService.createUser("merkatorUser2");
-        ObjectId testUserId = userRepository.findByUserName("merkatorUser2").getId();
+        ObjectId testUserId = userRepository.findByUsername("merkatorUser2").getId();
         MerkatorUser testMerkatorUser = userService.getUser(testUserId);
         Assertions.assertEquals(testMerkatorUser.getId(),  testUserId);
     }
