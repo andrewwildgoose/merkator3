@@ -18,13 +18,31 @@ public class RouteServiceImpl implements RouteService{
 
     @Autowired
     private RouteRepository routeRepository;
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
+    public RouteServiceImpl(RouteRepository routeRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.routeRepository = routeRepository;
+    }
+
+    // with file
     @Override
     public ObjectId addRoute(ObjectId userID, String routeName, GPX file) {
         // create and save the route to the repo
         Route route = new Route(routeName);
         route.setRouteGpx(file);
+        route = routeRepository.insert(route);
+
+        // add the route to the user's routes
+        MerkatorUser user = userRepository.findById(userID);
+        user.addRoute(route.getId());
+        return route.getId();
+    }
+
+    // without file
+    @Override
+    public ObjectId addRoute(ObjectId userID, String routeName) {
+        Route route = new Route(routeName);
         route = routeRepository.insert(route);
 
         // add the route to the user's routes

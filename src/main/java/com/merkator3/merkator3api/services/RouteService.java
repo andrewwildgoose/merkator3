@@ -8,5 +8,7 @@ public interface RouteService {
 
     ObjectId addRoute(ObjectId userID, String routeName, GPX file);
 
+    ObjectId addRoute(ObjectId userID, String routeName);
+
     Route getRoute(ObjectId id);
 }
