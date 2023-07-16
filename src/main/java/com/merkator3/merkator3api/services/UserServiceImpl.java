@@ -1,6 +1,8 @@
 package com.merkator3.merkator3api.services;
 
 import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -17,9 +21,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+    private final RouteRepository routeRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,
+                           RouteRepository routeRepository) {
         this.userRepository = userRepository;
+        this.routeRepository = routeRepository;
     }
 
     // CREATE
@@ -33,6 +40,16 @@ public class UserServiceImpl implements UserService{
     @Override
     public MerkatorUser getUser(ObjectId userId) {
         return userRepository.findById(userId);
+    }
+
+    @Override
+    public List<Route> getUserRoutes(ObjectId userId) {
+        MerkatorUser user = userRepository.findById(userId);
+        List<ObjectId> userRouteIds = user.getUserRoutes();
+        List<String> routeIdsString = userRouteIds.stream()
+                .map(ObjectId::toString)
+                .collect(Collectors.toList());
+        return routeRepository.findAllById(routeIdsString);
     }
 
 

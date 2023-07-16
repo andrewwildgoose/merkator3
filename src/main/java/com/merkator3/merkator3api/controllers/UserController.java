@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/merkator/user")
@@ -26,21 +27,30 @@ public class UserController {
     @Autowired
     RouteService routeService;
 
+    //user welcome page
     @GetMapping("/")
     public String getUserHomeMessage() {
         return "Welcome to merkator";
     }
 
+    // ADDING & RETRIEVING USERS
+
+    // create a new user
     @PostMapping("/create")
     public MerkatorUser createUser(@RequestBody String username) {
         return userService.createUser(username);
     }
 
+    // return a user by ID
     @GetMapping("/{userID}")
     public MerkatorUser getUser(@PathVariable("userID") ObjectId id) {
         return userService.getUser(id);
     }
 
+
+    // ADDING & RETRIEVING ROUTES
+
+    // add a new route with a gpx file
     @PostMapping("/{userID}/newroute")
     public String addRoute(@PathVariable("userID") ObjectId userID, @RequestParam("file") MultipartFile file,
                             @RequestParam("fileName") String fileName)
@@ -50,23 +60,37 @@ public class UserController {
             GPX fileGPX = GpxBuilder.convertMultipartFileToGPX(file);
 
             ObjectId routeID = routeService.addRoute(userID, fileName, fileGPX);
-            return "redirect:/merkator/user/{userID}/route/" + routeID;
+            return "redirect:/merkator/user/" + userID + "/route/" + routeID;
         } catch (IOException e) {
             return e.toString();
         }
     }
 
+    // add a new route with no file
     @PostMapping("/{userID}/newroutename")
     public String addRoute(@PathVariable("userID") ObjectId userID, @RequestBody String routeName) {
         // save the route to the repo
         ObjectId routeID = routeService.addRoute(userID, routeName);
 
-        return "redirect:/merkator/user/{userID}/route/" + routeID;
+        return "redirect:/merkator/user/" + userID + "/route/" + routeID;
     }
 
+    // get a route by ID
     @GetMapping("/{userID}/route/{routeID}")
     public String getRoute(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID) {
         Route route = routeService.getRoute(routeID);
-        return route.getRouteName() + route.getRouteDescription();
+        return route.getRouteName() + "\n" + route.getRouteDescription();
     }
+
+    // get a list of the user's routes
+    @GetMapping("/{userID}/routes")
+    public List<Route> getUserRoutes(@PathVariable("userID") ObjectId userID) {
+        return userService.getUserRoutes(userID);
+    }
+
+    // ADDING & RETRIEVING TRIPS
+
+    // create a new trip
+    //@PostMapping("/{userID}/newtrip")
+    //public String addTrip();
 }
