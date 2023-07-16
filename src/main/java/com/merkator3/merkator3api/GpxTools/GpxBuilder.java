@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
 import java.util.List;
 
 // Class for building GPX objects from a given list of points
@@ -37,6 +38,27 @@ public class GpxBuilder {
         Path tempFile = Files.createTempFile("temp", file.getOriginalFilename());
         Files.write(tempFile, file.getBytes(), StandardOpenOption.CREATE);
         return GPX.read(tempFile);
+    }
+
+    public static Metadata populateGPXMetadataTime(Metadata metadata) {
+        Metadata.Builder metadataBuilder = Metadata.builder();
+
+        metadata.getBounds().ifPresent(metadataBuilder::bounds);
+        metadata.getExtensions().ifPresent(metadataBuilder::extensions);
+        metadata.getName().ifPresent(metadataBuilder::name);
+        metadata.getDescription().ifPresent(metadataBuilder::desc);
+        metadata.getAuthor().ifPresent(metadataBuilder::author);
+
+        List<Link> links = metadata.getLinks();
+        if (!links.isEmpty()) {
+            links.forEach(metadataBuilder::addLink);
+        }
+
+        metadata = metadataBuilder
+                .time(Instant.now())
+                .build();
+
+        return metadata;
     }
 
 }

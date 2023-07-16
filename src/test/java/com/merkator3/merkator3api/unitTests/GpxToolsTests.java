@@ -1,10 +1,6 @@
 package com.merkator3.merkator3api.unitTests;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.merkator3.merkator3api.GpxTools.GpxBuilder;
-import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
-import com.merkator3.merkator3api.GpxTools.GpxReader;
-import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
+import com.merkator3.merkator3api.GpxTools.*;
 import io.jenetics.jpx.*;
 import org.junit.jupiter.api.*;
 
