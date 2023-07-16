@@ -9,7 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 
@@ -45,11 +48,30 @@ public class Route {
     }
 
     public GPX getRouteGpx() throws IOException {
-        return GPX.read((Path) new ByteArrayInputStream(routeGpxString.getBytes()));
+        Path tempFile = Files.createTempFile("gpx", ".xml");
+        Files.writeString(tempFile, routeGpxString);
+
+        GPX gpx = GPX.read(tempFile);
+
+        // Delete the temporary file
+        Files.delete(tempFile);
+
+        return gpx;
     }
 
-    public void setRouteGpx(GPX routeGpx) {
-        this.routeGpxString = routeGpx.toString();
+    public void setRouteGpx(GPX routeGpx) throws IOException {
+        Path tempFile = Files.createTempFile("gpx", ".xml");
+        GPX.write(routeGpx, tempFile);
+
+        byte[] bytes = Files.readAllBytes(tempFile);
+        String xmlString = new String(bytes);
+
+        // Delete the temporary file
+        Files.delete(tempFile);
+
+        this.routeGpxString = xmlString;
 
     }
+
+
 }

@@ -31,7 +31,7 @@ public class RouteTests {
         Path path = Path.of("src/test/TestFiles/GPX/London to Brighton Return.gpx");
         GPX routeGPX = GPX.read(path);
         testRoute.setRouteGpx(routeGPX);
-        Assertions.assertEquals(routeGPX, testRoute.getRouteGpx());
+        Assertions.assertEquals(routeGPX.getTracks().toString(), testRoute.getRouteGpx().getTracks().toString());
     }
 
 

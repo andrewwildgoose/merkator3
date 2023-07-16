@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Service
 @DependsOn({"routeRepository", "userRepository"})
 public class RouteServiceImpl implements RouteService{
@@ -27,7 +29,7 @@ public class RouteServiceImpl implements RouteService{
 
     // with file
     @Override
-    public ObjectId addRoute(ObjectId userID, String routeName, GPX file) {
+    public ObjectId addRoute(ObjectId userID, String routeName, GPX file) throws IOException {
         // create and save the route to the repo
         Route route = new Route(routeName);
         route.setRouteGpx(file);

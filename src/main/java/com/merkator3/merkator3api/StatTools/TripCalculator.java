@@ -5,6 +5,7 @@ import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
 import com.merkator3.merkator3api.models.Route;
 import com.merkator3.merkator3api.models.Trip;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TripCalculator {
@@ -20,21 +21,39 @@ public class TripCalculator {
         GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
 
         return tripRoutes.stream()
-                .mapToDouble(route -> distCalc.lengthToKm(distCalc.calculateDistance(route.getRouteGpx())))
+                .mapToDouble(route -> {
+                    try {
+                        return distCalc.lengthToKm(distCalc.calculateDistance(route.getRouteGpx()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .sum();
     }
 
     public Double totalElevationGain() {
         GpxElevationCalculator elevCalc = new GpxElevationCalculator();
         return tripRoutes.stream()
-                .mapToDouble(route -> elevCalc.calculateElevationGain(route.getRouteGpx()))
+                .mapToDouble(route -> {
+                    try {
+                        return elevCalc.calculateElevationGain(route.getRouteGpx());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .sum();
     }
 
     public Double totalElevationLoss() {
         GpxElevationCalculator elevCalc = new GpxElevationCalculator();
         return tripRoutes.stream()
-                .mapToDouble(route -> elevCalc.calculateElevationLoss(route.getRouteGpx()))
+                .mapToDouble(route -> {
+                    try {
+                        return elevCalc.calculateElevationLoss(route.getRouteGpx());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .sum();
     }
 }

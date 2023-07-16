@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Optional;
 
 @SpringBootTest
 public class DatabaseTests {
@@ -68,7 +67,6 @@ public class DatabaseTests {
         // Save the test route to the repository
         routeRepository.save(DBTestRouteGPX);
 
-        Optional<Route> retrievedRouteByID = routeRepository.findById("64b3e18a63ecc24f72bb861c");
         // Retrieve the saved route from the repository
         Route retrievedRoute = routeRepository.findByRouteName("DBTestRouteGPX");
 
