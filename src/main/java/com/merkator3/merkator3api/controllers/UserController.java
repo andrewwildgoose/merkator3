@@ -3,8 +3,10 @@ package com.merkator3.merkator3api.controllers;
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.models.Trip;
 import com.merkator3.merkator3api.services.RouteService;
 import com.merkator3.merkator3api.services.RouteServiceImpl;
+import com.merkator3.merkator3api.services.TripService;
 import com.merkator3.merkator3api.services.UserService;
 
 import io.jenetics.jpx.GPX;
@@ -26,6 +28,8 @@ public class UserController {
     UserService userService;
     @Autowired
     RouteService routeService;
+    @Autowired
+    TripService tripService;
 
     //user welcome page
     @GetMapping("/")
@@ -91,6 +95,22 @@ public class UserController {
     // ADDING & RETRIEVING TRIPS
 
     // create a new trip
-    //@PostMapping("/{userID}/newtrip")
-    //public String addTrip();
+    @PostMapping("/{userID}/newtrip")
+    public Trip addTrip(@PathVariable("userID") ObjectId userID, @RequestBody String tripName) {
+        return tripService.addTrip(userID, tripName);
+    }
+
+    // get a trip by ID
+    @GetMapping("/{userID}/trip/{tripID}")
+    public Trip getTrip(@PathVariable("userID") ObjectId userID, @PathVariable("tripID") ObjectId tripID) {
+        return tripService.getTrip(tripID);
+    }
+
+    // add a route to a trip
+    @PostMapping("{userID}/trip/{tripID}/addroute")
+    public Trip addRouteToTrip(@PathVariable("userID") ObjectId userID, @PathVariable("tripID") ObjectId tripID,
+                                @RequestBody String routeID) {
+        ObjectId objRouteID = new ObjectId(routeID);
+        return tripService.addRouteToTrip(tripID, objRouteID);
+    }
 }

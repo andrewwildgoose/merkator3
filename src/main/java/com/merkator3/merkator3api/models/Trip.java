@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "trips")
@@ -48,6 +49,9 @@ public class Trip {
     }
 
     public void addRoute(Route route){
+        if (tripRoutes == null) {
+            tripRoutes = new ArrayList<>();
+        }
         tripRoutes.add(route);
     }
 

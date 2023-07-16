@@ -9,9 +9,9 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(collectionResourceRel = "routes", path = "routes")
 public interface RouteRepository extends MongoRepository<Route, String>{
-    public Route findByRouteName(@Param("route") String route);
+    Route findByRouteName(@Param("route") String route);
 
-    public Route findById(@Param("id") ObjectId id);
+    Route findById(@Param("id") ObjectId id);
 
 }
 

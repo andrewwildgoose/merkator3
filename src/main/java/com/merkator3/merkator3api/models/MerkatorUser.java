@@ -39,8 +39,8 @@ public class MerkatorUser {
     }
 
     public void addRoute(ObjectId routeId) {
-        if (userRoutes == null){
-            userRoutes = new ArrayList<>();
+        if (this.userRoutes == null){
+            this.userRoutes = new ArrayList<>();
         }
         userRoutes.add(routeId);
     }
@@ -50,8 +50,8 @@ public class MerkatorUser {
     }
 
     public void addTrip(ObjectId tripId) {
-        if (userTrips == null) {
-            userTrips = new ArrayList<>();
+        if (this.userTrips == null) {
+            this.userTrips = new ArrayList<>();
         }
         userTrips.add(tripId);
     }
