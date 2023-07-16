@@ -8,13 +8,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+
 
 @Document(collection = "routes")
 public class Route {
     @Id private ObjectId id;
     @Field("routeName") private String routeName;
     @Field("routeDescription") private String routeDescription;
-    @Field("routeGPX") private GPX routeGpx;
+    @Field("routeGPX") private String routeGpxString;
 
     public Route(String routeName) {
         this.routeName = routeName;
@@ -40,26 +44,12 @@ public class Route {
         this.routeDescription = routeDescription;
     }
 
-    public GPX getRouteGpx() {
-        return routeGpx;
+    public GPX getRouteGpx() throws IOException {
+        return GPX.read((Path) new ByteArrayInputStream(routeGpxString.getBytes()));
     }
 
     public void setRouteGpx(GPX routeGpx) {
-        //retrieve metadata
-        Metadata metadata = routeGpx.getMetadata().orElse(null);
+        this.routeGpxString = routeGpx.toString();
 
-        //database will not accept empty time metadata so check and update to current time if empty and repopulate the metadata.
-        if (metadata != null && metadata.getTime().isEmpty()) {
-            metadata = GpxBuilder.populateGPXMetadataTime(metadata);
-        }
-
-
-        this.routeGpx = GPX.builder()
-                .version(GPX.Version.V11)
-                .metadata(metadata)
-                .wayPoints(routeGpx.getWayPoints())
-                .routes(routeGpx.getRoutes())
-                .tracks(routeGpx.getTracks())
-                .build();
     }
 }
