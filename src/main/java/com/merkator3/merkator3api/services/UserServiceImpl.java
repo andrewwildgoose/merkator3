@@ -2,7 +2,9 @@ package com.merkator3.merkator3api.services;
 
 import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.models.Trip;
 import com.merkator3.merkator3api.repositories.RouteRepository;
+import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
     private final RouteRepository routeRepository;
+
+    @Autowired
+    private TripRepository tripRepository;
 
     public UserServiceImpl(UserRepository userRepository,
                            RouteRepository routeRepository) {
@@ -50,6 +55,16 @@ public class UserServiceImpl implements UserService{
                 .map(ObjectId::toString)
                 .collect(Collectors.toList());
         return routeRepository.findAllById(routeIdsString);
+    }
+
+    @Override
+    public List<Trip> getUserTrips(ObjectId userId) {
+        MerkatorUser user = userRepository.findById(userId);
+        List<ObjectId> userTripIds = user.getUserTrips();
+        List<String> tripIdsString = userTripIds.stream()
+                .map(ObjectId::toString)
+                .collect(Collectors.toList());
+        return tripRepository.findAllById(tripIdsString);
     }
 
 

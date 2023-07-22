@@ -113,4 +113,9 @@ public class UserController {
         ObjectId objRouteID = new ObjectId(routeID);
         return tripService.addRouteToTrip(tripID, objRouteID);
     }
+
+    @GetMapping("/{userID}/trips")
+    public List<Trip> getUserTrips(@PathVariable("userID") ObjectId userID) {
+        return userService.getUserTrips(userID);
+    }
 }
