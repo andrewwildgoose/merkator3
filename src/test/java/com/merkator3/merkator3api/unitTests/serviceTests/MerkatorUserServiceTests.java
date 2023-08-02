@@ -1,6 +1,7 @@
 package com.merkator3.merkator3api.unitTests.serviceTests;
 
 import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import com.merkator3.merkator3api.services.UserService;
 import com.merkator3.merkator3api.services.UserServiceImpl;
@@ -14,11 +15,13 @@ public class MerkatorUserServiceTests {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RouteRepository routeRepository;
     private UserService userService;
 
     @BeforeEach
     void createUserService() {
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository, routeRepository);
     }
 
     @AfterEach

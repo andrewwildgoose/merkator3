@@ -44,19 +44,19 @@ public class RouteServiceImpl implements RouteService{
         userRepository.save(user);
         return route.getId();
     }
-
+    //TODO: flagged for deletion
     // without file
-    @Override
-    public ObjectId addRoute(ObjectId userID, String routeName) {
-        Route route = new Route(routeName);
-        route = routeRepository.save(route);
-
-        // add the route to the user's routes
-        MerkatorUser user = userRepository.findById(userID);
-        user.addRoute(route.getId());
-        userRepository.save(user);
-        return route.getId();
-    }
+//    @Override
+//    public ObjectId addRoute(ObjectId userID, String routeName) {
+//        Route route = new Route(routeName);
+//        route = routeRepository.save(route);
+//
+//        // add the route to the user's routes
+//        MerkatorUser user = userRepository.findById(userID);
+//        user.addRoute(route.getId());
+//        userRepository.save(user);
+//        return route.getId();
+//    }
 
     @Override
     public Route getRoute(ObjectId id) {

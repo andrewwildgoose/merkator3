@@ -13,12 +13,15 @@ import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/merkator/user")
@@ -33,8 +36,10 @@ public class UserController {
 
     //user welcome page
     @GetMapping("/")
-    public String getUserHomeMessage() {
-        return "Welcome to merkator";
+    public Map<String, String> getUserHomeMessage() {
+        Map<String, String> jsonMap = new HashMap<>();
+        jsonMap.put("welcome_message", "Welcome to merkator");
+        return jsonMap;
     }
 
     // ADDING & RETRIEVING USERS
@@ -70,20 +75,22 @@ public class UserController {
         }
     }
 
+    //TODO: decide if function is needed
     // add a new route with no file
-    @PostMapping("/{userID}/newroutename")
-    public String addRoute(@PathVariable("userID") ObjectId userID, @RequestBody String routeName) {
-        // save the route to the repo
-        ObjectId routeID = routeService.addRoute(userID, routeName);
-
-        return "redirect:/merkator/user/" + userID + "/route/" + routeID;
-    }
+//    @PostMapping("/{userID}/newroutename")
+//    public String addRoute(@PathVariable("userID") ObjectId userID, @RequestBody String routeName) {
+//        // save the route to the repo
+//        ObjectId routeID = routeService.addRoute(userID, routeName);
+//
+//        return "redirect:/merkator/user/" + userID + "/route/" + routeID;
+//    }
 
     // get a route by ID
     @GetMapping("/{userID}/route/{routeID}")
-    public String getRoute(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID) {
+    public Route getRoute(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID) {
         Route route = routeService.getRoute(routeID);
-        return route.getRouteName() + "\n" + route.getRouteDescription();
+//        return route.getRouteName() + "\n" + route.getRouteDescription();
+        return route;
     }
 
     // get a list of the user's routes

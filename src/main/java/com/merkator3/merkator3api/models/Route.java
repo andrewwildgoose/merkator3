@@ -2,6 +2,7 @@ package com.merkator3.merkator3api.models;
 
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import io.jenetics.jpx.GPX;
+import io.jenetics.jpx.Length;
 import io.jenetics.jpx.Metadata;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
 
 @Document(collection = "routes")
@@ -48,10 +50,21 @@ public class Route {
     }
 
     public GPX getRouteGpx() throws IOException {
-        Path tempFile = Files.createTempFile("gpx", ".xml");
+        Path tempFile = Files.createTempFile(".gpx", ".xml");
         Files.writeString(tempFile, routeGpxString);
 
         GPX gpx = GPX.read(tempFile);
+
+        // Convert the custom Length object in GPX to double values
+        gpx.getTracks().forEach(track -> {
+            track.getSegments().forEach(segment -> {
+                segment.getPoints().forEach(point -> {
+                    Optional<Length> elevationOptional = point.getElevation();
+                    double elevation = elevationOptional.map(Length::doubleValue).orElse(0.0);
+                    point = point.toBuilder().ele(elevation).build();
+                });
+            });
+        });
 
         // Delete the temporary file
         Files.delete(tempFile);
