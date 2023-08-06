@@ -13,6 +13,7 @@ import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,10 +88,17 @@ public class UserController {
 
     // get a route by ID
     @GetMapping("/{userID}/route/{routeID}")
-    public Route getRoute(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID) {
-        Route route = routeService.getRoute(routeID);
-//        return route.getRouteName() + "\n" + route.getRouteDescription();
-        return route;
+    public Route getRoute(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID)
+            throws IOException {
+        return routeService.getRoute(routeID);
+    }
+
+    // get a route's GPXString by ID
+    @GetMapping("/{userID}/route_gpx_string/{routeID}")
+    public String getRouteGPXString(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID)
+            throws IOException, JSONException {
+        System.out.println(routeService.getRouteGpxAsJSON(routeID));
+        return routeService.getRouteGpxAsJSON(routeID);
     }
 
     // get a list of the user's routes

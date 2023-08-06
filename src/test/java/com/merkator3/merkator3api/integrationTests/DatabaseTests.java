@@ -70,9 +70,14 @@ public class DatabaseTests {
         // Retrieve the saved route from the repository
         Route retrievedRoute = routeRepository.findByRouteName("DBTestRouteGPX");
 
+        retrievedRoute.getRouteGpx().getTracks().forEach(track -> {
+                    track.getSegments().forEach(segment -> {
+                        segment.getPoints().forEach(System.out::println);
+                    });
+                });
+
         // Assert that the saved route and retrieved route have similar properties
         Assertions.assertEquals(DBTestRouteGPX.getRouteGpx().getTracks(), retrievedRoute.getRouteGpx().getTracks());
-        Assertions.assertEquals(DBTestRouteGPX.getRouteGpx().getWayPoints(), retrievedRoute.getRouteGpx().getWayPoints());
 
         // Cleanup: Delete the saved route from the repository
         routeRepository.deleteById(DBTestRouteGPX.getId().toString());

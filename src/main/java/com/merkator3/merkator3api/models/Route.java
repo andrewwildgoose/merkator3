@@ -23,7 +23,7 @@ public class Route {
     @Id private ObjectId id;
     @Field("routeName") private String routeName;
     @Field("routeDescription") private String routeDescription;
-    @Field("routeGPX") private String routeGpxString;
+    @Field("routeGPXString") private String routeGpxString;
 
     public Route(String routeName) {
         this.routeName = routeName;
@@ -55,17 +55,6 @@ public class Route {
 
         GPX gpx = GPX.read(tempFile);
 
-        // Convert the custom Length object in GPX to double values
-        gpx.getTracks().forEach(track -> {
-            track.getSegments().forEach(segment -> {
-                segment.getPoints().forEach(point -> {
-                    Optional<Length> elevationOptional = point.getElevation();
-                    double elevation = elevationOptional.map(Length::doubleValue).orElse(0.0);
-                    point = point.toBuilder().ele(elevation).build();
-                });
-            });
-        });
-
         // Delete the temporary file
         Files.delete(tempFile);
 
@@ -84,6 +73,11 @@ public class Route {
 
         this.routeGpxString = xmlString;
 
+    }
+
+    public String getRouteGpxString() throws IOException {
+        System.out.println(this.routeGpxString);
+        return this.routeGpxString;
     }
 
 

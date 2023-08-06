@@ -1,5 +1,9 @@
 package com.merkator3.merkator3api.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.models.Route;
 import com.merkator3.merkator3api.repositories.RouteRepository;
@@ -8,10 +12,10 @@ import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.Metadata;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -59,7 +63,31 @@ public class RouteServiceImpl implements RouteService{
 //    }
 
     @Override
-    public Route getRoute(ObjectId id) {
-        return routeRepository.findById(id);
+    public Route getRoute(ObjectId id) throws IOException {
+
+        Route route = routeRepository.findById(id);
+
+//        if (route != null) {
+//            // Access the GPX object from the Route
+//            GPX gpx = route.getRouteGpx();
+//            // Update the GPX object in the Route
+//            route.setRouteGpx(gpx);
+//        }
+
+        return route;
+    }
+
+    @Override
+    public String getRouteGpxAsJSON(ObjectId id) throws IOException, JSONException {
+        Route route = routeRepository.findById(id);
+        String routeGpxString = route.getRouteGpxString();
+        return convertXmlToJson(routeGpxString);
+    }
+
+    public static String convertXmlToJson(String xml) throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+        JsonNode node = xmlMapper.readTree(xml.getBytes());
+        ObjectMapper jsonMapper = new ObjectMapper();
+        return jsonMapper.writeValueAsString(node);
     }
 }
