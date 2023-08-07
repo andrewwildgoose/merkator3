@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
     // CREATE
     @Override
     public MerkatorUser createUser(String username) {
-        MerkatorUser merkatorUser = new MerkatorUser( username);
+        MerkatorUser merkatorUser = new MerkatorUser();
         return userRepository.save(merkatorUser);
     }
 
