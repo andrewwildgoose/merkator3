@@ -4,6 +4,7 @@ package com.merkator3.merkator3api.models;
 import jakarta.annotation.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "user")
@@ -110,4 +113,5 @@ public class MerkatorUser implements UserDetails {
     public List<ObjectId> getUserTrips() {
         return userTrips;
     }
+
 }
