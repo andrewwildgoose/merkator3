@@ -10,7 +10,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserRepository extends MongoRepository<MerkatorUser, String> {
 
-    MerkatorUser findByUsername(@Param("user") String user);
+    MerkatorUser findByEmail(@Param("email") String email);
 
     MerkatorUser findById(@Param("id") ObjectId id);
 
