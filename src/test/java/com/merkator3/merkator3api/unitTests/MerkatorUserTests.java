@@ -14,7 +14,7 @@ public class MerkatorUserTests {
     MerkatorUser testMerkatorUser;
     @BeforeEach
     void createUser() {
-        testMerkatorUser = new MerkatorUser("testUser");
+        testMerkatorUser = new MerkatorUser("testUser@google.com", "testUser");
     }
 
     @Test

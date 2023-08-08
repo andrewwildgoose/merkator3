@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserService {
 
-    MerkatorUser createUser(String username);
+    MerkatorUser createUser(String email, String password);
 
     MerkatorUser getUser(ObjectId userId);
 

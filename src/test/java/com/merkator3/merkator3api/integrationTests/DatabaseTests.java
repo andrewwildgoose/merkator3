@@ -25,14 +25,14 @@ public class DatabaseTests {
     private MerkatorUser testMerkatorUser;
     @BeforeEach
     void createUser() {
-        if (userRepository.findByUsername("testUser") == null) {
-            testMerkatorUser = new MerkatorUser("testUser");
+        if (userRepository.findByEmail("testUser@google.com") == null) {
+            testMerkatorUser = new MerkatorUser("testUser@google.com", "testUser");
         }
     }
 
     @AfterEach
     void removeUser() {
-        if (userRepository.findByUsername("testUser")!=null){
+        if (userRepository.findByEmail("testUser@google.com") == null){
             userRepository.delete(testMerkatorUser);
         }
     }
@@ -40,7 +40,7 @@ public class DatabaseTests {
     @Test
     void userInserted() {
         userRepository.save(testMerkatorUser);
-        Assertions.assertEquals(userRepository.findByUsername("testUser").getUsername(),"testUser");
+        Assertions.assertEquals(userRepository.findByEmail("testUser@google.com").getName(),"testUser");
     }
 
     @Test

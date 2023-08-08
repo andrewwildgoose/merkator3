@@ -26,24 +26,24 @@ public class MerkatorUserServiceTests {
 
     @AfterEach
     void deleteTestUsers() {
-        if (userRepository.findByUsername("merkatorUser1")!=null){
-            userRepository.delete(userRepository.findByUsername("merkatorUser1"));
+        if (userRepository.findByEmail("merkatorUser1@google.com")!=null){
+            userRepository.delete(userRepository.findByEmail("merkatorUser1@google.com"));
         }
-        if (userRepository.findByUsername("merkatorUser2")!=null){
-            userRepository.delete(userRepository.findByUsername("merkatorUser2"));
+        if (userRepository.findByEmail("merkatorUser2@google.com")!=null){
+            userRepository.delete(userRepository.findByEmail("merkatorUser2@google.com"));
         }
     }
 
     @Test
     void createUserTest() {
-        userService.createUser("merkatorUser1");
-        Assertions.assertEquals(userRepository.findByUsername("merkatorUser1").getUsername(), "merkatorUser1");
+        userService.createUser("merkatorUser1@google.com", "1234");
+        Assertions.assertEquals(userRepository.findByEmail("merkatorUser1@google.com").getUsername(), "merkatorUser1");
     }
 
     @Test
     void getUserTest() {
-        userService.createUser("merkatorUser2");
-        ObjectId testUserId = userRepository.findByUsername("merkatorUser2").getId();
+        userService.createUser("merkatorUser2@google.com", "1234");
+        ObjectId testUserId = userRepository.findByEmail("\"merkatorUser2@google.com\"").getId();
         MerkatorUser testMerkatorUser = userService.getUser(testUserId);
         Assertions.assertEquals(testMerkatorUser.getId(),  testUserId);
     }

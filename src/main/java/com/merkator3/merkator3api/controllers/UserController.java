@@ -47,8 +47,8 @@ public class UserController {
 
     // create a new user
     @PostMapping("/create")
-    public MerkatorUser createUser(@RequestBody String username) {
-        return userService.createUser(username);
+    public MerkatorUser createUser(@RequestBody String email, @RequestBody String password) {
+        return userService.createUser(email, password);
     }
 
     // return a user by ID
