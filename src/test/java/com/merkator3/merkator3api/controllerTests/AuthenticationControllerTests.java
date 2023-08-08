@@ -42,8 +42,36 @@ public class AuthenticationControllerTests {
                 String.class
         );
 
-        // Assert the response as needed
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getBody()).contains("\"token\"");
+    }
+
+    @Test
+    public void authenticateUserTest() {
+        // Create JSON values for email and password
+        String email = "jess@google.com";
+        String password = "secret";
+
+        // Set the JSON values in the request body
+        String requestBody = "{\"email\": \"" + email + "\", \"password\": \"" + password + "\"}";
+
+        // Set the headers to indicate JSON content
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // Create a request entity with the JSON body and headers
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+
+        // Make a POST request to the authentication endpoint
+        ResponseEntity<String> response = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/auth/authenticate",
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+
+
+          assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).contains("\"token\"");
     }
 }
