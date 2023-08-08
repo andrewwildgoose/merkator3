@@ -17,6 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    //added as secret to Github
     private static final String SECRET_KEY = "076b97f38abc67a65f2ac8aa873d0e61b39233c929f7502b85f621fc100706b5";
 
 
