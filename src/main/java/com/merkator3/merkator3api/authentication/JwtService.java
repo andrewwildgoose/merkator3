@@ -17,8 +17,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    //added as secret to Github
-    private static final String SECRET_KEY = "076b97f38abc67a65f2ac8aa873d0e61b39233c929f7502b85f621fc100706b5";
+    //added as secret to GitHub
+    private static final String SECRET_KEY = "a0D6fNmII3T1UT0EKep4LmqdSe4BNa1lc8G5N4HoeHc=";
 
 
     public String extractUserEmail(String token) {
@@ -60,7 +60,8 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+        return Jwts
+                .parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
