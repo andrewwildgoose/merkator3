@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @DependsOn({"tripRepository", "routeRepository", "userRepository"})
@@ -54,5 +56,15 @@ public class TripServiceImpl implements TripService {
         trip.addRoute(route);
         tripRepository.save(trip);
         return trip;
+    }
+
+    @Override
+    public List<Trip> getUserTrips(ObjectId userId) {
+        MerkatorUser user = userRepository.findById(userId);
+        List<ObjectId> userTripIds = user.getUserTrips();
+        List<String> tripIdsString = userTripIds.stream()
+                .map(ObjectId::toString)
+                .collect(Collectors.toList());
+        return tripRepository.findAllById(tripIdsString);
     }
 }

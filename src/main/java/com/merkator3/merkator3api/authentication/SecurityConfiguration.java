@@ -50,7 +50,7 @@ public class SecurityConfiguration {
         http.cors(withDefaults())
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/v1/auth/**")
+                        .requestMatchers("/merkator/api/v1/auth/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

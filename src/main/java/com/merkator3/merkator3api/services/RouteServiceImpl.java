@@ -18,6 +18,10 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @DependsOn({"routeRepository", "userRepository"})
@@ -48,33 +52,22 @@ public class RouteServiceImpl implements RouteService{
         userRepository.save(user);
         return route.getId();
     }
-    //TODO: flagged for deletion
-    // without file
-//    @Override
-//    public ObjectId addRoute(ObjectId userID, String routeName) {
-//        Route route = new Route(routeName);
-//        route = routeRepository.save(route);
-//
-//        // add the route to the user's routes
-//        MerkatorUser user = userRepository.findById(userID);
-//        user.addRoute(route.getId());
-//        userRepository.save(user);
-//        return route.getId();
-//    }
 
     @Override
     public Route getRoute(ObjectId id) throws IOException {
 
         Route route = routeRepository.findById(id);
 
-//        if (route != null) {
-//            // Access the GPX object from the Route
-//            GPX gpx = route.getRouteGpx();
-//            // Update the GPX object in the Route
-//            route.setRouteGpx(gpx);
-//        }
-
         return route;
+    }
+
+    @Override
+    public Map<String, String> getRouteDetails(ObjectId id) throws IOException, JSONException {
+        Route route = routeRepository.findById(id);
+        Map<String, String> jsonMap = new HashMap<>();
+        jsonMap.put("route_name", route.getRouteName());
+        jsonMap.put("route_description", route.getRouteDescription());
+        return jsonMap;
     }
 
     @Override
@@ -82,6 +75,16 @@ public class RouteServiceImpl implements RouteService{
         Route route = routeRepository.findById(id);
         String routeGpxString = route.getRouteGpxString();
         return convertXmlToJson(routeGpxString);
+    }
+
+    @Override
+    public List<Route> getUserRoutes(ObjectId userId) {
+        MerkatorUser user = userRepository.findById(userId);
+        List<ObjectId> userRouteIds = user.getUserRoutes();
+        List<String> routeIdsString = userRouteIds.stream()
+                .map(ObjectId::toString)
+                .collect(Collectors.toList());
+        return routeRepository.findAllById(routeIdsString);
     }
 
     public static String convertXmlToJson(String xml) throws IOException {

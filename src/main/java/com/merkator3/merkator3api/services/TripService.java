@@ -6,6 +6,7 @@ import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface TripService {
 
@@ -14,4 +15,6 @@ public interface TripService {
     Trip getTrip(ObjectId id);
 
     Trip addRouteToTrip(ObjectId tripID, ObjectId routeID);
+
+    List<Trip> getUserTrips(ObjectId id);
 }

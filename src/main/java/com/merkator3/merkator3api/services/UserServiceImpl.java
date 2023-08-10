@@ -23,13 +23,14 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
     private final RouteRepository routeRepository;
 
     @Autowired
     private TripRepository tripRepository;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           RouteRepository routeRepository) {
+    public UserServiceImpl(UserRepository userRepository, RouteRepository routeRepository) {
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
     }
@@ -65,6 +66,11 @@ public class UserServiceImpl implements UserService{
                 .map(ObjectId::toString)
                 .collect(Collectors.toList());
         return tripRepository.findAllById(tripIdsString);
+    }
+
+    @Override
+    public MerkatorUser findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 

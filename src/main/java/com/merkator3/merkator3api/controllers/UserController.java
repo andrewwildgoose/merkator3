@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/merkator/user")
+@RequestMapping("/merkator/userDemo")
 public class UserController {
 
     @Autowired
@@ -93,11 +93,16 @@ public class UserController {
         return routeService.getRoute(routeID);
     }
 
+    @GetMapping("/{userID}/route_details/{routeID}")
+    public Map<String, String> getRouteDetails(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID)
+            throws IOException, JSONException {
+        return routeService.getRouteDetails(routeID);
+    }
+
     // get a route's GPXString by ID
     @GetMapping("/{userID}/route_gpx_string/{routeID}")
     public String getRouteGPXString(@PathVariable("userID") ObjectId userID, @PathVariable("routeID") ObjectId routeID)
             throws IOException, JSONException {
-        System.out.println(routeService.getRouteGpxAsJSON(routeID));
         return routeService.getRouteGpxAsJSON(routeID);
     }
 

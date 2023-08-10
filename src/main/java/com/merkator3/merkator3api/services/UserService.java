@@ -16,4 +16,6 @@ public interface UserService {
     List<Route> getUserRoutes(ObjectId userId);
 
     List<Trip> getUserTrips(ObjectId userId);
+
+    MerkatorUser findByEmail(String email);
 }
