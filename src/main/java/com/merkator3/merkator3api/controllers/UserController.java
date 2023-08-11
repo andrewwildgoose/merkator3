@@ -59,23 +59,23 @@ public class UserController {
 
 
     // ADDING & RETRIEVING ROUTES
-
+    //TODO:FLagged for deletion
     // add a new route with a gpx file
-    @PostMapping("/{userID}/newroute")
-    public String addRoute(@PathVariable("userID") ObjectId userID,
-                           @RequestParam("file") MultipartFile file,
-                            @RequestParam("fileName") String fileName)
-            throws IOException {
-        // save the route to the repo
-        try {
-            GPX fileGPX = GpxBuilder.convertMultipartFileToGPX(file);
-
-            ObjectId routeID = routeService.addRoute(userID, fileName, fileGPX);
-            return "redirect:/merkator/user/" + userID + "/route/" + routeID;
-        } catch (IOException e) {
-            return e.toString();
-        }
-    }
+//    @PostMapping("/{userID}/newroute")
+//    public String addRoute(@PathVariable("userID") ObjectId userID,
+//                           @RequestParam("file") MultipartFile file,
+//                            @RequestParam("fileName") String fileName)
+//            throws IOException {
+//        // save the route to the repo
+//        try {
+//            GPX fileGPX = GpxBuilder.convertMultipartFileToGPX(file);
+//
+//            ObjectId routeID = routeService.addRoute(userID, fileName, fileGPX);
+//            return "redirect:/merkator/user/" + userID + "/route/" + routeID;
+//        } catch (IOException e) {
+//            return e.toString();
+//        }
+//    }
 
     //TODO: decide if function is needed
     // add a new route with no file

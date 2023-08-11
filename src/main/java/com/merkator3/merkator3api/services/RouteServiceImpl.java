@@ -3,8 +3,12 @@ package com.merkator3.merkator3api.services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.merkator3.merkator3api.GpxTools.GpxBuilder;
+import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
+import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
 import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.models.RouteResponse;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import io.jenetics.jpx.GPX;
@@ -14,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,6 +35,8 @@ public class RouteServiceImpl implements RouteService{
     private RouteRepository routeRepository;
     @Autowired
     private final UserRepository  userRepository;
+    private final GpxDistanceCalculator gpxDistCalc = new GpxDistanceCalculator();
+    private final GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
 
     public RouteServiceImpl(RouteRepository routeRepository, UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -37,17 +45,19 @@ public class RouteServiceImpl implements RouteService{
 
     // with file
     @Override
-    public ObjectId addRoute(ObjectId userID, String routeName, GPX gpx) throws IOException {
-        // create and save the route to the repo
+    public ObjectId addRoute(ObjectId userID, String routeName, MultipartFile file) throws IOException {
+        MerkatorUser user = userRepository.findById(userID);
+
+        GPX fileGPX = GpxBuilder.convertMultipartFileToGPX(file);
+
         Route route = new Route(routeName);
-        route.setRouteGpxString(gpx);
-        route.setRouteDescription(String.valueOf(gpx.getMetadata().flatMap(Metadata::getDescription)));
+        route.setRouteGpxString(fileGPX);
+        route.setRouteDescription(String.valueOf(fileGPX.getMetadata().flatMap(Metadata::getDescription)));
         route = routeRepository.save(route);
 
-        // add the route to the user's routes
-        MerkatorUser user = userRepository.findById(userID);
         user.addRoute(route.getId());
         userRepository.save(user);
+
         return route.getId();
     }
 
@@ -80,6 +90,45 @@ public class RouteServiceImpl implements RouteService{
                 .map(ObjectId::toString)
                 .collect(Collectors.toList());
         return routeRepository.findAllById(routeIdsString);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RouteResponse getRouteResponse(ObjectId routeId) throws IOException {
+        Route route = routeRepository.findById(routeId);
+        GPX routeGpx = route.getRouteGpx();
+
+        try {
+            return new RouteResponse(
+                    route.getId(),
+                    route.getRouteName(),
+                    route.getRouteDescription(),
+                    gpxDistCalc.lengthToKm(
+                            gpxDistCalc.calculateDistance(
+                                    routeGpx)),
+                    gpxElevCalc.calculateElevationGain(routeGpx),
+                    gpxElevCalc.calculateElevationLoss(routeGpx),
+                    getRouteGpxAsJSON(route.getId())
+            );
+        } catch (IOException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RouteResponse> getRouteResponsesForUser(ObjectId id) {
+        List<Route> routes = getUserRoutes(id);
+
+        return routes.stream()
+                .map(route -> {
+                    try {
+                        return getRouteResponse(route.getId());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     public static String convertXmlToJson(String xml) throws IOException {
