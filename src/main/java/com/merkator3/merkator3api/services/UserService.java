@@ -13,9 +13,5 @@ public interface UserService {
 
     MerkatorUser getUser(ObjectId userId);
 
-    List<Route> getUserRoutes(ObjectId userId);
-
-    List<Trip> getUserTrips(ObjectId userId);
-
     MerkatorUser findByEmail(String email);
 }

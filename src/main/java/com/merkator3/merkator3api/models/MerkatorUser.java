@@ -27,11 +27,8 @@ import java.util.List;
 public class MerkatorUser implements UserDetails {
 
     @Id private ObjectId id;
-
     @Field("email") private String email;
-
     @Field("name") private String name;
-
     @Field("password") private String password;
     @Field("userRoutes") private List<ObjectId> userRoutes;
     @Field("userTrips") private List<ObjectId> userTrips;

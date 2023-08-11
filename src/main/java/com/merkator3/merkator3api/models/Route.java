@@ -1,21 +1,14 @@
 package com.merkator3.merkator3api.models;
 
-import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import io.jenetics.jpx.GPX;
-import io.jenetics.jpx.Length;
-import io.jenetics.jpx.Metadata;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 
 
 @Document(collection = "routes")
@@ -61,7 +54,7 @@ public class Route {
         return gpx;
     }
 
-    public void setRouteGpx(GPX routeGpx) throws IOException {
+    public void setRouteGpxString(GPX routeGpx) throws IOException {
         Path tempFile = Files.createTempFile("gpx", ".xml");
         GPX.write(routeGpx, tempFile);
 
@@ -76,8 +69,18 @@ public class Route {
     }
 
     public String getRouteGpxString() throws IOException {
-        System.out.println(this.routeGpxString);
+        //System.out.println(this.routeGpxString);
         return this.routeGpxString;
+    }
+
+    @Override
+    public String toString() {
+        return "Route{" +
+                "id=" + id +
+                ", routeName='" + routeName + '\'' +
+                ", routeDescription='" + routeDescription + '\'' +
+                ", routeGpxString='" + routeGpxString + '\'' +
+                '}';
     }
 
 

@@ -105,12 +105,12 @@ public class UserController {
             throws IOException, JSONException {
         return routeService.getRouteGpxAsJSON(routeID);
     }
-
+    //TODO: marked for removal.
     // get a list of the user's routes
-    @GetMapping("/{userID}/routes")
-    public List<Route> getUserRoutes(@PathVariable("userID") ObjectId userID) {
-        return userService.getUserRoutes(userID);
-    }
+//    @GetMapping("/{userID}/routes")
+//    public List<Route> getUserRoutes(@PathVariable("userID") ObjectId userID) {
+//        return userService.getUserRoutes(userID);
+//    }
 
     // ADDING & RETRIEVING TRIPS
 
@@ -133,9 +133,9 @@ public class UserController {
         ObjectId objRouteID = new ObjectId(routeID);
         return tripService.addRouteToTrip(tripID, objRouteID);
     }
-
-    @GetMapping("/{userID}/trips")
-    public List<Trip> getUserTrips(@PathVariable("userID") ObjectId userID) {
-        return userService.getUserTrips(userID);
-    }
+    //TODO: marked for removal.
+//    @GetMapping("/{userID}/trips")
+//    public List<Trip> getUserTrips(@PathVariable("userID") ObjectId userID) {
+//        return userService.getUserTrips(userID);
+//    }
 }

@@ -49,26 +49,6 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<Route> getUserRoutes(ObjectId userId) {
-        MerkatorUser user = userRepository.findById(userId);
-        List<ObjectId> userRouteIds = user.getUserRoutes();
-        List<String> routeIdsString = userRouteIds.stream()
-                .map(ObjectId::toString)
-                .collect(Collectors.toList());
-        return routeRepository.findAllById(routeIdsString);
-    }
-
-    @Override
-    public List<Trip> getUserTrips(ObjectId userId) {
-        MerkatorUser user = userRepository.findById(userId);
-        List<ObjectId> userTripIds = user.getUserTrips();
-        List<String> tripIdsString = userTripIds.stream()
-                .map(ObjectId::toString)
-                .collect(Collectors.toList());
-        return tripRepository.findAllById(tripIdsString);
-    }
-
-    @Override
     public MerkatorUser findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

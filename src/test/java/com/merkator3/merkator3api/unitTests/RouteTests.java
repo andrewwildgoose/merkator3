@@ -30,7 +30,7 @@ public class RouteTests {
     void testGPXAdded() throws IOException {
         Path path = Path.of("src/test/TestFiles/GPX/London to Brighton Return.gpx");
         GPX routeGPX = GPX.read(path);
-        testRoute.setRouteGpx(routeGPX);
+        testRoute.setRouteGpxString(routeGPX);
         System.out.println(testRoute.getRouteGpxString());
         Assertions.assertEquals(routeGPX.getTracks().toString(), testRoute.getRouteGpx().getTracks().toString());
     }

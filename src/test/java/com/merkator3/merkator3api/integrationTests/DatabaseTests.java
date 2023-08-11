@@ -62,7 +62,7 @@ public class DatabaseTests {
         GPX routeGPX = GPX.read(path);
 
         // Set the GPX on the test route
-        DBTestRouteGPX.setRouteGpx(routeGPX);
+        DBTestRouteGPX.setRouteGpxString(routeGPX);
 
         // Save the test route to the repository
         routeRepository.save(DBTestRouteGPX);

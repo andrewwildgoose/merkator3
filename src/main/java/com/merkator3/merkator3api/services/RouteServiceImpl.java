@@ -1,6 +1,5 @@
 package com.merkator3.merkator3api.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -13,7 +12,6 @@ import io.jenetics.jpx.Metadata;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +40,7 @@ public class RouteServiceImpl implements RouteService{
     public ObjectId addRoute(ObjectId userID, String routeName, GPX gpx) throws IOException {
         // create and save the route to the repo
         Route route = new Route(routeName);
-        route.setRouteGpx(gpx);
+        route.setRouteGpxString(gpx);
         route.setRouteDescription(String.valueOf(gpx.getMetadata().flatMap(Metadata::getDescription)));
         route = routeRepository.save(route);
 
@@ -55,10 +53,7 @@ public class RouteServiceImpl implements RouteService{
 
     @Override
     public Route getRoute(ObjectId id) throws IOException {
-
-        Route route = routeRepository.findById(id);
-
-        return route;
+        return routeRepository.findById(id);
     }
 
     @Override
