@@ -30,6 +30,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private TripRepository tripRepository;
 
+    @Autowired
+    private RouteService routeService;
+
     public UserServiceImpl(UserRepository userRepository, RouteRepository routeRepository) {
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
@@ -51,6 +54,23 @@ public class UserServiceImpl implements UserService{
     @Override
     public MerkatorUser findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public boolean deleteRoute(ObjectId userId, ObjectId routeId) {
+        MerkatorUser user = userRepository.findById(userId);
+        if (user != null && user.getUserRoutes().contains(routeId)) {
+            // Delete the route from the route repository
+            boolean success = routeService.deleteRoute(routeId);
+
+            if (success) {
+                // Remove routeId from the user's userRoutes list
+                user.getUserRoutes().remove(routeId);
+                userRepository.save(user);
+                return true; // Route deleted successfully
+            }
+        }
+        return false; // Either user not found or route deletion failed
     }
 
 

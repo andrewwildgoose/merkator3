@@ -25,4 +25,8 @@ public interface RouteService {
     RouteResponse getRouteResponse(ObjectId routeId) throws IOException;
 
     List<RouteResponse> getRouteResponsesForUser(ObjectId id);
+
+    boolean routeBelongsToUser(ObjectId userId, ObjectId routeId);
+
+    boolean deleteRoute(ObjectId routeId);
 }

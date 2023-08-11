@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -129,6 +130,29 @@ public class RouteServiceImpl implements RouteService{
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+
+    @Override
+    public boolean routeBelongsToUser(ObjectId userId, ObjectId routeId) {
+        Route route = routeRepository.findById(routeId);
+        MerkatorUser user = userRepository.findById(userId);
+        return user.getUserRoutes().contains(routeId);
+    }
+
+    @Override
+    public boolean deleteRoute(ObjectId routeId) {
+        try {
+            Route route = routeRepository.findById(routeId);
+            if (route == null) {
+                return false; // Route not found
+            }
+            // Remove route from route repository
+            routeRepository.deleteById(String.valueOf(routeId));
+            return true; // Route deleted successfully
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static String convertXmlToJson(String xml) throws IOException {

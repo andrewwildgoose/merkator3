@@ -88,4 +88,21 @@ public class UserController2 {
         RouteResponse routeResponse = routeService.getRouteResponse(routeId);
         return ResponseEntity.ok(routeResponse);
     }
+
+    @DeleteMapping("/route/{routeId}")
+    public ResponseEntity<String> deleteRoute(@AuthenticationPrincipal UserDetails userDetails,
+                                                @PathVariable("routeId") ObjectId routeId) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+
+        if (!routeService.routeBelongsToUser(user.getId(), routeId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Route does not belong to the user.");
+        }
+
+        boolean success = userService.deleteRoute(user.getId(), routeId);
+        if (success) {
+            return ResponseEntity.ok("Route deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting route.");
+        }
+    }
 }
