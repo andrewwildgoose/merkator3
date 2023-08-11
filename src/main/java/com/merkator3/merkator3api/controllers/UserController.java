@@ -62,7 +62,8 @@ public class UserController {
 
     // add a new route with a gpx file
     @PostMapping("/{userID}/newroute")
-    public String addRoute(@PathVariable("userID") ObjectId userID, @RequestParam("file") MultipartFile file,
+    public String addRoute(@PathVariable("userID") ObjectId userID,
+                           @RequestParam("file") MultipartFile file,
                             @RequestParam("fileName") String fileName)
             throws IOException {
         // save the route to the repo

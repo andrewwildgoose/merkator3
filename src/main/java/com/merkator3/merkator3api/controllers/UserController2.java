@@ -80,7 +80,7 @@ public class UserController2 {
 
             return ResponseEntity.created(routeLocation).body("Route added successfully.");
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding route.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding route: " + e);
         }
     }
 
