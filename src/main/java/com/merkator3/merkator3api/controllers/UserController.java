@@ -115,11 +115,12 @@ public class UserController {
 
     // ADDING & RETRIEVING TRIPS
 
+    //TODO: marked for removal
     // create a new trip
-    @PostMapping("/{userID}/newtrip")
-    public Trip addTrip(@PathVariable("userID") ObjectId userID, @RequestBody String tripName) {
-        return tripService.addTrip(userID, tripName);
-    }
+//    @PostMapping("/{userID}/newtrip")
+//    public Trip addTrip(@PathVariable("userID") ObjectId userID, @RequestBody String tripName) {
+//        return tripService.addTrip(userID, tripName);
+//    }
 
     // get a trip by ID
     @GetMapping("/{userID}/trip/{tripID}")
@@ -127,13 +128,14 @@ public class UserController {
         return tripService.getTrip(tripID);
     }
 
+    //TODO: marked for removal.
     // add a route to a trip
-    @PostMapping("{userID}/trip/{tripID}/addroute")
-    public Trip addRouteToTrip(@PathVariable("userID") ObjectId userID, @PathVariable("tripID") ObjectId tripID,
-                                @RequestBody String routeID) {
-        ObjectId objRouteID = new ObjectId(routeID);
-        return tripService.addRouteToTrip(tripID, objRouteID);
-    }
+//    @PostMapping("{userID}/trip/{tripID}/addroute")
+//    public Trip addRouteToTrip(@PathVariable("userID") ObjectId userID, @PathVariable("tripID") ObjectId tripID,
+//                                @RequestBody String routeID) {
+//        ObjectId objRouteID = new ObjectId(routeID);
+//        return tripService.addRouteToTrip(tripID, objRouteID);
+//    }
     //TODO: marked for removal.
 //    @GetMapping("/{userID}/trips")
 //    public List<Trip> getUserTrips(@PathVariable("userID") ObjectId userID) {

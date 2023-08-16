@@ -6,21 +6,16 @@ import com.merkator3.merkator3api.models.Route;
 import com.merkator3.merkator3api.models.Trip;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class TripCalculator {
 
-    private final Trip trip;
-    private final List<Route> tripRoutes;
-
-    public TripCalculator(Trip trip) {
-        this.trip = trip;
-        this.tripRoutes = trip.getTripRoutes();
-    }
-    public Double totalDistance() {
+    public Double totalDistance(Trip trip) {
+        List<Route> tripRoutes = trip.getTripRoutes();
         GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
 
-        return tripRoutes.stream()
+        double totalDistance = tripRoutes.stream()
                 .mapToDouble(route -> {
                     try {
                         return distCalc.lengthToKm(distCalc.calculateDistance(route.getRouteGpx()));
@@ -29,9 +24,16 @@ public class TripCalculator {
                     }
                 })
                 .sum();
-    }
 
-    public Double totalElevationGain() {
+        // Format the total distance to two decimal places
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        String formattedTotalDistance = decimalFormat.format(totalDistance);
+
+        // Parse the formatted string back to a double
+        return Double.parseDouble(formattedTotalDistance);
+    }
+    public Double totalElevationGain(Trip trip) {
+        List<Route> tripRoutes = trip.getTripRoutes();
         GpxElevationCalculator elevCalc = new GpxElevationCalculator();
         return tripRoutes.stream()
                 .mapToDouble(route -> {
@@ -44,7 +46,8 @@ public class TripCalculator {
                 .sum();
     }
 
-    public Double totalElevationLoss() {
+    public Double totalElevationLoss(Trip trip) {
+        List<Route> tripRoutes = trip.getTripRoutes();
         GpxElevationCalculator elevCalc = new GpxElevationCalculator();
         return tripRoutes.stream()
                 .mapToDouble(route -> {

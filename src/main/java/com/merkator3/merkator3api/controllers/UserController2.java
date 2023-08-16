@@ -1,10 +1,7 @@
 package com.merkator3.merkator3api.controllers;
 
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
-import com.merkator3.merkator3api.models.MerkatorUser;
-import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.RouteResponse;
-import com.merkator3.merkator3api.models.Trip;
+import com.merkator3.merkator3api.models.*;
 import com.merkator3.merkator3api.services.RouteService;
 import com.merkator3.merkator3api.services.TripService;
 import com.merkator3.merkator3api.services.UserService;
@@ -53,13 +50,6 @@ public class UserController2 {
         return ResponseEntity.ok(routeResponses);
     }
 
-    // Return a list of the user's trips
-    @GetMapping("/trips")
-    public ResponseEntity<List<Trip>> getUserTrips(@AuthenticationPrincipal UserDetails userDetails) {
-        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
-        List<Trip> trips = tripService.getUserTrips(user.getId());
-        return ResponseEntity.ok(trips);
-    }
 
     // Add a new route to the user's routes
     @PostMapping("/new_route")
@@ -103,6 +93,57 @@ public class UserController2 {
             return ResponseEntity.ok("Route deleted successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting route.");
+        }
+    }
+
+    // Return a list of the user's trips
+    @GetMapping("/trips")
+    public ResponseEntity<List<TripResponse>> getUserTrips(@AuthenticationPrincipal UserDetails userDetails) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+        List<Trip> trips = tripService.getUserTrips(user.getId());
+
+        List<TripResponse> tripResponses = trips.stream()
+                .map(trip -> tripService.getTripResponse(trip.getId()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(tripResponses);
+    }
+
+    @PostMapping("/new_trip")
+    public ResponseEntity<String> addTrip(@AuthenticationPrincipal UserDetails userDetails,
+                                            @RequestBody String tripName) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+
+        ObjectId tripID = tripService.addTrip(user.getId(), tripName);
+
+        URI tripLocation = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("trip/{id}")
+                .buildAndExpand(tripID)
+                .toUri();
+
+        return ResponseEntity.created(tripLocation).body("Trip added successfully.");
+    }
+
+    @GetMapping("/trip/{id}")
+    public ResponseEntity<TripResponse> getTrip(@AuthenticationPrincipal UserDetails userDetails, @PathVariable("id") ObjectId tripId) throws IOException {
+        TripResponse tripResponse = tripService.getTripResponse(tripId);
+        return ResponseEntity.ok(tripResponse);
+    }
+
+    @PostMapping("/trip/add_route")
+    public ResponseEntity<String> addRouteToTrip(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AddRouteToTripRequest request) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+        ObjectId tripID = request.getTripId();
+        if (!tripService.tripBelongsToUser(user.getId(), tripID)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Trip does not belong to the user.");
+        }
+        ObjectId routeID = request.getRouteId();
+
+        boolean success = tripService.addRouteToTrip(tripID, routeID);
+        if (success) {
+            return ResponseEntity.ok("Route added to trip.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding route to trip.");
         }
     }
 }
