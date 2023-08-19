@@ -8,6 +8,7 @@ import org.bson.types.ObjectId;
 @Builder
 public class RouteResponse {
     private ObjectId id;
+    private String idString;
     private String routeName;
     private String routeDescription;
     private Double routeLength;
@@ -15,11 +16,12 @@ public class RouteResponse {
     private int routeElevationLoss;
     private String routeGpxString;
 
-    public RouteResponse(ObjectId id, String routeName,
+    public RouteResponse(ObjectId id, String idString, String routeName,
                             String routeDescription, Double routeLength,
                             int routeElevationGain, int routeElevationLoss,
                             String routeGpxString) {
         this.id = id;
+        this.idString = idString;
         this.routeName = routeName;
         this.routeDescription = routeDescription;
         this.routeLength = routeLength;

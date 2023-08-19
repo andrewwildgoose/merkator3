@@ -102,6 +102,7 @@ public class RouteServiceImpl implements RouteService{
         try {
             return new RouteResponse(
                     route.getId(),
+                    route.getId().toString(),
                     route.getRouteName(),
                     route.getRouteDescription(),
                     gpxDistCalc.lengthToKm(

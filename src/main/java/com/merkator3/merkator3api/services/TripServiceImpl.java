@@ -85,7 +85,7 @@ public class TripServiceImpl implements TripService {
         Trip trip = tripRepository.findById(tripId);
 
         if (trip.getTripRoutes().isEmpty()) { //return trip currently holding no routes
-            return new TripResponse(tripId, trip.getTripName());
+            return new TripResponse(tripId, tripId.toString(), trip.getTripName());
         } else { // populate the trip response with the corresponding route data
             Double tripLength = tripCalc.totalDistance(trip);
             Double tripElevationGain = tripCalc.totalElevationGain(trip);
@@ -104,6 +104,7 @@ public class TripServiceImpl implements TripService {
                     .collect(Collectors.toList());
             return new TripResponse(
                     tripId,
+                    tripId.toString(),
                     trip.getTripName(),
                     trip.getTripDescription(),
                     tripLength,

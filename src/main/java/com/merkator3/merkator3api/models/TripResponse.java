@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public class TripResponse {
     private ObjectId id;
+    private String idString;
     private String tripName;
     private String tripDescription;
     private Double tripLength;
@@ -18,15 +19,17 @@ public class TripResponse {
     private List<String> tripRouteNames;
     private List<String> tripGpxStrings;
 
-    public TripResponse(ObjectId id, String tripName) {
+    public TripResponse(ObjectId id, String idString, String tripName) {
         this.id = id;
+        this.idString = idString;
         this.tripName = tripName;
     }
-    public TripResponse(ObjectId id, String tripName,
+    public TripResponse(ObjectId id, String idString, String tripName,
                         String tripDescription, Double tripLength,
                         Double tripElevationGain, Double tripElevationLoss, List<String> tripRouteNames,
                         List<String> tripGpxStrings) {
         this.id = id;
+        this.idString = idString;
         this.tripName = tripName;
         this.tripDescription = tripDescription;
         this.tripLength = tripLength;
