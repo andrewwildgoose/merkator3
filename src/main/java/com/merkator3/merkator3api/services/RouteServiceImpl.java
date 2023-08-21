@@ -15,6 +15,7 @@ import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.Metadata;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class RouteServiceImpl implements RouteService{
     private final GpxDistanceCalculator gpxDistCalc = new GpxDistanceCalculator();
     private final GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
 
+    @Value("${merkator.api.mapBoxKey}")
+    private String mapBoxKey;
+
     public RouteServiceImpl(RouteRepository routeRepository, UserRepository userRepository) {
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
@@ -54,6 +58,7 @@ public class RouteServiceImpl implements RouteService{
         Route route = new Route(routeName);
         route.setRouteGpxString(fileGPX);
         route.setRouteDescription(String.valueOf(fileGPX.getMetadata().flatMap(Metadata::getDescription)));
+        route.setRouteStaticMapURL(mapBoxKey);
         route = routeRepository.save(route);
 
         user.addRoute(route.getId());

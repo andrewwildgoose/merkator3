@@ -18,4 +18,6 @@ public interface TripService {
     TripResponse getTripResponse(ObjectId tripId);
 
     boolean tripBelongsToUser(ObjectId id, ObjectId tripID);
+
+    boolean deleteTrip(ObjectId tripId);
 }

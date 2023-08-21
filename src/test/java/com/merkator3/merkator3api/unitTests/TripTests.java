@@ -41,22 +41,22 @@ public class TripTests {
 
     @Test
     void testCalculateTripDistance() {
-        TripCalculator tripCalculator = new TripCalculator(testTrip1);
-        Double tripDist = tripCalculator.totalDistance();
+        TripCalculator tripCalculator = new TripCalculator();
+        Double tripDist = tripCalculator.totalDistance(testTrip1);
         Assertions.assertEquals(347.17, tripDist);
     }
 
     @Test
     void testCalculateTripElevationGain() {
-        TripCalculator tripCalculator = new TripCalculator(testTrip1);
-        Double tripElevGain = tripCalculator.totalElevationGain();
+        TripCalculator tripCalculator = new TripCalculator();
+        Double tripElevGain = tripCalculator.totalElevationGain(testTrip1);
         Assertions.assertEquals(660, tripElevGain);
     }
 
     @Test
     void testCalculateTripElevationLoss() {
-        TripCalculator tripCalculator = new TripCalculator(testTrip1);
-        Double tripElevLoss = tripCalculator.totalElevationLoss();
+        TripCalculator tripCalculator = new TripCalculator();
+        Double tripElevLoss = tripCalculator.totalElevationLoss(testTrip1);
         Assertions.assertEquals(684.0, tripElevLoss);
     }
 

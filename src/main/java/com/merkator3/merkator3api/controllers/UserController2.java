@@ -146,4 +146,21 @@ public class UserController2 {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding route to trip.");
         }
     }
+
+    @DeleteMapping("/trip/{tripId}")
+    public ResponseEntity<String> deleteTrip(@AuthenticationPrincipal UserDetails userDetails,
+                                                @PathVariable("tripId") ObjectId tripId) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+
+        if (!tripService.tripBelongsToUser(user.getId(), tripId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Trip does not belong to the user.");
+        }
+
+        boolean success = userService.deleteTrip(user.getId(), tripId);
+        if (success) {
+            return ResponseEntity.ok("Trip deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting trip.");
+        }
+    }
 }

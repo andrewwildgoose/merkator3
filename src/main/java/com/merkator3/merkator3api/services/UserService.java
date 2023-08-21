@@ -16,4 +16,6 @@ public interface UserService {
     MerkatorUser findByEmail(String email);
 
     boolean deleteRoute(ObjectId userId, ObjectId routeId);
+
+    boolean deleteTrip(ObjectId userId, ObjectId tripId);
 }

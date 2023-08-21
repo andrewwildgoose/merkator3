@@ -84,7 +84,7 @@ public class TripServiceImpl implements TripService {
 
         Trip trip = tripRepository.findById(tripId);
 
-        if (trip.getTripRoutes().isEmpty()) { //return trip currently holding no routes
+        if (trip.getTripRoutes() == null) { //return trip currently holding no routes
             return new TripResponse(tripId, tripId.toString(), trip.getTripName());
         } else { // populate the trip response with the corresponding route data
             Double tripLength = tripCalc.totalDistance(trip);
@@ -121,5 +121,20 @@ public class TripServiceImpl implements TripService {
         Trip trip = tripRepository.findById(tripID);
         MerkatorUser user = userRepository.findById(userID);
         return user.getUserTrips().contains(tripID);
+    }
+
+    @Override
+    public boolean deleteTrip(ObjectId tripId) {
+        try {
+            Trip trip = tripRepository.findById(tripId);
+            if (trip == null) {
+                return false; // Route not found
+            }
+            // Remove route from route repository
+            tripRepository.deleteById(String.valueOf(tripId));
+            return true; // Route deleted successfully
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
