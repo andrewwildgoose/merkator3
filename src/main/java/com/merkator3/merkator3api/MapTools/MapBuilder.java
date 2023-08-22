@@ -4,6 +4,7 @@ import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.utils.PolylineUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -35,6 +36,8 @@ public class MapBuilder {
 
         Random random = new Random();
 
+        List<StaticPolylineAnnotation> routePolyLines = new ArrayList<>();
+
 
         MapboxStaticMap.Builder mapBuilder = MapboxStaticMap.builder()
                 .accessToken(mapBoxKey)
@@ -52,27 +55,36 @@ public class MapBuilder {
                     .collect(Collectors.toList());
 
             //Reduce the number of points to fit URL length constraints
-            List<Point> simplifiedPoints = simplify(points, 0.0175);
+            List<Point> simplifiedPoints = simplify(points, 0.00175);
             LineString lineString = LineString.fromLngLats(simplifiedPoints);
 
-            // Generate a random color
-            int red = random.nextInt(255);
-            int green = random.nextInt(255);
-            int blue = random.nextInt(255);
 
-            // Save the RGB values for consistent colouring of this route.
-            route.setMapLineColor(red, green, blue);
+            if (route.getMapLineColor() == null) {
+                // Generate a random color if the route does not yet have a colour
+                int red = random.nextInt(255);
+                int green = random.nextInt(255);
+                int blue = random.nextInt(255);
+
+                // Save the RGB values for consistent colouring of this route.
+                route.setMapLineColor(red, green, blue);
+            }
+
 
             StaticPolylineAnnotation polylineAnnotation = StaticPolylineAnnotation.builder()
                     .polyline(PolylineUtils.encode(simplifiedPoints, 5))
-                    .strokeColor(red,green,blue)
+                    .strokeColor(
+                            route.getMapLineColor().get(0),
+                            route.getMapLineColor().get(1),
+                            route.getMapLineColor().get(2)
+                    )
                     .strokeOpacity(0.9F)
                     .strokeWidth(6.0)
                     .build();
+            routePolyLines.add(polylineAnnotation);
 
-            mapBuilder.staticPolylineAnnotations(Collections.singletonList(polylineAnnotation));
+
         }
-
+        mapBuilder.staticPolylineAnnotations(routePolyLines);
         MapboxStaticMap staticMap = mapBuilder.build();
         return staticMap.url().toString();
     }

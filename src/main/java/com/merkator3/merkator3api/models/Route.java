@@ -1,10 +1,8 @@
 package com.merkator3.merkator3api.models;
 
-import com.mapbox.api.staticmap.v1.MapboxStaticMap;
 import com.merkator3.merkator3api.MapTools.MapBuilder;
 import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -12,10 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 
 @Document(collection = "routes")
@@ -25,7 +20,7 @@ public class Route {
     @Field("routeDescription") private String routeDescription;
     @Field("routeGPXString") private String routeGpxString;
     @Field("mapLineColor") private List<Integer> mapLineColor;
-    @Field("routeStaticMapURL") private String routeStaticMapURL;
+    @Field("routeStaticMapURL") private String routeStaticMapUrl;
 
 
     public Route(String routeName) {
@@ -94,14 +89,17 @@ public class Route {
     }
 
 
-    public void setRouteStaticMapURL(String mapBoxKey) {
+    public void setRouteStaticMapUrl(String mapBoxKey) {
         List<Route> singleRouteList = List.of(this);
         MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
-        this.routeStaticMapURL = mapBuilder.generateStaticMapImageUrl(singleRouteList);
+        this.routeStaticMapUrl = mapBuilder.generateStaticMapImageUrl(singleRouteList);
     }
 
-    public String getRouteStaticMapURL() {
-        return this.routeStaticMapURL;
+    public String getRouteStaticMapURL(String mapBoxKey) {
+        if (this.routeStaticMapUrl == null) {
+            this.setRouteStaticMapUrl(mapBoxKey);
+        }
+        return this.routeStaticMapUrl;
     }
 
     public List<Integer> getMapLineColor() {

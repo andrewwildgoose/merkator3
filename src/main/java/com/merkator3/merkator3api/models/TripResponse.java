@@ -18,6 +18,7 @@ public class TripResponse {
     private Double tripElevationLoss;
     private List<String> tripRouteNames;
     private List<String> tripGpxStrings;
+    private String tripStaticMapUrl;
 
     public TripResponse(ObjectId id, String idString, String tripName) {
         this.id = id;
@@ -27,7 +28,7 @@ public class TripResponse {
     public TripResponse(ObjectId id, String idString, String tripName,
                         String tripDescription, Double tripLength,
                         Double tripElevationGain, Double tripElevationLoss, List<String> tripRouteNames,
-                        List<String> tripGpxStrings) {
+                        List<String> tripGpxStrings, String tripStaticMapUrl) {
         this.id = id;
         this.idString = idString;
         this.tripName = tripName;
@@ -37,5 +38,6 @@ public class TripResponse {
         this.tripElevationLoss = tripElevationLoss;
         this.tripGpxStrings = tripGpxStrings;
         this.tripRouteNames = tripRouteNames;
+        this.tripStaticMapUrl = tripStaticMapUrl;
     }
 }

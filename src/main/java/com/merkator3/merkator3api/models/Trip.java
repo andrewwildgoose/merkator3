@@ -1,5 +1,6 @@
 package com.merkator3.merkator3api.models;
 
+import com.merkator3.merkator3api.MapTools.MapBuilder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,6 +16,7 @@ public class Trip {
     @Field("tripName") private String tripName;
     @Field("tripDescription") private String tripDescription;
     @Field("tripRoutes") private List<Route> tripRoutes;
+    @Field("tripStaticMapURL") private String tripStaticMapUrl;
 
     public Trip(String tripName){
         this.tripName = tripName;
@@ -55,4 +57,15 @@ public class Trip {
         tripRoutes.add(route);
     }
 
+    public void setTripStaticMapUrl(String mapBoxKey) {
+        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
+        this.tripStaticMapUrl = mapBuilder.generateStaticMapImageUrl(this.tripRoutes);
+    }
+
+    public String getTripStaticMapUrl(String mapBoxKey) {
+        if (this.tripStaticMapUrl == null) {
+            this.setTripStaticMapUrl(mapBoxKey);
+        }
+        return this.tripStaticMapUrl;
+    }
 }

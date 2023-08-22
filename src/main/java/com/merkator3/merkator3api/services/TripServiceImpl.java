@@ -7,6 +7,7 @@ import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,8 @@ public class TripServiceImpl implements TripService {
     private final UserRepository userRepository;
     @Autowired
     private final RouteService routeService;
+    @Value("${merkator.api.mapBoxKey}")
+    private String mapBoxKey;
 
     private final TripCalculator tripCalc = new TripCalculator();
 
@@ -62,6 +65,7 @@ public class TripServiceImpl implements TripService {
 
             if (trip != null && route != null) {
                 trip.addRoute(route);
+                trip.setTripStaticMapUrl(mapBoxKey);
                 tripRepository.save(trip);
                 return true;
             }
@@ -111,7 +115,8 @@ public class TripServiceImpl implements TripService {
                     tripElevationGain,
                     tripElevationLoss,
                     tripRouteNames,
-                    tripGpxStrings
+                    tripGpxStrings,
+                    trip.getTripStaticMapUrl(mapBoxKey)
             );
         }
     }

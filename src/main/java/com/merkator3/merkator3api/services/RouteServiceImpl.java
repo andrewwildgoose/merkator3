@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +57,7 @@ public class RouteServiceImpl implements RouteService{
         Route route = new Route(routeName);
         route.setRouteGpxString(fileGPX);
         route.setRouteDescription(String.valueOf(fileGPX.getMetadata().flatMap(Metadata::getDescription)));
-        route.setRouteStaticMapURL(mapBoxKey);
+        route.setRouteStaticMapUrl(mapBoxKey);
         route = routeRepository.save(route);
 
         user.addRoute(route.getId());
@@ -99,7 +98,7 @@ public class RouteServiceImpl implements RouteService{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional()
     public RouteResponse getRouteResponse(ObjectId routeId) throws IOException {
         Route route = routeRepository.findById(routeId);
         GPX routeGpx = route.getRouteGpx();
@@ -115,7 +114,8 @@ public class RouteServiceImpl implements RouteService{
                                     routeGpx)),
                     gpxElevCalc.calculateElevationGain(routeGpx),
                     gpxElevCalc.calculateElevationLoss(routeGpx),
-                    getRouteGpxAsJSON(route.getId())
+                    getRouteGpxAsJSON(route.getId()),
+                    route.getRouteStaticMapURL(mapBoxKey)
             );
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
@@ -123,7 +123,7 @@ public class RouteServiceImpl implements RouteService{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional()
     public List<RouteResponse> getRouteResponsesForUser(ObjectId id) {
         List<Route> routes = getUserRoutes(id);
 
