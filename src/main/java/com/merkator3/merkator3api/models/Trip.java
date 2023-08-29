@@ -1,71 +1,29 @@
 package com.merkator3.merkator3api.models;
 
-import com.merkator3.merkator3api.MapTools.MapBuilder;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "trips")
-public class Trip {
+/**
+ * A Trip is a collection of Routes which the user wants to analyse together.
+ */
 
-    @Id private ObjectId id;
-    @Field("tripName") private String tripName;
-    @Field("tripDescription") private String tripDescription;
-    @Field("tripRoutes") private List<Route> tripRoutes;
-    @Field("tripStaticMapURL") private String tripStaticMapUrl;
+public interface Trip {
 
-    public Trip(String tripName){
-        this.tripName = tripName;
-    };
+    ObjectId getId();
 
-    public ObjectId getId() {
-        return id;
-    }
+    String getTripName();
 
-    public String getTripName() {
-        return tripName;
-    }
+    void setTripName(String tripName);
 
-    public void setTripName(String tripName) {
-        this.tripName = tripName;
-    }
+    String getTripDescription();
 
-    public String getTripDescription() {
-        return tripDescription;
-    }
+    void setTripDescription(String tripDescription);
 
-    public void setTripDescription(String tripDescription) {
-        this.tripDescription = tripDescription;
-    }
+    List<Route> getTripRoutes();
 
-    public List<Route> getTripRoutes() {
-        return tripRoutes;
-    }
+    void setTripRoutes(List<Route> tripRoutes);
 
-    public void setTripRoutes(List<Route> tripRoutes) {
-        this.tripRoutes = tripRoutes;
-    }
+    void setTripStaticMapUrl(String mapBoxKey);
 
-    public void addRoute(Route route){
-        if (tripRoutes == null) {
-            tripRoutes = new ArrayList<>();
-        }
-        tripRoutes.add(route);
-    }
-
-    public void setTripStaticMapUrl(String mapBoxKey) {
-        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
-        this.tripStaticMapUrl = mapBuilder.generateStaticMapImageUrl(this.tripRoutes);
-    }
-
-    public String getTripStaticMapUrl(String mapBoxKey) {
-        if (this.tripStaticMapUrl == null) {
-            this.setTripStaticMapUrl(mapBoxKey);
-        }
-        return this.tripStaticMapUrl;
-    }
+    String getTripStaticMapUrl(String mapBoxKey);
 }

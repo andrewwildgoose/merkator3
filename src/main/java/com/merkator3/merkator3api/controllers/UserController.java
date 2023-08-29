@@ -1,27 +1,20 @@
 package com.merkator3.merkator3api.controllers;
 
-import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import com.merkator3.merkator3api.models.MerkatorUser;
 import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.Trip;
+import com.merkator3.merkator3api.models.PlannedTrip;
 import com.merkator3.merkator3api.services.RouteService;
-import com.merkator3.merkator3api.services.RouteServiceImpl;
 import com.merkator3.merkator3api.services.TripService;
 import com.merkator3.merkator3api.services.UserService;
 
-import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -124,7 +117,7 @@ public class UserController {
 
     // get a trip by ID
     @GetMapping("/{userID}/trip/{tripID}")
-    public Trip getTrip(@PathVariable("userID") ObjectId userID, @PathVariable("tripID") ObjectId tripID) {
+    public PlannedTrip getTrip(@PathVariable("userID") ObjectId userID, @PathVariable("tripID") ObjectId tripID) {
         return tripService.getTrip(tripID);
     }
 

@@ -1,20 +1,13 @@
 package com.merkator3.merkator3api.services;
 
 import com.merkator3.merkator3api.models.MerkatorUser;
-import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.Trip;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service

@@ -43,37 +43,37 @@ public class TripServiceImpl implements TripService {
     @Override
     public ObjectId addTrip(ObjectId userID, String tripName) {
         // create and save the trip to the repo
-        Trip trip = new Trip(tripName);
-        tripRepository.save(trip);
+        PlannedTrip plannedTrip = new PlannedTrip(tripName);
+        tripRepository.save(plannedTrip);
 
         // save the trip to the user's trips
         MerkatorUser user = userRepository.findById(userID);
-        user.addTrip(trip.getId());
+        user.addTrip(plannedTrip.getId());
         userRepository.save(user);
-        return trip.getId();
+        return plannedTrip.getId();
     }
 
     @Override
-    public Trip getTrip(ObjectId id) {
+    public PlannedTrip getTrip(ObjectId id) {
         return tripRepository.findById(id);
     }
 
     @Override
     public boolean addRouteToTrip(ObjectId tripID, ObjectId routeID) {
-            Trip trip = tripRepository.findById(tripID);
+            PlannedTrip plannedTrip = tripRepository.findById(tripID);
             Route route = routeRepository.findById(routeID);
 
-            if (trip != null && route != null) {
-                trip.addRoute(route);
-                trip.setTripStaticMapUrl(mapBoxKey);
-                tripRepository.save(trip);
+            if (plannedTrip != null && route != null) {
+                plannedTrip.addRoute(route);
+                plannedTrip.setTripStaticMapUrl(mapBoxKey);
+                tripRepository.save(plannedTrip);
                 return true;
             }
             return false;
     }
 
     @Override
-    public List<Trip> getUserTrips(ObjectId userId) {
+    public List<PlannedTrip> getUserTrips(ObjectId userId) {
         MerkatorUser user = userRepository.findById(userId);
         List<ObjectId> userTripIds = user.getUserTrips();
         List<String> tripIdsString = userTripIds.stream()
@@ -82,22 +82,23 @@ public class TripServiceImpl implements TripService {
         return tripRepository.findAllById(tripIdsString);
     }
 
+    //Returns data relevant for populating a user's Trip Feed
     @Override
     @Transactional(readOnly = true)
     public TripResponse getTripResponse(ObjectId tripId) {
 
-        Trip trip = tripRepository.findById(tripId);
+        PlannedTrip plannedTrip = tripRepository.findById(tripId);
 
-        if (trip.getTripRoutes() == null) { //return trip currently holding no routes
-            return new TripResponse(tripId, tripId.toString(), trip.getTripName());
+        if (plannedTrip.getTripRoutes() == null) { //return trip currently holding no routes
+            return new TripResponse(tripId, tripId.toString(), plannedTrip.getTripName());
         } else { // populate the trip response with the corresponding route data
-            Double tripLength = tripCalc.totalDistance(trip);
-            Double tripElevationGain = tripCalc.totalElevationGain(trip);
-            Double tripElevationLoss = tripCalc.totalElevationLoss(trip);
-            List<String> tripRouteNames = trip.getTripRoutes().stream()
+            Double tripLength = tripCalc.totalDistance(plannedTrip);
+            Double tripElevationGain = tripCalc.totalElevationGain(plannedTrip);
+            Double tripElevationLoss = tripCalc.totalElevationLoss(plannedTrip);
+            List<String> tripRouteNames = plannedTrip.getTripRoutes().stream()
                     .map(Route::getRouteName)
                     .collect(Collectors.toList());
-            List<String> tripGpxStrings = trip.getTripRoutes().stream()
+            List<String> tripGpxStrings = plannedTrip.getTripRoutes().stream()
                     .map(route -> {
                         try {
                             return routeService.getRouteGpxAsJSON(route.getId());
@@ -109,21 +110,22 @@ public class TripServiceImpl implements TripService {
             return new TripResponse(
                     tripId,
                     tripId.toString(),
-                    trip.getTripName(),
-                    trip.getTripDescription(),
+                    plannedTrip.getTripName(),
+                    plannedTrip.getTripDescription(),
                     tripLength,
                     tripElevationGain,
                     tripElevationLoss,
                     tripRouteNames,
                     tripGpxStrings,
-                    trip.getTripStaticMapUrl(mapBoxKey)
+                    plannedTrip.getTripStaticMapUrl(mapBoxKey),
+                    plannedTrip.getTripRoutes().size()
             );
         }
     }
 
     @Override
     public boolean tripBelongsToUser(ObjectId userID, ObjectId tripID) {
-        Trip trip = tripRepository.findById(tripID);
+        PlannedTrip plannedTrip = tripRepository.findById(tripID);
         MerkatorUser user = userRepository.findById(userID);
         return user.getUserTrips().contains(tripID);
     }
@@ -131,8 +133,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public boolean deleteTrip(ObjectId tripId) {
         try {
-            Trip trip = tripRepository.findById(tripId);
-            if (trip == null) {
+            PlannedTrip plannedTrip = tripRepository.findById(tripId);
+            if (plannedTrip == null) {
                 return false; // Route not found
             }
             // Remove route from route repository
@@ -141,5 +143,14 @@ public class TripServiceImpl implements TripService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // Returns a list of the Trip's Route names & ids
+    @Override
+    public List<RouteMapping> getRouteMapping(ObjectId tripId) {
+        PlannedTrip plannedTrip = tripRepository.findById(tripId);
+        return plannedTrip.getTripRoutes().stream()
+                .map(route -> new RouteMapping(route.getId().toString(), route.getRouteName()))
+                .toList();
     }
 }

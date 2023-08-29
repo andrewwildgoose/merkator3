@@ -1,14 +1,11 @@
 package com.merkator3.merkator3api.controllers;
 
-import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import com.merkator3.merkator3api.models.*;
 import com.merkator3.merkator3api.services.RouteService;
 import com.merkator3.merkator3api.services.TripService;
 import com.merkator3.merkator3api.services.UserService;
-import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -100,9 +97,9 @@ public class UserController2 {
     @GetMapping("/trips")
     public ResponseEntity<List<TripResponse>> getUserTrips(@AuthenticationPrincipal UserDetails userDetails) {
         MerkatorUser user = userService.findByEmail(userDetails.getUsername());
-        List<Trip> trips = tripService.getUserTrips(user.getId());
+        List<PlannedTrip> plannedTrips = tripService.getUserTrips(user.getId());
 
-        List<TripResponse> tripResponses = trips.stream()
+        List<TripResponse> tripResponses = plannedTrips.stream()
                 .map(trip -> tripService.getTripResponse(trip.getId()))
                 .collect(Collectors.toList());
 
