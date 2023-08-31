@@ -5,15 +5,15 @@ import com.mapbox.geojson.Point;
 import com.mapbox.geojson.utils.PolylineUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.mapbox.api.staticmap.v1.MapboxStaticMap;
 import com.mapbox.api.staticmap.v1.models.StaticPolylineAnnotation;
-import com.mapbox.geojson.Feature;
+
 import static com.mapbox.geojson.utils.PolylineUtils.simplify;
 
+import com.merkator3.merkator3api.models.Route;
 import com.merkator3.merkator3api.models.Route;
 import io.jenetics.jpx.GPX;
 import lombok.SneakyThrows;

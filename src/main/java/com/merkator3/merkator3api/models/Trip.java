@@ -1,29 +1,75 @@
 package com.merkator3.merkator3api.models;
 
+import com.merkator3.merkator3api.MapTools.MapBuilder;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Trip is a collection of Routes which the user wants to analyse together.
+ * A PlannedTrip is a collection of Routes which the user has not yet undertaken
+ * which they want to analyse together.
  */
+@Document(collection = "trips")
+public class Trip{
 
-public interface Trip {
+    @Id private ObjectId id;
+    @Field("tripName") private String tripName;
+    @Field("tripDescription") private String tripDescription;
+    @Field("tripRoutes") private List<Route> tripRoutes;
+    @Field("tripStaticMapURL") private String tripStaticMapUrl;
 
-    ObjectId getId();
+    public Trip(String tripName){
+        this.tripName = tripName;
+    };
 
-    String getTripName();
+    public ObjectId getId() {
+        return id;
+    }
 
-    void setTripName(String tripName);
+    public String getTripName() {
+        return tripName;
+    }
 
-    String getTripDescription();
+    public void setTripName(String tripName) {
+        this.tripName = tripName;
+    }
 
-    void setTripDescription(String tripDescription);
+    public String getTripDescription() {
+        return tripDescription;
+    }
 
-    List<Route> getTripRoutes();
+    public void setTripDescription(String tripDescription) {
+        this.tripDescription = tripDescription;
+    }
 
-    void setTripRoutes(List<Route> tripRoutes);
+    public List<Route> getTripRoutes() {
+        return tripRoutes;
+    }
 
-    void setTripStaticMapUrl(String mapBoxKey);
+    public void setTripRoutes(List<Route> tripRoutes) {
+        this.tripRoutes = tripRoutes;
+    }
 
-    String getTripStaticMapUrl(String mapBoxKey);
+    public void addRoute(Route route){
+        if (tripRoutes == null) {
+            tripRoutes = new ArrayList<>();
+        }
+        tripRoutes.add(route);
+    }
+
+    public void setTripStaticMapUrl(String mapBoxKey) {
+        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
+        this.tripStaticMapUrl = mapBuilder.generateStaticMapImageUrl(this.tripRoutes);
+    }
+
+    public String getTripStaticMapUrl(String mapBoxKey) {
+        if (this.tripStaticMapUrl == null) {
+            this.setTripStaticMapUrl(mapBoxKey);
+        }
+        return this.tripStaticMapUrl;
+    }
 }

@@ -8,17 +8,17 @@ import lombok.Data;
 @Builder
 public class AddRouteToTripRequest {
 
-    private ObjectId tripID;
-    private ObjectId routeID;
+    private ObjectId tripId;
+    private ObjectId routeId;
 
-    public AddRouteToTripRequest(ObjectId tripID, ObjectId routeID) {
-        this.tripID = tripID;
-        this.routeID = routeID;
+    public AddRouteToTripRequest(ObjectId tripId, ObjectId routeId) {
+        this.tripId = tripId;
+        this.routeId = routeId;
     }
     public ObjectId getTripId() {
-        return tripID;
+        return tripId;
     }
     public ObjectId getRouteId() {
-        return routeID;
+        return routeId;
     }
 }

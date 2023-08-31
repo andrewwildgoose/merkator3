@@ -1,24 +1,23 @@
 package com.merkator3.merkator3api.controllers;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
-import com.merkator3.merkator3api.models.RouteMapping;
-import com.merkator3.merkator3api.models.TripResponse;
+import com.merkator3.merkator3api.models.*;
 import com.merkator3.merkator3api.services.RouteService;
 import com.merkator3.merkator3api.services.TripService;
 import com.merkator3.merkator3api.services.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/merkator/user")
@@ -33,28 +32,77 @@ public class TripController {
     @Autowired
     private TripService tripService;
 
-    @PostMapping("/complete_trip")
-    public void completeTrip(@AuthenticationPrincipal UserDetails userDetails,
-                                                        @RequestParam("file") List<MultipartFile> file,
-                                                        @RequestParam("routeId") List<String> routeId,
-                                                        @RequestParam("tripId") String tripIdString){
+    // Return a list of the user's trips
+    @GetMapping("/trips")
+    public ResponseEntity<List<TripResponse>> getUserTrips(@AuthenticationPrincipal UserDetails userDetails) {
         MerkatorUser user = userService.findByEmail(userDetails.getUsername());
-        ObjectId tripId = new ObjectId(tripIdString);
-        if (tripService.tripBelongsToUser(user.getId(), tripId)){
-            System.out.println(tripId);
-            System.out.println(routeId);
-            System.out.println(file);
+        List<Trip> trips = tripService.getUserTrips(user.getId());
+
+        List<TripResponse> tripResponse = trips.stream()
+                .map(trip -> tripService.getTripResponse(trip.getId()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(tripResponse);
+    }
+
+    @PostMapping("/new_trip")
+    public ResponseEntity<String> addTrip(@AuthenticationPrincipal UserDetails userDetails,
+                                          @RequestBody String tripName) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+
+        ObjectId tripID = tripService.addTrip(user.getId(), tripName);
+
+        URI tripLocation = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("trip/{id}")
+                .buildAndExpand(tripID)
+                .toUri();
+
+        return ResponseEntity.created(tripLocation).body("Trip added successfully.");
+    }
+
+    @GetMapping("/trip/{id}")
+    public ResponseEntity<TripResponse> getTrip(@AuthenticationPrincipal UserDetails userDetails, @PathVariable("id") ObjectId tripId) throws IOException {
+        TripResponse tripResponse = tripService.getTripResponse(tripId);
+        return ResponseEntity.ok(tripResponse);
+    }
+
+    @PostMapping("/trip/add_route")
+    public ResponseEntity<String> addRouteToTrip(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AddRouteToTripRequest request) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+        System.out.println(request.getTripId());
+        System.out.println(request.getRouteId());
+
+        ObjectId tripId = request.getTripId();
+        if (!tripService.tripBelongsToUser(user.getId(), tripId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Trip does not belong to the user.");
         }
-        else {
-            System.out.println("Route does not belong to user");
+        ObjectId routeId = request.getRouteId();
+
+        boolean success = tripService.addRouteToTrip(tripId, routeId);
+        if (success) {
+            return ResponseEntity.ok("Route added to trip.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding route to trip.");
         }
     }
-//    public ResponseEntity<CompletedTrip> completeTrip(@AuthenticationPrincipal UserDetails userDetails,
-//                                                        @RequestParam("files") List<MultipartFile> files,
-//                                                        @RequestParam("routeIds") List<String> routeIds,
-//                                                        @RequestParam("tripId") String tripId) {
-//
-//    }
+
+    @DeleteMapping("/trip/{tripId}")
+    public ResponseEntity<String> deleteTrip(@AuthenticationPrincipal UserDetails userDetails,
+                                             @PathVariable("tripId") ObjectId tripId) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+
+        if (!tripService.tripBelongsToUser(user.getId(), tripId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Trip does not belong to the user.");
+        }
+
+        boolean success = userService.deleteTrip(user.getId(), tripId);
+        if (success) {
+            return ResponseEntity.ok("Trip deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting trip.");
+        }
+    }
+
 
     @GetMapping("/trip/route_mappings")
     public ResponseEntity<List<RouteMapping>> tripRouteInfo(@AuthenticationPrincipal UserDetails userDetails,
