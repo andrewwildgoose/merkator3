@@ -15,8 +15,7 @@ import java.util.List;
 
 
 @Document(collection = "routes")
-@TypeAlias("route")
-public class Route {
+public class Route implements RouteMarker{
     @Id private ObjectId id;
     @Field("routeName") private String routeName;
     @Field("routeDescription") private String routeDescription;
@@ -24,8 +23,6 @@ public class Route {
     @Field("mapLineColor") private List<Integer> mapLineColor;
     @Field("routeStaticMapURL") private String routeStaticMapUrl;
 
-    public Route() {
-    }
     public Route(String routeName) {
         this.routeName = routeName;
     }

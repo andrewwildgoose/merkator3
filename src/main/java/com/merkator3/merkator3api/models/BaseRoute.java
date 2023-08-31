@@ -4,7 +4,6 @@ import com.merkator3.merkator3api.MapTools.MapBuilder;
 import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -13,24 +12,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-@Document(collection = "completedRoutes")
+// Base route object from which routes & completed routes draw their inheritance.
 
-public class CompletedRoute implements RouteMarker {
+public abstract class BaseRoute {
 
     @Id
     private ObjectId id;
     @Field("routeName") private String routeName;
-    @Field("hasParentRoute") private Boolean hasParentRoute;
-    @Field("parentRouteName") private String parentRouteName;
-    @Field("parentRouteId") private ObjectId parentRouteId;
     @Field("routeDescription") private String routeDescription;
     @Field("routeGPXString") private String routeGpxString;
-    @Field("mapLineColor") private List<Integer> mapLineColor;
-    @Field("routeStaticMapURL") private String routeStaticMapUrl;
+//    @Field("mapLineColor") private List<Integer> mapLineColor;
+//    @Field("routeStaticMapURL") private String routeStaticMapUrl;
 
-    public CompletedRoute(String routeName, Boolean hasParentRoute) {
+    public BaseRoute() {
+    }
+    public BaseRoute(String routeName) {
         this.routeName = routeName;
-        this.hasParentRoute = hasParentRoute;
     }
 
     public ObjectId getId() {
@@ -43,22 +40,6 @@ public class CompletedRoute implements RouteMarker {
 
     public void setRouteName(String routeName) {
         this.routeName = routeName;
-    }
-
-    public void setParentRouteName(String parentRouteName) {
-        this.parentRouteName = parentRouteName;
-    }
-
-    public String getParentRouteName() {
-        return parentRouteName;
-    }
-
-    public void setParentRouteId(ObjectId parentRouteId) {
-        this.parentRouteId = parentRouteId;
-    }
-
-    public ObjectId getParentRouteId() {
-        return parentRouteId;
     }
 
     public String getRouteDescription() {
@@ -112,7 +93,7 @@ public class CompletedRoute implements RouteMarker {
 
 
 //    public void setRouteStaticMapUrl(String mapBoxKey) {
-//        List<CompletedRoute> singleRouteList = List.of(this);
+//        List<BaseRoute> singleRouteList = List.of(this);
 //        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
 //        this.routeStaticMapUrl = mapBuilder.generateStaticMapImageUrl(singleRouteList);
 //    }
@@ -124,13 +105,12 @@ public class CompletedRoute implements RouteMarker {
 //        return this.routeStaticMapUrl;
 //    }
 
-    public List<Integer> getMapLineColor() {
-        return mapLineColor;
-    }
-
-    // Store the RGB values for the map line colour of this map.
-    public void setMapLineColor(int red, int green, int blue) {
-        this.mapLineColor = List.of(red, green, blue);
-    }
-
+//    public List<Integer> getMapLineColor() {
+//        return mapLineColor;
+//    }
+//
+//    // Store the RGB values for the map line colour of this map.
+//    public void setMapLineColor(int red, int green, int blue) {
+//        this.mapLineColor = List.of(red, green, blue);
+//    }
 }

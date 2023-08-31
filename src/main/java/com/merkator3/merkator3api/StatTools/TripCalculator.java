@@ -11,8 +11,8 @@ import java.util.List;
 
 public class TripCalculator {
 
-    public Double totalDistance(Trip ptriprip) {
-        List<Route> tripRoutes = ptriprip.getTripRoutes();
+    public Double totalDistance(Trip trip) {
+        List<Route> tripRoutes = trip.getTripRoutes();
         GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
 
         double totalDistance = tripRoutes.stream()

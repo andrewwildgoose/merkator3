@@ -14,7 +14,7 @@ import java.util.List;
  * which they want to analyse together.
  */
 @Document(collection = "trips")
-public class Trip{
+public class Trip implements TripMarker{
 
     @Id private ObjectId id;
     @Field("tripName") private String tripName;
