@@ -4,6 +4,7 @@ import com.merkator3.merkator3api.MapTools.MapBuilder;
 import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 
 @Document(collection = "routes")
+@TypeAlias("route")
 public class Route {
     @Id private ObjectId id;
     @Field("routeName") private String routeName;
@@ -22,7 +24,8 @@ public class Route {
     @Field("mapLineColor") private List<Integer> mapLineColor;
     @Field("routeStaticMapURL") private String routeStaticMapUrl;
 
-
+    public Route() {
+    }
     public Route(String routeName) {
         this.routeName = routeName;
     }

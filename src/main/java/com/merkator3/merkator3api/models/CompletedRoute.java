@@ -4,6 +4,7 @@
 //import io.jenetics.jpx.GPX;
 //import org.bson.types.ObjectId;
 //import org.springframework.data.annotation.Id;
+//import org.springframework.data.annotation.TypeAlias;
 //import org.springframework.data.mongodb.core.mapping.Document;
 //import org.springframework.data.mongodb.core.mapping.Field;
 //
@@ -12,7 +13,8 @@
 //import java.nio.file.Path;
 //import java.util.List;
 //
-//@Document(collection = "completedRoutes")
+//@Document(collection = "routes")
+//@TypeAlias("completedRoute")
 //public class CompletedRoute extends Route {
 //
 //    @Id
@@ -27,7 +29,7 @@
 //    @Field("routeStaticMapURL") private String routeStaticMapUrl;
 //
 //    public CompletedRoute(String routeName, Boolean hasParentRoute) {
-//        super(routeName);
+//        this.routeName = routeName;
 //        this.hasParentRoute = hasParentRoute;
 //    }
 //
