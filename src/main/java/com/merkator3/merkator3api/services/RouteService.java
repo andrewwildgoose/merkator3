@@ -1,9 +1,8 @@
 package com.merkator3.merkator3api.services;
 
-import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.RouteResponse;
+import com.merkator3.merkator3api.models.route.planned.Route;
+import com.merkator3.merkator3api.models.route.planned.RouteResponse;
 import org.bson.types.ObjectId;
-import io.jenetics.jpx.GPX;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.web.multipart.MultipartFile;
 

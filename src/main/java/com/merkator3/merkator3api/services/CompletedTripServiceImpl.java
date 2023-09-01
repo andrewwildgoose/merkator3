@@ -1,7 +1,13 @@
 package com.merkator3.merkator3api.services;
 
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
-import com.merkator3.merkator3api.models.*;
+import com.merkator3.merkator3api.StatTools.CompletedTripCalculator;
+import com.merkator3.merkator3api.StatTools.TripCalculator;
+import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
+import com.merkator3.merkator3api.models.route.planned.Route;
+import com.merkator3.merkator3api.models.trip.planned.CompletedTrip;
+import com.merkator3.merkator3api.models.trip.planned.CompletedTripResponse;
+import com.merkator3.merkator3api.models.trip.planned.Trip;
 import com.merkator3.merkator3api.repositories.CompletedRouteRepository;
 import com.merkator3.merkator3api.repositories.CompletedTripRepository;
 import com.merkator3.merkator3api.repositories.RouteRepository;
@@ -9,6 +15,8 @@ import com.merkator3.merkator3api.repositories.TripRepository;
 import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @DependsOn({"tripRepository", "routeRepository", "completedTripRepository", "completedRouteRepository"})
@@ -30,13 +39,25 @@ public class CompletedTripServiceImpl implements CompletedTripService {
     private TripRepository tripRepository;
     @Autowired
     private RouteRepository routeRepository;
+    @Autowired
+    private TripService tripService;
+    @Autowired
+    private RouteService routeService;
+    @Value("${merkator.api.mapBoxKey}")
+    private String mapBoxKey;
+
+    private final TripCalculator tripCalc = new TripCalculator();
+    private final CompletedTripCalculator compTripCalc = new CompletedTripCalculator();
 
     public CompletedTripServiceImpl(CompletedTripRepository completedTripRepository, TripRepository tripRepository,
-                                    RouteRepository routeRepository, CompletedRouteRepository completedRouteRepository) {
+                                    RouteRepository routeRepository, CompletedRouteRepository completedRouteRepository,
+                                    TripService tripService, RouteService routeService) {
         this.completedTripRepository = completedTripRepository;
         this.completedRouteRepository = completedRouteRepository;
         this.tripRepository = tripRepository;
         this.routeRepository = routeRepository;
+        this.tripService = tripService;
+        this.routeService = routeService;
     }
 
     @Override
@@ -50,16 +71,47 @@ public class CompletedTripServiceImpl implements CompletedTripService {
             throws IOException {
         Trip parentTrip = tripRepository.findById(tripId);
 
+        // TODO: populate CompetedTripResponse with attributes.
         // Create completed trip and set its attributes
         CompletedTrip completedTrip = new CompletedTrip(parentTrip.getTripName(), true);
         completedTrip.setTripDescription("Completed trip based on " + parentTrip.getTripName());
         completedTrip.setParentTripId(tripId);
         completedTrip.setParentTripName(parentTrip.getTripName());
         List<CompletedRoute> completedRoutes = createCompletedRoutes(routeId, file);
-        completedRouteRepository.saveAll(completedRoutes);
         completedTrip.setCompletedRoutes(completedRoutes);
 
-        return null;
+        // Save the newly completed routes to the db.
+        completedRouteRepository.saveAll(completedRoutes);
+
+        // Calculate values that are used multiple times in the response
+        Double completedDistance = compTripCalc.totalCompletedDistance(completedTrip);
+        Double elapsedTime = compTripCalc.calculateTripElapsedTime(completedTrip);
+        Double movingTime = compTripCalc.calculateTripMovingTime(completedTrip);
+
+        // Build and return the completed trip response.
+        return new CompletedTripResponse(
+                completedTrip.getId(),
+                completedTrip.getId().toString(),
+                completedTrip.getTripName(),
+                completedTrip.getTripDescription(),
+                tripCalc.totalDistance(completedTrip),
+                tripCalc.totalElevationGain(completedTrip),
+                tripCalc.totalElevationLoss(completedTrip),
+                completedDistance,
+                compTripCalc.totalCompletedElevationGain(completedTrip),
+                compTripCalc.totalCompletedElevationLoss(completedTrip),
+                elapsedTime,
+                movingTime,
+                compTripCalc.calculateAvgSpeed(completedDistance, elapsedTime),
+                compTripCalc.calculateAvgSpeed(completedDistance, elapsedTime),
+                completedTrip.getTripRouteNames(),
+                completedTrip.getTripCompletedRouteNames(),
+                tripService.getTripGpxStrings(completedTrip),
+                getTripCompletedGpxStrings(completedTrip),
+                parentTrip.getTripStaticMapUrl(mapBoxKey),
+                completedTrip.getTripRoutes().size(),
+                completedTrip.getCompletedRoutes().size()
+        );
     }
 
     // Method for taking a list of routes to be completed & creating them.
@@ -91,4 +143,18 @@ public class CompletedTripServiceImpl implements CompletedTripService {
         }
         return completedRoutes;
     }
+
+    @Override
+    public List<String> getTripCompletedGpxStrings(CompletedTrip trip) {
+        return trip.getCompletedRoutes().stream()
+                .map(route -> {
+                    try {
+                        return routeService.getRouteGpxAsJSON(route.getId());
+                    } catch (IOException | JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
 }

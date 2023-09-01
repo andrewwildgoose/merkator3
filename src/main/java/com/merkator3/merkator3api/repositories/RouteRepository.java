@@ -1,7 +1,6 @@
 package com.merkator3.merkator3api.repositories;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
-import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.models.route.planned.Route;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;

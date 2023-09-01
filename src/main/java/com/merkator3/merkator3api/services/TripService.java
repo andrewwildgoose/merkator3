@@ -1,8 +1,9 @@
 package com.merkator3.merkator3api.services;
 
-import com.merkator3.merkator3api.models.RouteMapping;
-import com.merkator3.merkator3api.models.Trip;
-import com.merkator3.merkator3api.models.TripResponse;
+import com.merkator3.merkator3api.models.route.planned.RouteMapping;
+import com.merkator3.merkator3api.models.trip.planned.Trip;
+import com.merkator3.merkator3api.models.trip.TripMarker;
+import com.merkator3.merkator3api.models.trip.planned.TripResponse;
 import org.bson.types.ObjectId;
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface TripService {
     boolean deleteTrip(ObjectId tripId);
 
     List<RouteMapping> getRouteMapping(ObjectId tripId);
+
+    <T extends TripMarker> List<String> getTripGpxStrings(T trip);
 }

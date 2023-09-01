@@ -2,6 +2,11 @@ package com.merkator3.merkator3api.services;
 
 import com.merkator3.merkator3api.StatTools.TripCalculator;
 import com.merkator3.merkator3api.models.*;
+import com.merkator3.merkator3api.models.route.planned.Route;
+import com.merkator3.merkator3api.models.route.planned.RouteMapping;
+import com.merkator3.merkator3api.models.trip.planned.Trip;
+import com.merkator3.merkator3api.models.trip.TripMarker;
+import com.merkator3.merkator3api.models.trip.planned.TripResponse;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
@@ -95,18 +100,7 @@ public class TripServiceImpl implements TripService {
             Double tripLength = tripCalc.totalDistance(trip);
             Double tripElevationGain = tripCalc.totalElevationGain(trip);
             Double tripElevationLoss = tripCalc.totalElevationLoss(trip);
-            List<String> tripRouteNames = trip.getTripRoutes().stream()
-                    .map(Route::getRouteName)
-                    .collect(Collectors.toList());
-            List<String> tripGpxStrings = trip.getTripRoutes().stream()
-                    .map(route -> {
-                        try {
-                            return routeService.getRouteGpxAsJSON(route.getId());
-                        } catch (IOException | JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .collect(Collectors.toList());
+            // Build and return the trip response.
             return new TripResponse(
                     tripId,
                     tripId.toString(),
@@ -115,8 +109,8 @@ public class TripServiceImpl implements TripService {
                     tripLength,
                     tripElevationGain,
                     tripElevationLoss,
-                    tripRouteNames,
-                    tripGpxStrings,
+                    trip.getTripRouteNames(),
+                    getTripGpxStrings(trip),
                     trip.getTripStaticMapUrl(mapBoxKey),
                     trip.getTripRoutes().size()
             );
@@ -152,5 +146,18 @@ public class TripServiceImpl implements TripService {
         return trip.getTripRoutes().stream()
                 .map(route -> new RouteMapping(route.getId().toString(), route.getRouteName()))
                 .toList();
+    }
+
+    @Override
+    public <T extends TripMarker> List<String> getTripGpxStrings(T trip) {
+        return trip.getTripRoutes().stream()
+                .map(route -> {
+                    try {
+                        return routeService.getRouteGpxAsJSON(route.getId());
+                    } catch (IOException | JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,7 @@
 //package com.merkator3.merkator3api.controllers;
 //
 //import com.merkator3.merkator3api.models.MerkatorUser;
-//import com.merkator3.merkator3api.models.Route;
+//import com.merkator3.merkator3api.models.Route.Route;
 //import com.merkator3.merkator3api.models.PlannedTrip;
 //import com.merkator3.merkator3api.services.RouteService;
 //import com.merkator3.merkator3api.services.TripService;

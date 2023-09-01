@@ -2,8 +2,8 @@ package com.merkator3.merkator3api.unitTests;
 
 
 import com.merkator3.merkator3api.models.MerkatorUser;
-import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.PlannedTrip;
+import com.merkator3.merkator3api.models.route.planned.Route;
+import com.merkator3.merkator3api.models.trip.planned.Trip;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -33,7 +33,7 @@ public class MerkatorUserTests {
     void testUserTripAdded() {
         Route testRoute1 = new Route("testRoute1");
         Route testRoute2 = new Route("testRoute2");
-        PlannedTrip testPlannedTrip = new PlannedTrip("testTrip");
+        Trip testPlannedTrip = new Trip("testTrip");
         testMerkatorUser.addTrip(testPlannedTrip.getId());
         Assertions.assertEquals(testPlannedTrip.getId(), testMerkatorUser.getUserTrips().get(0));
     }

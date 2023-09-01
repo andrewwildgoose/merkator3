@@ -1,6 +1,6 @@
 package com.merkator3.merkator3api.unitTests;
 
-import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.models.route.planned.Route;
 import io.jenetics.jpx.GPX;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

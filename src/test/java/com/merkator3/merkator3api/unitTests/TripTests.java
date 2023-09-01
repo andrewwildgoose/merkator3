@@ -1,8 +1,8 @@
 package com.merkator3.merkator3api.unitTests;
 
 import com.merkator3.merkator3api.StatTools.TripCalculator;
-import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.PlannedTrip;
+import com.merkator3.merkator3api.models.route.planned.Route;
+import com.merkator3.merkator3api.models.trip.planned.Trip;
 import io.jenetics.jpx.GPX;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ public class TripTests {
     Route testRoute1;
     Route testRoute2;
     Route testRoute3;
-    PlannedTrip testPlannedTrip1;
+    Trip testPlannedTrip1;
 
     @BeforeEach
     void createTrip() throws IOException {
@@ -34,7 +34,7 @@ public class TripTests {
         Path path3 = Path.of("src/test/TestFiles/GPX/Belgium to Netherlands/2021-10-16_525668657_Antwerp to Rotterdam.gpx");
         testRoute3.setRouteGpxString(GPX.read(path3));
 
-        testPlannedTrip1 = new PlannedTrip("testTrip1");
+        testPlannedTrip1 = new Trip("testTrip1");
         List<Route> testRouteList = List.of(testRoute1, testRoute2, testRoute3);
         testPlannedTrip1.setTripRoutes(testRouteList);
     }

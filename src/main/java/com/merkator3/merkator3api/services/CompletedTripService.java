@@ -1,6 +1,7 @@
 package com.merkator3.merkator3api.services;
 
-import com.merkator3.merkator3api.models.CompletedTripResponse;
+import com.merkator3.merkator3api.models.trip.planned.CompletedTrip;
+import com.merkator3.merkator3api.models.trip.planned.CompletedTripResponse;
 import org.bson.types.ObjectId;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,4 +13,6 @@ public interface CompletedTripService {
 
     CompletedTripResponse handleTripCompletion(ObjectId tripId, List<String> routeId, List<MultipartFile> file)
             throws IOException;
+
+    List<String> getTripCompletedGpxStrings(CompletedTrip trip);
 }

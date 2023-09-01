@@ -13,8 +13,7 @@ import com.mapbox.api.staticmap.v1.models.StaticPolylineAnnotation;
 
 import static com.mapbox.geojson.utils.PolylineUtils.simplify;
 
-import com.merkator3.merkator3api.models.Route;
-import com.merkator3.merkator3api.models.Route;
+import com.merkator3.merkator3api.models.route.planned.Route;
 import io.jenetics.jpx.GPX;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;

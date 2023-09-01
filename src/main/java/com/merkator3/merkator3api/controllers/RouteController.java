@@ -1,7 +1,7 @@
 package com.merkator3.merkator3api.controllers;
 
 import com.merkator3.merkator3api.models.MerkatorUser;
-import com.merkator3.merkator3api.models.RouteResponse;
+import com.merkator3.merkator3api.models.route.planned.RouteResponse;
 import com.merkator3.merkator3api.services.RouteService;
 import com.merkator3.merkator3api.services.UserService;
 import org.bson.types.ObjectId;

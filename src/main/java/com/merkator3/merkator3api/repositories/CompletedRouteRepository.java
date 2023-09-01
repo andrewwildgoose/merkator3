@@ -1,6 +1,6 @@
 package com.merkator3.merkator3api.repositories;
 
-import com.merkator3.merkator3api.models.CompletedRoute;
+import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
