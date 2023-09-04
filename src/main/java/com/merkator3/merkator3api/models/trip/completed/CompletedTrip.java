@@ -1,5 +1,7 @@
-package com.merkator3.merkator3api.models.trip.planned;
+package com.merkator3.merkator3api.models.trip.completed;
 
+import com.merkator3.merkator3api.MapTools.MapBuilder;
+import com.merkator3.merkator3api.models.route.RouteMarker;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.trip.TripMarker;
@@ -134,18 +136,18 @@ public class CompletedTrip implements TripMarker {
     }
 
     //TODO: map functionality for a mixture of non & completed routes needs consideration.
-//    public void setTripStaticMapUrl(String mapBoxKey) {
-//        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
-//        List<RouteMarker> allRoutes = new ArrayList<>();
-//        allRoutes.addAll(this.tripRoutes);
-//        allRoutes.addAll(this.tripCompletedRoutes);
-//        this.tripStaticMapUrl = mapBuilder.generateStaticMapImageUrl(allRoutes);
-//    }
-//
-//    public String getTripStaticMapUrl(String mapBoxKey) {
-//        if (this.tripStaticMapUrl == null) {
-//            this.setTripStaticMapUrl(mapBoxKey);
-//        }
-//        return this.tripStaticMapUrl;
-//    }
+    public void setTripStaticMapUrl(String mapBoxKey) {
+        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
+        List<RouteMarker> allRoutes = new ArrayList<>();
+        allRoutes.addAll(this.tripRoutes);
+        allRoutes.addAll(this.tripCompletedRoutes);
+        this.tripStaticMapUrl = mapBuilder.generateStaticMapImageUrl(allRoutes);
+    }
+
+    public String getTripStaticMapUrl(String mapBoxKey) {
+        if (this.tripStaticMapUrl == null) {
+            this.setTripStaticMapUrl(mapBoxKey);
+        }
+        return this.tripStaticMapUrl;
+    }
 }

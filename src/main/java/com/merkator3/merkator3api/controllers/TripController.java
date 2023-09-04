@@ -1,13 +1,13 @@
 package com.merkator3.merkator3api.controllers;
 
-import com.merkator3.merkator3api.models.*;
 import com.merkator3.merkator3api.models.route.planned.AddRouteToTripRequest;
 import com.merkator3.merkator3api.models.route.planned.RouteMapping;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
 import com.merkator3.merkator3api.models.trip.planned.TripResponse;
-import com.merkator3.merkator3api.services.RouteService;
-import com.merkator3.merkator3api.services.TripService;
-import com.merkator3.merkator3api.services.UserService;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
+import com.merkator3.merkator3api.services.route.RouteService;
+import com.merkator3.merkator3api.services.trip.TripService;
+import com.merkator3.merkator3api.services.user.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

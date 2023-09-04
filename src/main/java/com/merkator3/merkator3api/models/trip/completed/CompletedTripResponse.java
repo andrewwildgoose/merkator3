@@ -1,4 +1,4 @@
-package com.merkator3.merkator3api.models.trip.planned;
+package com.merkator3.merkator3api.models.trip.completed;
 
 import com.merkator3.merkator3api.models.route.planned.RouteMapping;
 import org.bson.types.ObjectId;

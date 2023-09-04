@@ -1,7 +1,7 @@
 package com.merkator3.merkator3api.unitTests;
 
 
-import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
 import org.junit.jupiter.api.*;

@@ -1,9 +1,11 @@
-package com.merkator3.merkator3api.services;
+package com.merkator3.merkator3api.services.user;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
+import com.merkator3.merkator3api.services.route.RouteService;
+import com.merkator3.merkator3api.services.trip.TripService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;

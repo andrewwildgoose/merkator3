@@ -1,9 +1,9 @@
 package com.merkator3.merkator3api.controllers;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.models.route.planned.RouteResponse;
-import com.merkator3.merkator3api.services.RouteService;
-import com.merkator3.merkator3api.services.UserService;
+import com.merkator3.merkator3api.services.route.RouteService;
+import com.merkator3.merkator3api.services.user.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

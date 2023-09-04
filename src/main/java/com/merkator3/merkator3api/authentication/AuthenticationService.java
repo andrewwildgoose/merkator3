@@ -1,7 +1,7 @@
 package com.merkator3.merkator3api.authentication;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
-import com.merkator3.merkator3api.models.Role;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
+import com.merkator3.merkator3api.models.user.Role;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

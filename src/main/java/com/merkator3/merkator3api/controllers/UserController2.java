@@ -1,7 +1,7 @@
 package com.merkator3.merkator3api.controllers;
 
-import com.merkator3.merkator3api.models.*;
-import com.merkator3.merkator3api.services.UserService;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
+import com.merkator3.merkator3api.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

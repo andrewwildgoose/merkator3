@@ -13,6 +13,8 @@ import com.mapbox.api.staticmap.v1.models.StaticPolylineAnnotation;
 
 import static com.mapbox.geojson.utils.PolylineUtils.simplify;
 
+import com.merkator3.merkator3api.models.route.RouteMarker;
+import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import io.jenetics.jpx.GPX;
 import lombok.SneakyThrows;
@@ -31,7 +33,7 @@ public class MapBuilder {
     }
 
     @SneakyThrows
-    public String generateStaticMapImageUrl(List<Route> routes) {
+    public <T extends RouteMarker> String generateStaticMapImageUrl(List<T> routes) {
 
         Random random = new Random();
 
@@ -47,7 +49,7 @@ public class MapBuilder {
                 .height(150)
                 .retina(false);
 
-        for (Route route : routes) {
+        for (T route : routes) {
             GPX gpx = route.getRouteGpx();
             List<Point> points = extractCoordinatesFromGPX(gpx).stream()
                     .map(coordinate -> Point.fromLngLat(coordinate.getLongitude(), coordinate.getLatitude()))
@@ -76,7 +78,7 @@ public class MapBuilder {
                             route.getMapLineColor().get(1),
                             route.getMapLineColor().get(2)
                     )
-                    .strokeOpacity(0.9F)
+                    .strokeOpacity(route instanceof CompletedRoute ? 0.9F : 0.6F)
                     .strokeWidth(6.0)
                     .build();
             routePolyLines.add(polylineAnnotation);

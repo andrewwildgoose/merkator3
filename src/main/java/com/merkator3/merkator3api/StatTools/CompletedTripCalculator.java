@@ -2,7 +2,7 @@ package com.merkator3.merkator3api.StatTools;
 
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
-import com.merkator3.merkator3api.models.trip.planned.CompletedTrip;
+import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.WayPoint;

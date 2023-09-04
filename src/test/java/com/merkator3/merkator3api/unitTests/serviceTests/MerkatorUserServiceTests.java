@@ -1,10 +1,10 @@
 package com.merkator3.merkator3api.unitTests.serviceTests;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
-import com.merkator3.merkator3api.services.UserService;
-import com.merkator3.merkator3api.services.UserServiceImpl;
+import com.merkator3.merkator3api.services.user.UserService;
+import com.merkator3.merkator3api.services.user.UserServiceImpl;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

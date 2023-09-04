@@ -1,15 +1,16 @@
-package com.merkator3.merkator3api.services;
+package com.merkator3.merkator3api.services.trip;
 
 import com.merkator3.merkator3api.StatTools.TripCalculator;
-import com.merkator3.merkator3api.models.*;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.route.planned.RouteMapping;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
 import com.merkator3.merkator3api.models.trip.TripMarker;
 import com.merkator3.merkator3api.models.trip.planned.TripResponse;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
+import com.merkator3.merkator3api.services.route.RouteService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -111,11 +112,14 @@ public class TripServiceImpl implements TripService {
                     tripElevationLoss,
                     trip.getTripRouteNames(),
                     getTripGpxStrings(trip),
+                    getTripRouteColours(trip),
+                    getTripRouteIds(trip),
                     trip.getTripStaticMapUrl(mapBoxKey),
                     trip.getTripRoutes().size()
             );
         }
     }
+
 
     @Override
     public boolean tripBelongsToUser(ObjectId userID, ObjectId tripID) {
@@ -160,4 +164,20 @@ public class TripServiceImpl implements TripService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public <T extends TripMarker> List<List<Integer>> getTripRouteColours(T trip) {
+        return trip.getTripRoutes().stream()
+                .map(Route::getMapLineColor)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends TripMarker> List<String> getTripRouteIds(T trip) {
+        return trip.getTripRoutes().stream()
+                .map(Route::getId)
+                .map(r -> r.toString())
+                .collect(Collectors.toList());
+    }
+
 }

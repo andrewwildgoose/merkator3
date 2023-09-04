@@ -24,6 +24,8 @@ public class TripResponse {
     private List<String> tripRouteNames;
     private List<RouteMapping> routeMappings;
     private List<String> tripGpxStrings;
+    private List<List<Integer>> tripRouteColours;
+    private List<String> tripRouteIds;
     private String tripStaticMapUrl;
     private int routeCount;
     private String error;
@@ -44,7 +46,7 @@ public class TripResponse {
     public TripResponse(ObjectId id, String idString, String tripName,
                         String tripDescription, Double tripLength,
                         Double tripElevationGain, Double tripElevationLoss, List<String> tripRouteNames,
-                        List<String> tripGpxStrings, String tripStaticMapUrl, int routeCount) {
+                        List<String> tripGpxStrings, List<List<Integer>> tripRouteColours, List<String> tripRouteIds, String tripStaticMapUrl, int routeCount) {
         this.id = id;
         this.idString = idString;
         this.tripName = tripName;
@@ -53,7 +55,9 @@ public class TripResponse {
         this.tripElevationGain = tripElevationGain;
         this.tripElevationLoss = tripElevationLoss;
         this.tripGpxStrings = tripGpxStrings;
+        this.tripRouteColours = tripRouteColours;
         this.tripRouteNames = tripRouteNames;
+        this.tripRouteIds = tripRouteIds;
         this.tripStaticMapUrl = tripStaticMapUrl;
         this.routeCount = routeCount;
     }

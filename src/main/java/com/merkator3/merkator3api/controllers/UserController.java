@@ -1,11 +1,11 @@
 //package com.merkator3.merkator3api.controllers;
 //
-//import com.merkator3.merkator3api.models.MerkatorUser;
+//import com.merkator3.merkator3api.models.user.MerkatorUser;
 //import com.merkator3.merkator3api.models.Route.Route;
 //import com.merkator3.merkator3api.models.PlannedTrip;
-//import com.merkator3.merkator3api.services.RouteService;
-//import com.merkator3.merkator3api.services.TripService;
-//import com.merkator3.merkator3api.services.UserService;
+//import com.merkator3.merkator3api.services.route.RouteService;
+//import com.merkator3.merkator3api.services.trip.TripService;
+//import com.merkator3.merkator3api.services.user.UserService;
 //
 //import org.bson.types.ObjectId;
 //

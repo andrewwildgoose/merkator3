@@ -1,6 +1,6 @@
 package com.merkator3.merkator3api.integrationTests;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;

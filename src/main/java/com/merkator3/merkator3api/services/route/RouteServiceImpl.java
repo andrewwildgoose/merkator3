@@ -1,4 +1,4 @@
-package com.merkator3.merkator3api.services;
+package com.merkator3.merkator3api.services.route;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
-import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.route.planned.RouteResponse;
 import com.merkator3.merkator3api.repositories.RouteRepository;

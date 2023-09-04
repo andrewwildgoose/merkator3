@@ -1,5 +1,6 @@
 package com.merkator3.merkator3api.models.route.completed;
 
+import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.models.route.RouteMarker;
 import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
@@ -25,8 +26,8 @@ public class CompletedRoute implements RouteMarker {
     @Field("parentRouteId") private ObjectId parentRouteId;
     @Field("routeDescription") private String routeDescription;
     @Field("routeGPXString") private String routeGpxString;
-//    @Field("mapLineColor") private List<Integer> mapLineColor;
-//    @Field("routeStaticMapURL") private String routeStaticMapUrl;
+    @Field("mapLineColor") private List<Integer> mapLineColor;
+    @Field("routeStaticMapURL") private String routeStaticMapUrl;
 
     public CompletedRoute(String routeName, Boolean hasParentRoute) {
         this.routeName = routeName;
@@ -120,26 +121,26 @@ public class CompletedRoute implements RouteMarker {
     }
 
 
-//    public void setRouteStaticMapUrl(String mapBoxKey) {
-//        List<CompletedRoute> singleRouteList = List.of(this);
-//        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
-//        this.routeStaticMapUrl = mapBuilder.generateStaticMapImageUrl(singleRouteList);
-//    }
+    public void setRouteStaticMapUrl(String mapBoxKey) {
+        List<CompletedRoute> singleRouteList = List.of(this);
+        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
+        this.routeStaticMapUrl = mapBuilder.generateStaticMapImageUrl(singleRouteList);
+    }
 
-//    public String getRouteStaticMapURL(String mapBoxKey) {
-//        if (this.routeStaticMapUrl == null) {
-//            this.setRouteStaticMapUrl(mapBoxKey);
-//        }
-//        return this.routeStaticMapUrl;
-//    }
+    public String getRouteStaticMapURL(String mapBoxKey) {
+        if (this.routeStaticMapUrl == null) {
+            this.setRouteStaticMapUrl(mapBoxKey);
+        }
+        return this.routeStaticMapUrl;
+    }
 
-//    public List<Integer> getMapLineColor() {
-//        return mapLineColor;
-//    }
-//
-//    // Store the RGB values for the map line colour of this map.
-//    public void setMapLineColor(int red, int green, int blue) {
-//        this.mapLineColor = List.of(red, green, blue);
-//    }
+    public List<Integer> getMapLineColor() {
+        return mapLineColor;
+    }
+
+    // Store the RGB values for the map line colour of this map.
+    public void setMapLineColor(int red, int green, int blue) {
+        this.mapLineColor = List.of(red, green, blue);
+    }
 
 }

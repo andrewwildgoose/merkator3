@@ -1,6 +1,6 @@
-package com.merkator3.merkator3api.services;
+package com.merkator3.merkator3api.services.user;
 
-import com.merkator3.merkator3api.models.MerkatorUser;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import org.bson.types.ObjectId;
 
 public interface UserService {

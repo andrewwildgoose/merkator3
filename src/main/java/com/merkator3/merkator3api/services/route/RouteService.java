@@ -1,4 +1,4 @@
-package com.merkator3.merkator3api.services;
+package com.merkator3.merkator3api.services.route;
 
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.route.planned.RouteResponse;

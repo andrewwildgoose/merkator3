@@ -1,4 +1,4 @@
-package com.merkator3.merkator3api.services;
+package com.merkator3.merkator3api.services.trip;
 
 import com.merkator3.merkator3api.models.route.planned.RouteMapping;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
@@ -26,4 +26,8 @@ public interface TripService {
     List<RouteMapping> getRouteMapping(ObjectId tripId);
 
     <T extends TripMarker> List<String> getTripGpxStrings(T trip);
+
+    <T extends TripMarker> List<List<Integer>> getTripRouteColours(T trip);
+
+    <T extends TripMarker> List<String> getTripRouteIds(T trip);
 }
