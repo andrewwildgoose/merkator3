@@ -39,21 +39,22 @@ public class CompletedTripController {
                                                               @RequestParam("routeId") List<String> routeId,
                                                               @RequestParam("tripId") String tripIdString) throws IOException {
         MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+        ObjectId userId = user.getId();
         ObjectId tripId = new ObjectId(tripIdString);
 
-        if (!tripService.tripBelongsToUser(user.getId(), tripId)){
+        if (!tripService.tripBelongsToUser(userId, tripId)){
             System.out.println("Trip does not belong to user");
             String error = "Trip does not belong to user";
             ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
 
         }
-        String completedTripId = completedTripService.handleTripCompletion(tripId, routeId, file);
+        String completedTripId = completedTripService.handleTripCompletion(userId, tripId, routeId, file);
 
         return ResponseEntity.ok(completedTripId);
     }
 
     @GetMapping("/completed_trip/{id}")
-    public ResponseEntity<CompletedTripResponse> getCompleteTrip(@AuthenticationPrincipal UserDetails userDetails, @PathVariable("id") ObjectId completedTripId) throws IOException {
+    public ResponseEntity<CompletedTripResponse> getCompleteTrip(@AuthenticationPrincipal UserDetails userDetails, @PathVariable("id") ObjectId completedTripId) {
 
         CompletedTripResponse completedTripResponse = completedTripService.getCompletedTrip(completedTripId);
 

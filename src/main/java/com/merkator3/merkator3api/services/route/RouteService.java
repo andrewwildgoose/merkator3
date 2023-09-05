@@ -28,4 +28,8 @@ public interface RouteService {
     boolean routeBelongsToUser(ObjectId userId, ObjectId routeId);
 
     boolean deleteRoute(ObjectId routeId);
+
+    void setRouteStaticMapUrl(Route route, String mapBoxKey);
+
+    String getRouteStaticMapURL(Route route, String mapBoxKey);
 }

@@ -22,7 +22,7 @@ public class Trip implements TripMarker {
     @Id private ObjectId id;
     @Field("tripName") private String tripName;
     @Field("tripDescription") private String tripDescription;
-    @Field("tripRoutes") private List<Route> tripRoutes;
+    @Field("tripRoutes") private List<ObjectId> tripRoutes;
     @Field("tripStaticMapURL") private String tripStaticMapUrl;
 
     public Trip(String tripName){
@@ -49,17 +49,16 @@ public class Trip implements TripMarker {
         this.tripDescription = tripDescription;
     }
 
-    public List<Route> getTripRoutes() {
+    public List<ObjectId> getTripRoutes() {
+        if (this.tripRoutes == null) {
+            this.tripRoutes = new ArrayList<>();
+        }
         return tripRoutes;
     }
 
     public void setTripRoutes(List<Route> tripRoutes) {
-        this.tripRoutes = tripRoutes;
-    }
-
-    public List<String> getTripRouteNames() {
-        return this.getTripRoutes().stream()
-                .map(Route::getRouteName)
+        this.tripRoutes = tripRoutes.stream()
+                .map(Route::getId)
                 .collect(Collectors.toList());
     }
 
@@ -67,18 +66,14 @@ public class Trip implements TripMarker {
         if (tripRoutes == null) {
             tripRoutes = new ArrayList<>();
         }
-        tripRoutes.add(route);
+        tripRoutes.add(route.getId());
     }
 
-    public void setTripStaticMapUrl(String mapBoxKey) {
-        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
-        this.tripStaticMapUrl = mapBuilder.generateStaticMapImageUrl(this.tripRoutes);
+    public void setTripStaticMapUrl(String mapUrl) {
+        this.tripStaticMapUrl = mapUrl;
     }
 
-    public String getTripStaticMapUrl(String mapBoxKey) {
-        if (this.tripStaticMapUrl == null) {
-            this.setTripStaticMapUrl(mapBoxKey);
-        }
+    public String getTripStaticMapUrl() {
         return this.tripStaticMapUrl;
     }
 }

@@ -1,10 +1,18 @@
 package com.merkator3.merkator3api.models.trip.completed;
 
 import com.merkator3.merkator3api.models.route.planned.RouteMapping;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class CompletedTripResponse {
     private ObjectId id;
     private String idString;

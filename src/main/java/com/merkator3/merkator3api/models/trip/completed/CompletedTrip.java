@@ -29,8 +29,8 @@ public class CompletedTrip implements TripMarker {
     @Field("parentTripName") private String parentTripName;
     @Field("parentTripId") private ObjectId parentTripId;
     @Field("tripDescription") private String tripDescription;
-    @Field("tripRoutes") private List<Route> tripRoutes;
-    @Field("tripCompletedRoutes") private List<CompletedRoute> tripCompletedRoutes;
+    @Field("tripRoutes") private List<ObjectId> tripRoutes;
+    @Field("tripCompletedRoutes") private List<ObjectId> tripCompletedRoutes;
     @Field("tripStaticMapURL") private String tripStaticMapUrl;
 
     public CompletedTrip(String tripName, Boolean hasParentTrip){
@@ -74,17 +74,13 @@ public class CompletedTrip implements TripMarker {
         this.tripDescription = tripDescription;
     }
 
-    public List<Route> getTripRoutes() {
+    public List<ObjectId> getTripRoutes() {
         return tripRoutes;
     }
 
     public void setTripRoutes(List<Route> tripRoutes) {
-        this.tripRoutes = tripRoutes;
-    }
-
-    public List<String> getTripRouteNames() {
-        return this.getTripRoutes().stream()
-                .map(Route::getRouteName)
+        this.tripRoutes = tripRoutes.stream()
+                .map(Route::getId)
                 .collect(Collectors.toList());
     }
 
@@ -92,62 +88,36 @@ public class CompletedTrip implements TripMarker {
         if (tripRoutes == null) {
             tripRoutes = new ArrayList<>();
         }
-        tripRoutes.add(route);
+        tripRoutes.add(route.getId());
     }
 
-    public List<CompletedRoute> getCompletedRoutes() {
+    public List<ObjectId> getCompletedRoutes() {
         return tripCompletedRoutes;
     }
 
     public void setCompletedRoutes(List<CompletedRoute> completedRoutes) {
         for (CompletedRoute completedRoute : completedRoutes) {
-            addCompletedRoute(completedRoute);
-
+            addCompletedRoute(completedRoute.getId());
         }
     }
 
-    public List<String> getTripCompletedRouteNames() {
-        return this.getCompletedRoutes().stream()
-                .map(CompletedRoute::getRouteName)
-                .collect(Collectors.toList());
-    }
-
-    public void addCompletedRoute(CompletedRoute completedRoute) {
+    public void addCompletedRoute(ObjectId completedRoute) {
         if (tripCompletedRoutes == null) {
             tripCompletedRoutes = new ArrayList<>();
         }
+        tripCompletedRoutes.add(completedRoute);
+    }
 
-        ObjectId parentRouteId = completedRoute.getParentRouteId();
-
-        // Check if a completed route with the same parentRouteId already exists
-        Optional<CompletedRoute> existingCompletedRouteOptional = tripCompletedRoutes.stream()
-                .filter(route -> route.getParentRouteId().equals(parentRouteId))
-                .findFirst();
-
-        if (existingCompletedRouteOptional.isPresent()) {
-            // Replace the existing completed route with the new one
-            CompletedRoute existingCompletedRoute = existingCompletedRouteOptional.get();
-            int existingRouteIndex = tripCompletedRoutes.indexOf(existingCompletedRoute);
-            tripCompletedRoutes.set(existingRouteIndex, completedRoute);
-        } else {
-            // No existing completed route with the same parentRouteId, add the new one
-            tripCompletedRoutes.add(completedRoute);
-        }
+    public void addCompletedRoute(int index, ObjectId completedRoute) {
+        tripCompletedRoutes.set(index, completedRoute);
     }
 
     //TODO: map functionality for a mixture of non & completed routes needs consideration.
-    public void setTripStaticMapUrl(String mapBoxKey) {
-        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
-        List<RouteMarker> allRoutes = new ArrayList<>();
-        allRoutes.addAll(this.tripRoutes);
-        allRoutes.addAll(this.tripCompletedRoutes);
-        this.tripStaticMapUrl = mapBuilder.generateStaticMapImageUrl(allRoutes);
+    public void setTripStaticMapUrl(String mapUrl) {
+        this.tripStaticMapUrl = mapUrl;
     }
 
-    public String getTripStaticMapUrl(String mapBoxKey) {
-        if (this.tripStaticMapUrl == null) {
-            this.setTripStaticMapUrl(mapBoxKey);
-        }
+    public String getTripStaticMapUrl() {
         return this.tripStaticMapUrl;
     }
 }

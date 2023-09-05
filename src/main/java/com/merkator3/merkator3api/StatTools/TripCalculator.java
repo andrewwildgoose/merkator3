@@ -2,8 +2,12 @@ package com.merkator3.merkator3api.StatTools;
 
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
+import com.merkator3.merkator3api.models.route.RouteMarker;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.trip.TripMarker;
+import com.merkator3.merkator3api.services.trip.TripService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -11,12 +15,12 @@ import java.util.List;
 
 public class TripCalculator {
 
+
     GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
 
     GpxElevationCalculator elevCalc = new GpxElevationCalculator();
 
-    public <T extends TripMarker> Double totalDistance(T trip) {
-        List<Route> tripRoutes = trip.getTripRoutes();
+    public <R extends RouteMarker> Double totalDistance(List<R> tripRoutes) {
 
         double totalDistance = tripRoutes.stream()
                 .mapToDouble(route -> {
@@ -36,8 +40,7 @@ public class TripCalculator {
         return Double.parseDouble(formattedTotalDistance);
     }
 
-    public <T extends TripMarker> Double totalElevationGain(T trip) {
-        List<Route> tripRoutes = trip.getTripRoutes();
+    public <R extends RouteMarker> Double totalElevationGain(List<R> tripRoutes) {
 
         return tripRoutes.stream()
                 .mapToDouble(route -> {
@@ -50,8 +53,7 @@ public class TripCalculator {
                 .sum();
     }
 
-    public <T extends TripMarker> Double totalElevationLoss(T trip) {
-        List<Route> tripRoutes = trip.getTripRoutes();
+    public <R extends RouteMarker> Double totalElevationLoss(List<R> tripRoutes) {
 
         return tripRoutes.stream()
                 .mapToDouble(route -> {

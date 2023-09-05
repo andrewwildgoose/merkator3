@@ -89,16 +89,11 @@ public class Route implements RouteMarker {
     }
 
 
-    public void setRouteStaticMapUrl(String mapBoxKey) {
-        List<Route> singleRouteList = List.of(this);
-        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
-        this.routeStaticMapUrl = mapBuilder.generateStaticMapImageUrl(singleRouteList);
+    public void setRouteStaticMapUrl(String mapUrl) {
+        this.routeStaticMapUrl = mapUrl;
     }
 
-    public String getRouteStaticMapURL(String mapBoxKey) {
-        if (this.routeStaticMapUrl == null) {
-            this.setRouteStaticMapUrl(mapBoxKey);
-        }
+    public String getRouteStaticMapURL() {
         return this.routeStaticMapUrl;
     }
 

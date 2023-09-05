@@ -4,9 +4,13 @@ import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
+import com.merkator3.merkator3api.services.route.CompletedRouteService;
+import com.merkator3.merkator3api.services.trip.CompletedTripService;
 import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.WayPoint;
 import org.apache.commons.math3.util.Precision;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -28,8 +32,7 @@ public class CompletedTripCalculator {
 
     GpxElevationCalculator elevCalc = new GpxElevationCalculator();
 
-    public Double totalCompletedDistance(CompletedTrip completedTrip) {
-        List<CompletedRoute> tripCompletedRoutes = completedTrip.getCompletedRoutes();
+    public Double totalCompletedDistance(List<CompletedRoute> tripCompletedRoutes) {
 
         double totalCompletedDistance = tripCompletedRoutes.stream()
                 .mapToDouble(completedRoute -> {
@@ -49,8 +52,7 @@ public class CompletedTripCalculator {
         return Double.parseDouble(formattedTotalDistance);
     }
 
-    public Double totalCompletedElevationGain(CompletedTrip completedTrip) {
-        List<CompletedRoute> tripCompletedRoutes = completedTrip.getCompletedRoutes();
+    public Double totalCompletedElevationGain(List<CompletedRoute> tripCompletedRoutes) {
 
         return tripCompletedRoutes.stream()
                 .mapToDouble(completedRoute -> {
@@ -63,10 +65,9 @@ public class CompletedTripCalculator {
                 .sum();
     }
 
-    public Double totalCompletedElevationLoss(CompletedTrip completedTrip) {
-        List<CompletedRoute> tripRoutes = completedTrip.getCompletedRoutes();
+    public Double totalCompletedElevationLoss(List<CompletedRoute> tripCompletedRoutes) {
 
-        return tripRoutes.stream()
+        return tripCompletedRoutes.stream()
                 .mapToDouble(completedRoute -> {
                     try {
                         return elevCalc.calculateElevationLoss(completedRoute.getRouteGpx());
@@ -124,8 +125,8 @@ public class CompletedTripCalculator {
         return totalDuration.toMinutes();
     }
 
-    public double calculateTripElapsedTime(CompletedTrip trip) {
-        return trip.getCompletedRoutes().stream()
+    public double calculateTripElapsedTime(List<CompletedRoute> tripCompletedRoutes) {
+        return tripCompletedRoutes.stream()
                 .mapToDouble(route -> {
                     try {
                         return calculateElapsedTime(route);
@@ -137,8 +138,8 @@ public class CompletedTripCalculator {
                 .sum();
     }
 
-    public double calculateTripMovingTime(CompletedTrip trip) {
-        return trip.getCompletedRoutes().stream()
+    public double calculateTripMovingTime(List<CompletedRoute> tripCompletedRoutes) {
+        return tripCompletedRoutes.stream()
                 .mapToDouble(route -> {
                     try {
                         return calculateMovingTime(route);

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.merkator3.merkator3api.GpxTools.GpxBuilder;
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
+import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.route.planned.RouteResponse;
@@ -57,7 +58,7 @@ public class RouteServiceImpl implements RouteService{
         Route route = new Route(routeName);
         route.setRouteGpxString(fileGPX);
         route.setRouteDescription(String.valueOf(fileGPX.getMetadata().flatMap(Metadata::getDescription)));
-        route.setRouteStaticMapUrl(mapBoxKey);
+        setRouteStaticMapUrl(route, mapBoxKey);
         route = routeRepository.save(route);
 
         user.addRoute(route.getId());
@@ -115,7 +116,7 @@ public class RouteServiceImpl implements RouteService{
                     gpxElevCalc.calculateElevationGain(routeGpx),
                     gpxElevCalc.calculateElevationLoss(routeGpx),
                     getRouteGpxAsJSON(route.getId()),
-                    route.getRouteStaticMapURL(mapBoxKey)
+                    getRouteStaticMapURL(route, mapBoxKey)
             );
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);
@@ -166,5 +167,21 @@ public class RouteServiceImpl implements RouteService{
         JsonNode node = xmlMapper.readTree(xml.getBytes());
         ObjectMapper jsonMapper = new ObjectMapper();
         return jsonMapper.writeValueAsString(node);
+    }
+
+    @Override
+    public void setRouteStaticMapUrl(Route route, String mapBoxKey) {
+        List<Route> singleRouteList = List.of(route);
+        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
+        route.setRouteStaticMapUrl(mapBuilder.generateStaticMapImageUrl(singleRouteList));
+    }
+
+
+    @Override
+    public String getRouteStaticMapURL(Route route, String mapBoxKey) {
+        if (route.getRouteStaticMapURL() == null) {
+            setRouteStaticMapUrl(route, mapBoxKey);
+        }
+        return route.getRouteStaticMapURL();
     }
 }

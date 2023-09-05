@@ -30,6 +30,7 @@ public class MerkatorUser implements UserDetails {
     @Field("password") private String password;
     @Field("userRoutes") private List<ObjectId> userRoutes;
     @Field("userTrips") private List<ObjectId> userTrips;
+    @Field("userCompletedTrips") private List<ObjectId> userCompletedTrips;
 
     private Role role;
 
@@ -109,4 +110,14 @@ public class MerkatorUser implements UserDetails {
         return userTrips;
     }
 
+    public void addCompletedTrip(ObjectId tripId) {
+        if (this.userCompletedTrips == null) {
+            this.userCompletedTrips = new ArrayList<>();
+        }
+        userCompletedTrips.add(tripId);
+    }
+
+    public Collection<ObjectId> getUserCompletedTrips() {
+        return userCompletedTrips;
+    }
 }

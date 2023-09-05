@@ -1,5 +1,6 @@
 package com.merkator3.merkator3api.services.trip;
 
+import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.StatTools.TripCalculator;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.route.planned.RouteMapping;
@@ -37,14 +38,14 @@ public class TripServiceImpl implements TripService {
     private final RouteService routeService;
     @Value("${merkator.api.mapBoxKey}")
     private String mapBoxKey;
-
     private final TripCalculator tripCalc = new TripCalculator();
-
-    public TripServiceImpl(TripRepository tripRepository, RouteRepository routeRepository, UserRepository userRepository, RouteService routeService) {
+    public TripServiceImpl(TripRepository tripRepository, RouteRepository routeRepository, UserRepository userRepository,
+                           RouteService routeService) {
         this.tripRepository = tripRepository;
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
         this.routeService = routeService;
+
     }
     @Override
     public ObjectId addTrip(ObjectId userID, String tripName) {
@@ -71,7 +72,7 @@ public class TripServiceImpl implements TripService {
 
             if (trip != null && route != null) {
                 trip.addRoute(route);
-                trip.setTripStaticMapUrl(mapBoxKey);
+                setTripStaticMapUrl(trip, mapBoxKey);
                 tripRepository.save(trip);
                 return true;
             }
@@ -94,13 +95,14 @@ public class TripServiceImpl implements TripService {
     public TripResponse getTripResponse(ObjectId tripId) {
 
         Trip trip = tripRepository.findById(tripId);
+        List<Route> tripRoutes = getTripRoutes(trip);
 
         if (trip.getTripRoutes() == null) { //return trip currently holding no routes
             return new TripResponse(tripId, tripId.toString(), trip.getTripName());
         } else { // populate the trip response with the corresponding route data
-            Double tripLength = tripCalc.totalDistance(trip);
-            Double tripElevationGain = tripCalc.totalElevationGain(trip);
-            Double tripElevationLoss = tripCalc.totalElevationLoss(trip);
+            Double tripLength = tripCalc.totalDistance(tripRoutes);
+            Double tripElevationGain = tripCalc.totalElevationGain(tripRoutes);
+            Double tripElevationLoss = tripCalc.totalElevationLoss(tripRoutes);
             // Build and return the trip response.
             return new TripResponse(
                     tripId,
@@ -110,11 +112,11 @@ public class TripServiceImpl implements TripService {
                     tripLength,
                     tripElevationGain,
                     tripElevationLoss,
-                    trip.getTripRouteNames(),
+                    getTripRouteNames(trip),
                     getTripGpxStrings(trip),
                     getTripRouteColours(trip),
                     getTripRouteIds(trip),
-                    trip.getTripStaticMapUrl(mapBoxKey),
+                    getTripStaticMapUrl(trip),
                     trip.getTripRoutes().size()
             );
         }
@@ -123,7 +125,6 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public boolean tripBelongsToUser(ObjectId userID, ObjectId tripID) {
-        Trip trip = tripRepository.findById(tripID);
         MerkatorUser user = userRepository.findById(userID);
         return user.getUserTrips().contains(tripID);
     }
@@ -148,6 +149,7 @@ public class TripServiceImpl implements TripService {
     public List<RouteMapping> getRouteMapping(ObjectId tripId) {
         Trip trip = tripRepository.findById(tripId);
         return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
                 .map(route -> new RouteMapping(route.getId().toString(), route.getRouteName()))
                 .toList();
     }
@@ -155,6 +157,7 @@ public class TripServiceImpl implements TripService {
     @Override
     public <T extends TripMarker> List<String> getTripGpxStrings(T trip) {
         return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
                 .map(route -> {
                     try {
                         return routeService.getRouteGpxAsJSON(route.getId());
@@ -168,6 +171,7 @@ public class TripServiceImpl implements TripService {
     @Override
     public <T extends TripMarker> List<List<Integer>> getTripRouteColours(T trip) {
         return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
                 .map(Route::getMapLineColor)
                 .collect(Collectors.toList());
     }
@@ -175,9 +179,40 @@ public class TripServiceImpl implements TripService {
     @Override
     public <T extends TripMarker> List<String> getTripRouteIds(T trip) {
         return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
                 .map(Route::getId)
-                .map(r -> r.toString())
+                .map(ObjectId::toString)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends TripMarker> List<Route> getTripRoutes(T trip) {
+        return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends TripMarker> List<String> getTripRouteNames(T trip) {
+        return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
+                .map(Route::getRouteName)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends TripMarker> void setTripStaticMapUrl(T trip, String mapBoxKey) {
+        MapBuilder mapBuilder = new MapBuilder(mapBoxKey);
+        String mapUrl = mapBuilder.generateStaticMapImageUrl(getTripRoutes(trip));
+        trip.setTripStaticMapUrl(mapUrl);
+    }
+
+    @Override
+    public String getTripStaticMapUrl(Trip trip) {
+        if (trip.getTripStaticMapUrl() == null) {
+            setTripStaticMapUrl(trip, mapBoxKey);
+        }
+        return trip.getTripStaticMapUrl();
     }
 
 }
