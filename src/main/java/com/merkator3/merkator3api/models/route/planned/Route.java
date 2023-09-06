@@ -48,7 +48,7 @@ public class Route implements RouteMarker {
     }
 
     public GPX getRouteGpx() throws IOException {
-        Path tempFile = Files.createTempFile(".gpx", ".xml");
+        Path tempFile = Files.createTempFile("gpx", ".xml");
         Files.writeString(tempFile, routeGpxString);
 
         GPX gpx = GPX.read(tempFile);

@@ -3,18 +3,23 @@ package com.merkator3.merkator3api.unitTests;
 import com.merkator3.merkator3api.StatTools.TripCalculator;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
+import com.merkator3.merkator3api.services.trip.TripService;
 import io.jenetics.jpx.GPX;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-//@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TripTests {
 
+    @Autowired
+    private TripService tripService;
     Route testRoute1;
     Route testRoute2;
     Route testRoute3;
@@ -42,21 +47,24 @@ public class TripTests {
     @Test
     void testCalculateTripDistance() {
         TripCalculator tripCalculator = new TripCalculator();
-        Double tripDist = tripCalculator.totalDistance(testPlannedTrip1);
+        List<Route> tripRoutes = tripService.getTripRoutes(testPlannedTrip1);
+        Double tripDist = tripCalculator.totalDistance(tripRoutes);
         Assertions.assertEquals(347.17, tripDist);
     }
 
     @Test
     void testCalculateTripElevationGain() {
         TripCalculator tripCalculator = new TripCalculator();
-        Double tripElevGain = tripCalculator.totalElevationGain(testPlannedTrip1);
+        List<Route> tripRoutes = tripService.getTripRoutes(testPlannedTrip1);
+        Double tripElevGain = tripCalculator.totalElevationGain(tripRoutes);
         Assertions.assertEquals(660, tripElevGain);
     }
 
     @Test
     void testCalculateTripElevationLoss() {
         TripCalculator tripCalculator = new TripCalculator();
-        Double tripElevLoss = tripCalculator.totalElevationLoss(testPlannedTrip1);
+        List<Route> tripRoutes = tripService.getTripRoutes(testPlannedTrip1);
+        Double tripElevLoss = tripCalculator.totalElevationLoss(tripRoutes);
         Assertions.assertEquals(684.0, tripElevLoss);
     }
 

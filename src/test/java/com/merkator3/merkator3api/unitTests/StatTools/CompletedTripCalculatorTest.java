@@ -24,7 +24,6 @@ class CompletedTripCalculatorTest {
     @Test
     void testCalculateElapsedTime() throws IOException {
         Path path = Path.of("src/test/TestFiles/CompletedGPX/Heading_up_to_join_dad_for_the_end_of_LEJOG_.gpx");
-        GPX gpx = GPX.read(path);
         testCompletedRoute.setRouteGpxString(path);
         Double totalTime = compTripCalc.calculateElapsedTime(testCompletedRoute);
         Double expectedTime = 435.0;

@@ -140,6 +140,7 @@ public class CompletedTripServiceImpl implements CompletedTripService {
                 tripService.getTripRouteNames(completedTrip),
                 getCompletedRouteNames(completedTrip),
                 tripService.getTripGpxStrings(completedTrip),
+                tripService.getTripRouteColours(parentTrip),
                 getTripCompletedGpxStrings(completedTrip),
                 getTripStaticMapUrl(completedTrip),
                 completedTrip.getTripRoutes().size(),

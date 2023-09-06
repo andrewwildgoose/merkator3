@@ -32,6 +32,7 @@ public class CompletedTripResponse {
     private List<String> tripCompletedRouteNames;
     private List<RouteMapping> routeMappings;
     private List<String> tripGpxStrings;
+    private List<List<Integer>> tripRouteColours;
     private List<String> tripCompletedGpxStrings;
     private String tripStaticMapUrl;
     private int routeCount;
@@ -58,6 +59,7 @@ public class CompletedTripResponse {
                                  Double tripElapsedTime, Double tripMovingTime, Double tripAvgSpeedElapsed,
                                  Double tripAvgSpeedMoving, List<String> tripRouteNames,
                                  List<String> tripCompletedRouteNames, List<String> tripGpxStrings,
+                                 List<List<Integer>> tripRouteColours,
                                  List<String> tripCompletedGpxStrings, String tripStaticMapUrl,
                                  int routeCount, int completedRouteCount) {
         this.id = id;
@@ -77,6 +79,7 @@ public class CompletedTripResponse {
         this.tripCompletedRouteNames = tripCompletedRouteNames;
         this.tripRouteNames = tripRouteNames;
         this.tripGpxStrings = tripGpxStrings;
+        this.tripRouteColours = tripRouteColours;
         this.tripCompletedGpxStrings = tripCompletedGpxStrings;
         this.tripStaticMapUrl = tripStaticMapUrl;
         this.routeCount = routeCount;

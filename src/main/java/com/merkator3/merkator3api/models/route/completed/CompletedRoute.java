@@ -71,8 +71,13 @@ public class CompletedRoute implements RouteMarker {
     }
 
     public GPX getRouteGpx() throws IOException {
-        Path tempFile = Files.createTempFile(".gpx", ".xml");
+        Path tempFile = Files.createTempFile("gpx", ".gpx");
         Files.writeString(tempFile, routeGpxString);
+
+        String fileContent = Files.readString(tempFile);
+
+        System.out.println("Contents of the temporary file:");
+        System.out.println(fileContent);
 
         GPX gpx = GPX.read(tempFile);
 
@@ -82,21 +87,8 @@ public class CompletedRoute implements RouteMarker {
         return gpx;
     }
 
+
     // Set's the simple version of the GPX information as a String for use, if required, by the front end.
-    public void setRouteGpxString(GPX routeGpx) throws IOException {
-        Path tempFile = Files.createTempFile("gpx", ".xml");
-        GPX.write(routeGpx, tempFile);
-
-        byte[] bytes = Files.readAllBytes(tempFile);
-        String xmlString = new String(bytes);
-
-        // Delete the temporary file
-        Files.delete(tempFile);
-
-        this.routeGpxString = xmlString;
-
-    }
-
     public void setRouteGpxString(Path path) {
         try {
             this.routeGpxString = Files.lines(path)
