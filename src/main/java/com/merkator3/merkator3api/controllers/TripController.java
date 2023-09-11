@@ -73,8 +73,6 @@ public class TripController {
     @PostMapping("/trip/add_route")
     public ResponseEntity<String> addRouteToTrip(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AddRouteToTripRequest request) {
         MerkatorUser user = userService.findByEmail(userDetails.getUsername());
-        System.out.println(request.getTripId());
-        System.out.println(request.getRouteId());
 
         ObjectId tripId = request.getTripId();
         if (!tripService.tripBelongsToUser(user.getId(), tripId)) {

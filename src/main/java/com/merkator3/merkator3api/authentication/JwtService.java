@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    //added as secret to GitHub
+    // stored as value in application.properties, included in .gitignore
     @Value("${merkator.api.secretKey}")
     private String secretKey;
 
@@ -41,10 +41,9 @@ public class JwtService {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // token is valid for 24 hours & 1000 milliseconds
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // token is valid for 24 hours & 1000 milliseconds
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
-
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {

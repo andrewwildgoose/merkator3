@@ -1,6 +1,7 @@
 package com.merkator3.merkator3api.services.trip;
 
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
+import com.merkator3.merkator3api.models.trip.TripMarker;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTripResponse;
 import org.bson.types.ObjectId;
@@ -19,6 +20,9 @@ public interface CompletedTripService {
 
     boolean tripBelongsToUser(ObjectId userID, ObjectId tripID);
 
+    // return a simple completed trip response
+    CompletedTripResponse getSimpleCompletedTrip(ObjectId tripId);
+
     CompletedTripResponse getCompletedTrip(ObjectId tripId);
 
     List<CompletedRoute> createCompletedRoutes(List<String> routeIds, List<MultipartFile> gpxFiles)
@@ -33,4 +37,8 @@ public interface CompletedTripService {
     void setTripStaticMapUrl(String mapBoxKey, CompletedTrip trip);
 
     String getTripStaticMapUrl(CompletedTrip completedTrip);
+
+    List<List<Integer>> getTripCompletedRouteColours(CompletedTrip trip);
+
+    List<CompletedTrip> getUserCompletedTrips(ObjectId id);
 }

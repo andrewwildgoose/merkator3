@@ -15,13 +15,12 @@ import static com.mapbox.geojson.utils.PolylineUtils.simplify;
 
 import com.merkator3.merkator3api.models.route.RouteMarker;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
-import com.merkator3.merkator3api.models.route.planned.Route;
 import io.jenetics.jpx.GPX;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import java.util.List;
 
-import static com.merkator3.merkator3api.GpxTools.GpxReader.extractCoordinatesFromGPX;
+import static com.merkator3.merkator3api.GpxTools.GpxReader.extractCoordinatesFromGpx;
 
 public class MapBuilder {
 
@@ -36,9 +35,7 @@ public class MapBuilder {
     public <T extends RouteMarker> String generateStaticMapImageUrl(List<T> routes) {
 
         Random random = new Random();
-
         List<StaticPolylineAnnotation> routePolyLines = new ArrayList<>();
-
 
         MapboxStaticMap.Builder mapBuilder = MapboxStaticMap.builder()
                 .accessToken(mapBoxKey)
@@ -51,14 +48,13 @@ public class MapBuilder {
 
         for (T route : routes) {
             GPX gpx = route.getRouteGpx();
-            List<Point> points = extractCoordinatesFromGPX(gpx).stream()
+            List<Point> points = extractCoordinatesFromGpx(gpx).stream()
                     .map(coordinate -> Point.fromLngLat(coordinate.getLongitude(), coordinate.getLatitude()))
                     .collect(Collectors.toList());
 
             //Reduce the number of points to fit URL length constraints
             List<Point> simplifiedPoints = simplify(points, 0.00175);
             LineString lineString = LineString.fromLngLats(simplifiedPoints);
-
 
             if (route.getMapLineColor() == null) {
                 // Generate a random color if the route does not yet have a colour
@@ -69,7 +65,6 @@ public class MapBuilder {
                 // Save the RGB values for consistent colouring of this route.
                 route.setMapLineColor(red, green, blue);
             }
-
 
             StaticPolylineAnnotation polylineAnnotation = StaticPolylineAnnotation.builder()
                     .polyline(PolylineUtils.encode(simplifiedPoints, 5))
@@ -82,8 +77,6 @@ public class MapBuilder {
                     .strokeWidth(6.0)
                     .build();
             routePolyLines.add(polylineAnnotation);
-
-
         }
         mapBuilder.staticPolylineAnnotations(routePolyLines);
         MapboxStaticMap staticMap = mapBuilder.build();

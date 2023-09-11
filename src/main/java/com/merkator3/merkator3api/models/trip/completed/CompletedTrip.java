@@ -25,7 +25,7 @@ public class CompletedTrip implements TripMarker {
     @Id
     private ObjectId id;
     @Field("tripName") private String tripName;
-    @Field("hasParentTrip") private Boolean hasParentTrip;
+    @Field("hasParentTrip") private final Boolean hasParentTrip;
     @Field("parentTripName") private String parentTripName;
     @Field("parentTripId") private ObjectId parentTripId;
     @Field("tripDescription") private String tripDescription;
@@ -48,6 +48,10 @@ public class CompletedTrip implements TripMarker {
 
     public void setTripName(String tripName) {
         this.tripName = tripName;
+    }
+
+    public boolean hasParentTrip() {
+        return hasParentTrip;
     }
 
     public void setParentTripName(String parentTripName) {

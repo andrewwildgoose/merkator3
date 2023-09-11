@@ -1,6 +1,5 @@
 package com.merkator3.merkator3api.models.trip.completed;
 
-import com.merkator3.merkator3api.models.route.planned.RouteMapping;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,44 +23,48 @@ public class CompletedTripResponse {
     private Double tripCompletedLength;
     private Double tripCompletedElevationGain;
     private Double tripCompletedElevationLoss;
-    private Double tripElapsedTime;
-    private Double tripMovingTime;
+    private String tripElapsedTime;
+    private String tripMovingTime;
     private Double tripAvgSpeedElapsed;
     private Double tripAvgSpeedMoving;
     private List<String> tripRouteNames;
     private List<String> tripCompletedRouteNames;
-    private List<RouteMapping> routeMappings;
     private List<String> tripGpxStrings;
     private List<List<Integer>> tripRouteColours;
     private List<String> tripCompletedGpxStrings;
+    private List<List<Integer>> tripCompletedRouteColours;
     private String tripStaticMapUrl;
     private int routeCount;
     private int completedRouteCount;
     private String error;
 
     // Simple trip response
-    public CompletedTripResponse(ObjectId id, String idString, String tripName) {
+    public CompletedTripResponse(ObjectId id, String idString, String tripName, String tripDescription,
+                                 Double tripLength, int routeCount, Double tripCompletedLength,
+                                 int completedRouteCount, String tripStaticMapUrl) {
         this.id = id;
         this.idString = idString;
         this.tripName = tripName;
+        this.tripDescription = tripDescription;
+        this.tripLength = tripLength;
+        this.routeCount = routeCount;
+        this.tripCompletedLength = tripCompletedLength;
+        this.completedRouteCount = completedRouteCount;
+        this.tripStaticMapUrl = tripStaticMapUrl;
     }
 
-    // Trip Response for retrieving related Route info
-    public CompletedTripResponse(List<RouteMapping> routeMappings){
-        this.routeMappings = routeMappings;
-    }
 
     // Detailed Trip Response
     public CompletedTripResponse(ObjectId id, String idString, String tripName,
                                  String tripDescription, Double tripLength,
                                  Double tripElevationGain, Double tripElevationLoss, Double tripCompletedLength,
                                  Double tripCompletedElevationGain, Double tripCompletedElevationLoss,
-                                 Double tripElapsedTime, Double tripMovingTime, Double tripAvgSpeedElapsed,
+                                 String tripElapsedTime, String tripMovingTime, Double tripAvgSpeedElapsed,
                                  Double tripAvgSpeedMoving, List<String> tripRouteNames,
                                  List<String> tripCompletedRouteNames, List<String> tripGpxStrings,
                                  List<List<Integer>> tripRouteColours,
-                                 List<String> tripCompletedGpxStrings, String tripStaticMapUrl,
-                                 int routeCount, int completedRouteCount) {
+                                 List<String> tripCompletedGpxStrings, List<List<Integer>> tripCompletedRouteColours,
+                                 String tripStaticMapUrl, int routeCount, int completedRouteCount) {
         this.id = id;
         this.idString = idString;
         this.tripName = tripName;
@@ -81,6 +84,7 @@ public class CompletedTripResponse {
         this.tripGpxStrings = tripGpxStrings;
         this.tripRouteColours = tripRouteColours;
         this.tripCompletedGpxStrings = tripCompletedGpxStrings;
+        this.tripCompletedRouteColours = tripCompletedRouteColours;
         this.tripStaticMapUrl = tripStaticMapUrl;
         this.routeCount = routeCount;
         this.completedRouteCount = completedRouteCount;

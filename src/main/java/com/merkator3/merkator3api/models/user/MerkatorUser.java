@@ -53,6 +53,21 @@ public class MerkatorUser implements UserDetails {
         return email;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -73,20 +88,7 @@ public class MerkatorUser implements UserDetails {
         return true;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
 
     public void addRoute(ObjectId routeId) {
         if (this.userRoutes == null){
@@ -117,7 +119,8 @@ public class MerkatorUser implements UserDetails {
         userCompletedTrips.add(tripId);
     }
 
-    public Collection<ObjectId> getUserCompletedTrips() {
+    public List<ObjectId> getUserCompletedTrips() {
         return userCompletedTrips;
     }
+
 }

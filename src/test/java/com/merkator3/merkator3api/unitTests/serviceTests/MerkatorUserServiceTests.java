@@ -15,13 +15,13 @@ public class MerkatorUserServiceTests {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
-    private RouteRepository routeRepository;
     private UserService userService;
 
     @BeforeEach
     void createUserService() {
-        userService = new UserServiceImpl(userRepository, routeRepository);
+        userService = new UserServiceImpl(userRepository);
     }
 
     @AfterEach

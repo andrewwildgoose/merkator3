@@ -16,7 +16,6 @@ import com.merkator3.merkator3api.services.route.RouteService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,8 +45,6 @@ public class CompletedTripServiceImpl implements CompletedTripService {
     @Autowired
     private TripService tripService;
     @Autowired
-    private RouteService routeService;
-    @Autowired
     private CompletedRouteService completedRouteService;
     @Value("${merkator.api.mapBoxKey}")
     private String mapBoxKey;
@@ -56,14 +53,13 @@ public class CompletedTripServiceImpl implements CompletedTripService {
     public CompletedTripServiceImpl(UserRepository userRepository, CompletedTripRepository completedTripRepository,
                                     TripRepository tripRepository, RouteRepository routeRepository,
                                     CompletedRouteRepository completedRouteRepository, TripService tripService,
-                                    RouteService routeService, CompletedRouteService completedRouteService) {
+                                    CompletedRouteService completedRouteService) {
         this.userRepository = userRepository;
         this.completedTripRepository = completedTripRepository;
         this.completedRouteRepository = completedRouteRepository;
         this.tripRepository = tripRepository;
         this.routeRepository = routeRepository;
         this.tripService = tripService;
-        this.routeService = routeService;
         this.completedRouteService = completedRouteService;
     }
 
@@ -108,6 +104,29 @@ public class CompletedTripServiceImpl implements CompletedTripService {
         return user.getUserCompletedTrips().contains(tripID);
     }
 
+    // return a simple completed trip response
+    @Override
+    public CompletedTripResponse getSimpleCompletedTrip(ObjectId tripId) {
+        CompletedTrip completedTrip = completedTripRepository.findById(tripId);
+        List<CompletedRoute> completedRoutes = getCompletedRoutes(completedTrip);
+        Trip parentTrip = tripRepository.findById(completedTrip.getParentTripId());
+        List<Route> plannedRoutes = tripService.getTripRoutes(parentTrip);
+
+        Double completedDistance = compTripCalc.totalCompletedDistance(completedRoutes);
+        return new CompletedTripResponse(
+                completedTrip.getId(),
+                completedTrip.getId().toString(),
+                completedTrip.getTripName(),
+                completedTrip.getTripDescription(),
+                tripCalc.totalDistance(plannedRoutes),
+                completedTrip.getTripRoutes().size(),
+                completedDistance,
+                completedTrip.getCompletedRoutes().size(),
+                getTripStaticMapUrl(completedTrip)
+        );
+    }
+
+    // Return a detailed completed trip response
     @Override
     public CompletedTripResponse getCompletedTrip(ObjectId tripId) {
         CompletedTrip completedTrip = completedTripRepository.findById(tripId);
@@ -121,6 +140,10 @@ public class CompletedTripServiceImpl implements CompletedTripService {
         Double elapsedTime = compTripCalc.calculateTripElapsedTime(completedRoutes);
         Double movingTime = compTripCalc.calculateTripMovingTime(completedRoutes);
 
+        // Format the time into HH:MM String
+        String elapsedTimeString = convertMinutesToHoursMinutes(elapsedTime);
+        String movingTimeString = convertMinutesToHoursMinutes(movingTime);
+
         // Build and return the completed trip response.
         return new CompletedTripResponse(
                 completedTrip.getId(),
@@ -133,25 +156,23 @@ public class CompletedTripServiceImpl implements CompletedTripService {
                 completedDistance,
                 compTripCalc.totalCompletedElevationGain(completedRoutes),
                 compTripCalc.totalCompletedElevationLoss(completedRoutes),
-                elapsedTime,
-                movingTime,
+                elapsedTimeString,
+                movingTimeString,
                 compTripCalc.calculateAvgSpeed(completedDistance, elapsedTime),
-                compTripCalc.calculateAvgSpeed(completedDistance, elapsedTime),
+                compTripCalc.calculateAvgSpeed(completedDistance, movingTime),
                 tripService.getTripRouteNames(completedTrip),
                 getCompletedRouteNames(completedTrip),
                 tripService.getTripGpxStrings(completedTrip),
-                tripService.getTripRouteColours(parentTrip),
+                tripService.getTripRouteColours(completedTrip),
                 getTripCompletedGpxStrings(completedTrip),
+                getTripCompletedRouteColours(completedTrip),
                 getTripStaticMapUrl(completedTrip),
                 completedTrip.getTripRoutes().size(),
                 completedTrip.getCompletedRoutes().size()
         );
     }
 
-
-
-
-    // Method for taking a list of routes to be completed & creating them.
+        // Method for taking a list of routes to be completed & creating them.
     @Override
     public List<CompletedRoute> createCompletedRoutes(List<String> routeIds, List<MultipartFile> gpxFiles)
             throws IOException {
@@ -173,6 +194,11 @@ public class CompletedTripServiceImpl implements CompletedTripService {
                 completedRoute.setParentRouteName(parentRoute.getRouteName());
                 completedRoute.setParentRouteId(parentRoute.getId());
                 completedRoute.setRouteDescription("Completed route based on " + parentRoute.getRouteName());
+                completedRoute.setMapLineColor(
+                        parentRoute.getMapLineColor().get(0),
+                        parentRoute.getMapLineColor().get(1),
+                        parentRoute.getMapLineColor().get(2)
+                        );
 
             } else {
                 completedRoute = new CompletedRoute(gpxFile.getOriginalFilename(), false);
@@ -181,6 +207,7 @@ public class CompletedTripServiceImpl implements CompletedTripService {
             Path tempFile = Files.createTempFile("temp", ".gpx");
             gpxFile.transferTo(tempFile.toFile());
             completedRoute.setRouteGpxString(tempFile);
+
             completedRouteRepository.save(completedRoute);
 
             // Add the completed route to the list
@@ -261,5 +288,30 @@ public class CompletedTripServiceImpl implements CompletedTripService {
             setTripStaticMapUrl(mapBoxKey, completedTrip);
         }
         return completedTrip.getTripStaticMapUrl();
+    }
+
+    @Override
+    public List<List<Integer>> getTripCompletedRouteColours(CompletedTrip trip) {
+        return trip.getCompletedRoutes().stream()
+                .map(route -> completedRouteRepository.findById(route))
+                .map(CompletedRoute::getMapLineColor)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CompletedTrip> getUserCompletedTrips(ObjectId userId) {
+        MerkatorUser user = userRepository.findById(userId);
+        List<ObjectId> userCompTripIds = user.getUserCompletedTrips();
+        List<String> tripIdsString = userCompTripIds.stream()
+                .map(ObjectId::toString)
+                .toList();
+        return completedTripRepository.findAllById(tripIdsString);
+    }
+
+    public static String convertMinutesToHoursMinutes(double minutes) {
+        int hours = (int) minutes / 60;
+        int remainingMinutes = (int) minutes % 60;
+
+        return String.format("%02d:%02d", hours, remainingMinutes);
     }
 }

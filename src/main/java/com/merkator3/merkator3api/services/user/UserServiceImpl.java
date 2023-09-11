@@ -1,8 +1,6 @@
 package com.merkator3.merkator3api.services.user;
 
 import com.merkator3.merkator3api.models.user.MerkatorUser;
-import com.merkator3.merkator3api.repositories.RouteRepository;
-import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import com.merkator3.merkator3api.services.route.RouteService;
 import com.merkator3.merkator3api.services.trip.TripService;
@@ -20,30 +18,30 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
 
     @Autowired
-    private final RouteRepository routeRepository;
-
-    @Autowired
-    private TripRepository tripRepository;
-
-    @Autowired
     private RouteService routeService;
 
     @Autowired
     private TripService tripService;
 
-    public UserServiceImpl(UserRepository userRepository, RouteRepository routeRepository) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.routeRepository = routeRepository;
+
     }
 
-    // CREATE
+    // Create user
     @Override
     public MerkatorUser createUser(String username, String password) {
         MerkatorUser merkatorUser = new MerkatorUser(username, password);
         return userRepository.save(merkatorUser);
     }
 
-    // READ
+    // Delete user
+    @Override
+    public void deleteUser(ObjectId userId) {
+        MerkatorUser user = userRepository.findById(userId);
+        userRepository.delete(user);
+    }
+
     @Override
     public MerkatorUser getUser(ObjectId userId) {
         return userRepository.findById(userId);

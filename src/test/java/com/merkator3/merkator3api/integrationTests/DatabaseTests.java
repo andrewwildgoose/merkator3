@@ -38,13 +38,13 @@ public class DatabaseTests {
     }
 
     @Test
-    void userInserted() {
+    void testUserInserted() {
         userRepository.save(testMerkatorUser);
         Assertions.assertEquals(userRepository.findByEmail("testUser@google.com").getName(),"testUser");
     }
 
     @Test
-    void routeInserted() {
+    void testRouteInserted() {
         Route DBTestRoute = new Route("DBTestRoute");
         routeRepository.save(DBTestRoute);
         Assertions.assertEquals(DBTestRoute.getRouteName(), routeRepository.findByRouteName("DBTestRoute").getRouteName());
@@ -53,7 +53,7 @@ public class DatabaseTests {
 
 
     @Test
-    void routeInsertedWithGPX() throws IOException {
+    void testRouteInsertedWithGPX() throws IOException {
         // Create a test route
         Route DBTestRouteGPX = new Route("DBTestRouteGPX");
 

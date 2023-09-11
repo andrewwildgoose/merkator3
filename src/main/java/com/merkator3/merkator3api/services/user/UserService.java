@@ -7,6 +7,8 @@ public interface UserService {
 
     MerkatorUser createUser(String email, String password);
 
+    void deleteUser(ObjectId userId);
+
     MerkatorUser getUser(ObjectId userId);
 
     MerkatorUser findByEmail(String email);

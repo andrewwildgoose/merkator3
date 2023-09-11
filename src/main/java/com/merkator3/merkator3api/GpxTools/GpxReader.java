@@ -27,7 +27,7 @@ public class GpxReader {
     }
 
     // method used to obtain a list of WayPoints directly from a GPX object.
-    public static List<Coordinate> extractCoordinatesFromGPX(GPX gpx) {
+    public static List<Coordinate> extractCoordinatesFromGpx(GPX gpx) {
         List<WayPoint> wayPoints = gpxToPointList(gpx);
 
         return wayPoints.stream()

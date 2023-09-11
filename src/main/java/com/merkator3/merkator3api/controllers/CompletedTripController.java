@@ -1,5 +1,6 @@
 package com.merkator3.merkator3api.controllers;
 
+import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTripResponse;
 import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.services.trip.CompletedTripService;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/merkator/user/")
@@ -32,6 +34,19 @@ public class CompletedTripController {
 
     @Autowired
     private CompletedTripService completedTripService;
+
+    @GetMapping("/completed_trips")
+    public ResponseEntity<List<CompletedTripResponse>> getCompletedTrips(@AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("Completed Trips request received");
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+        List<CompletedTrip> completedTrips = completedTripService.getUserCompletedTrips(user.getId());
+
+        List<CompletedTripResponse> completedTripResponses = completedTrips.stream()
+                .map(completedTrip -> completedTripService.getCompletedTrip(completedTrip.getId()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(completedTripResponses);
+    }
 
     @PostMapping("/complete_trip")
     public ResponseEntity<String> completeTrip(@AuthenticationPrincipal UserDetails userDetails,

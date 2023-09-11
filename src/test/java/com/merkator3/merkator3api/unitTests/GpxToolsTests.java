@@ -26,7 +26,7 @@ public class GpxToolsTests {
     }
 
     @BeforeEach
-    void creatLBLGPX() throws IOException {
+    void creatLblGpx() throws IOException {
         Path path = Path.of("src/test/TestFiles/GPX/London to Brighton Return.gpx");
         lbl = GPX.read(path);
     }
@@ -44,7 +44,7 @@ public class GpxToolsTests {
 
 
     @Test
-    void testWriteGPXToFile() throws IOException {
+    void testWriteGpxToFile() throws IOException {
         Path path = Path.of("src/test/TestFiles/GPX/test.gpx");
         GPX.write(gpx, path);
         Assertions.assertTrue(Files.exists(path), "GPX file has not been created");
@@ -52,8 +52,8 @@ public class GpxToolsTests {
 
     // Test the gpxToPointList function generates a list with the expected number of points.
     @Test
-    void testReadGPX() throws IOException {
-        testWriteGPXToFile();
+    void testReadGpx() throws IOException {
+        testWriteGpxToFile();
         int expectedSize = 3;
         GpxReader gpxReader = new GpxReader();
         List<WayPoint> gpxPoints = gpxReader.gpxToPointList("src/test/TestFiles/GPX/test.gpx");
@@ -63,7 +63,7 @@ public class GpxToolsTests {
     // Test for the GpxBuidler class to ensure it adds Waypoints directly into a segment in a GPX object.
     @Test
     void testBuildWaypoints() throws IOException {
-        testWriteGPXToFile();
+        testWriteGpxToFile();
         GpxReader gpxReader = new GpxReader();
         List<WayPoint> gpxPoints = gpxReader.gpxToPointList("src/test/TestFiles/GPX/test.gpx");
 
@@ -82,7 +82,7 @@ public class GpxToolsTests {
     }
 
     @Test
-    void testDistanceCalulator(){
+    void testDistanceCalculator(){
         GpxDistanceCalculator gpxDistCalc = new GpxDistanceCalculator();
         Length distance = gpxDistCalc.calculateDistance(lbl);
         Assertions.assertEquals("201487.60385260044 m", distance.toString());

@@ -17,9 +17,16 @@ public class MerkatorUserTests {
         testMerkatorUser = new MerkatorUser("testUser@google.com", "testUser");
     }
 
+    // Test to verify user created by retrieving the correct email
     @Test
     void testUserCreated() {
-        Assertions.assertEquals(testMerkatorUser.getUsername(), "testUser");
+        Assertions.assertEquals(testMerkatorUser.getUsername(), "testUser@google.com");
+    }
+
+    // Test to verify retrieval of user's name
+    @Test
+    void testGetName() {
+        Assertions.assertEquals(testMerkatorUser.getName(), "testUser");
     }
 
     @Test

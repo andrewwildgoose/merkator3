@@ -21,6 +21,8 @@ public class CompletedRoute implements RouteMarker {
     @Id
     private ObjectId id;
     @Field("routeName") private String routeName;
+
+
     @Field("hasParentRoute") private Boolean hasParentRoute;
     @Field("parentRouteName") private String parentRouteName;
     @Field("parentRouteId") private ObjectId parentRouteId;
@@ -44,6 +46,10 @@ public class CompletedRoute implements RouteMarker {
 
     public void setRouteName(String routeName) {
         this.routeName = routeName;
+    }
+
+    public Boolean getHasParentRoute() {
+        return hasParentRoute;
     }
 
     public void setParentRouteName(String parentRouteName) {
@@ -75,9 +81,6 @@ public class CompletedRoute implements RouteMarker {
         Files.writeString(tempFile, routeGpxString);
 
         String fileContent = Files.readString(tempFile);
-
-        System.out.println("Contents of the temporary file:");
-        System.out.println(fileContent);
 
         GPX gpx = GPX.read(tempFile);
 
