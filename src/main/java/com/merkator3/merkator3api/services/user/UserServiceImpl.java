@@ -3,6 +3,7 @@ package com.merkator3.merkator3api.services.user;
 import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import com.merkator3.merkator3api.services.route.RouteService;
+import com.merkator3.merkator3api.services.trip.CompletedTripService;
 import com.merkator3.merkator3api.services.trip.TripService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private TripService tripService;
+
+    @Autowired
+    private CompletedTripService completedTripService;
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -79,6 +83,23 @@ public class UserServiceImpl implements UserService{
             if (success) {
                 // Remove routeId from the user's userRoutes list
                 user.getUserTrips().remove(tripId);
+                userRepository.save(user);
+                return true; // Route deleted successfully
+            }
+        }
+        return false; // Either user not found or route deletion failed
+    }
+
+    @Override
+    public boolean deleteCompletedTrip(ObjectId userId, ObjectId completedTripId) {
+        MerkatorUser user = userRepository.findById(userId);
+        if (user != null && user.getUserCompletedTrips().contains(completedTripId)) {
+            // Delete the route from the route repository
+            boolean success = completedTripService.deleteTrip(completedTripId);
+
+            if (success) {
+                // Remove routeId from the user's userRoutes list
+                user.getUserCompletedTrips().remove(completedTripId);
                 userRepository.save(user);
                 return true; // Route deleted successfully
             }

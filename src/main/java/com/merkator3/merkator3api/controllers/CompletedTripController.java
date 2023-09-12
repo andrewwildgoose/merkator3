@@ -75,4 +75,21 @@ public class CompletedTripController {
 
         return ResponseEntity.ok(completedTripResponse);
     }
+
+    @DeleteMapping("/completed_trip/{id}")
+    public ResponseEntity<String> deleteTrip(@AuthenticationPrincipal UserDetails userDetails,
+                                             @PathVariable("id") ObjectId completedTripId) {
+        MerkatorUser user = userService.findByEmail(userDetails.getUsername());
+
+        if (!completedTripService.tripBelongsToUser(user.getId(), completedTripId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Trip does not belong to the user.");
+        }
+
+        boolean success = userService.deleteCompletedTrip(user.getId(), completedTripId);
+        if (success) {
+            return ResponseEntity.ok("Trip deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting trip.");
+        }
+    }
 }

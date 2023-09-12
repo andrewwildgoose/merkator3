@@ -41,4 +41,6 @@ public interface CompletedTripService {
     List<List<Integer>> getTripCompletedRouteColours(CompletedTrip trip);
 
     List<CompletedTrip> getUserCompletedTrips(ObjectId id);
+
+    boolean deleteTrip(ObjectId completedTripId);
 }

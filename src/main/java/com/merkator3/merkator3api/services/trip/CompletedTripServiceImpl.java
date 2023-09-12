@@ -308,6 +308,21 @@ public class CompletedTripServiceImpl implements CompletedTripService {
         return completedTripRepository.findAllById(tripIdsString);
     }
 
+    @Override
+    public boolean deleteTrip(ObjectId completedTripId) {
+        try {
+            CompletedTrip completedTrip = completedTripRepository.findById(completedTripId);
+            if (completedTripId == null) {
+                return false; // Route not found
+            }
+            // Remove route from route repository
+            completedTripRepository.deleteById(String.valueOf(completedTripId));
+            return true; // Route deleted successfully
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public static String convertMinutesToHoursMinutes(double minutes) {
         int hours = (int) minutes / 60;
         int remainingMinutes = (int) minutes % 60;

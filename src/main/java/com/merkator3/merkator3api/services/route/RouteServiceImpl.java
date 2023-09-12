@@ -116,7 +116,8 @@ public class RouteServiceImpl implements RouteService{
                     gpxElevCalc.calculateElevationGain(routeGpx),
                     gpxElevCalc.calculateElevationLoss(routeGpx),
                     getRouteGpxAsJSON(route.getId()),
-                    getRouteStaticMapURL(route, mapBoxKey)
+                    getRouteStaticMapURL(route, mapBoxKey),
+                    route.getMapLineColor()
             );
         } catch (IOException | JSONException e) {
             throw new RuntimeException(e);

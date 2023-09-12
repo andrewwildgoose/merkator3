@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
 
+import java.util.List;
+
 @Data
 @Builder
 public class RouteResponse {
@@ -16,11 +18,12 @@ public class RouteResponse {
     private int routeElevationLoss;
     private String routeGpxString;
     private String routeStaticMapUrl;
+    private List<Integer> mapLineColor;
 
     public RouteResponse(ObjectId id, String idString, String routeName,
                             String routeDescription, Double routeLength,
                             int routeElevationGain, int routeElevationLoss,
-                            String routeGpxString, String routeStaticMapUrl) {
+                            String routeGpxString, String routeStaticMapUrl, List<Integer> mapLineColor) {
         this.id = id;
         this.idString = idString;
         this.routeName = routeName;
@@ -30,6 +33,7 @@ public class RouteResponse {
         this.routeElevationLoss = routeElevationLoss;
         this.routeGpxString = routeGpxString;
         this.routeStaticMapUrl = routeStaticMapUrl;
+        this.mapLineColor = mapLineColor;
     }
 
 }
