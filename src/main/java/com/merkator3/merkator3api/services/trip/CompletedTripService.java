@@ -1,5 +1,6 @@
 package com.merkator3.merkator3api.services.trip;
 
+import com.merkator3.merkator3api.models.route.RouteMarker;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import com.merkator3.merkator3api.models.trip.TripMarker;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
@@ -20,25 +21,14 @@ public interface CompletedTripService {
 
     boolean tripBelongsToUser(ObjectId userID, ObjectId tripID);
 
-    // return a simple completed trip response
-    CompletedTripResponse getSimpleCompletedTrip(ObjectId tripId);
-
     CompletedTripResponse getCompletedTrip(ObjectId tripId);
 
     List<CompletedRoute> createCompletedRoutes(List<String> routeIds, List<MultipartFile> gpxFiles)
             throws IOException;
 
-    List<CompletedRoute> getCompletedRoutes(CompletedTrip trip);
-
     List<String> getTripCompletedGpxStrings(CompletedTrip trip);
 
-    List<String> getCompletedRouteNames(CompletedTrip trip);
-
-    void setTripStaticMapUrl(String mapBoxKey, CompletedTrip trip);
-
-    String getTripStaticMapUrl(CompletedTrip completedTrip);
-
-    List<List<Integer>> getTripCompletedRouteColours(CompletedTrip trip);
+    void setTripStaticMapUrl(String mapBoxKey, CompletedTrip trip, List<RouteMarker> combinedRoutes);
 
     List<CompletedTrip> getUserCompletedTrips(ObjectId id);
 
