@@ -1,7 +1,5 @@
 package com.merkator3.merkator3api.models.trip.completed;
 
-import com.merkator3.merkator3api.MapTools.MapBuilder;
-import com.merkator3.merkator3api.models.route.RouteMarker;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.trip.TripMarker;
@@ -12,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +47,7 @@ public class CompletedTrip implements TripMarker {
     public CompletedTrip(String tripName, Boolean hasParentTrip){
         this.tripName = tripName;
         this.hasParentTrip = hasParentTrip;
-    };
+    }
 
     public ObjectId getId() {
         return id;

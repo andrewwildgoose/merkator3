@@ -4,7 +4,6 @@ import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTripResponse;
 import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.services.trip.CompletedTripService;
-import com.merkator3.merkator3api.services.route.RouteService;
 import com.merkator3.merkator3api.services.trip.TripService;
 import com.merkator3.merkator3api.services.user.UserService;
 import org.bson.types.ObjectId;

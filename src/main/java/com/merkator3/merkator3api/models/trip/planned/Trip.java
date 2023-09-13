@@ -1,6 +1,5 @@
 package com.merkator3.merkator3api.models.trip.planned;
 
-import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.trip.TripMarker;
 import org.bson.types.ObjectId;
@@ -27,7 +26,7 @@ public class Trip implements TripMarker {
 
     public Trip(String tripName){
         this.tripName = tripName;
-    };
+    }
 
     public ObjectId getId() {
         return id;

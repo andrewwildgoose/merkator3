@@ -1,9 +1,7 @@
 package com.merkator3.merkator3api.services.trip;
 
-import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.models.route.planned.Route;
 import com.merkator3.merkator3api.models.route.planned.RouteMapping;
-import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
 import com.merkator3.merkator3api.models.trip.TripMarker;
 import com.merkator3.merkator3api.models.trip.planned.TripResponse;

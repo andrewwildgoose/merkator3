@@ -1,6 +1,5 @@
 package com.merkator3.merkator3api.models.route.planned;
 
-import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.models.route.RouteMarker;
 import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
@@ -74,7 +73,7 @@ public class Route implements RouteMarker {
 
     }
 
-    public String getRouteGpxString() throws IOException {
+    public String getRouteGpxString() {
         return this.routeGpxString;
     }
 

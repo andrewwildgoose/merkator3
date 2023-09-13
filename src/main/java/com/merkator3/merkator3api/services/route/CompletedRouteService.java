@@ -1,7 +1,6 @@
 package com.merkator3.merkator3api.services.route;
 
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
-import com.merkator3.merkator3api.models.route.planned.Route;
 import org.bson.types.ObjectId;
 
 import java.io.IOException;

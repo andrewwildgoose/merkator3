@@ -1,6 +1,5 @@
 package com.merkator3.merkator3api.models.route.completed;
 
-import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.models.route.RouteMarker;
 import io.jenetics.jpx.GPX;
 import org.bson.types.ObjectId;
@@ -21,7 +20,7 @@ public class CompletedRoute implements RouteMarker {
     @Id
     private ObjectId id;
     @Field("routeName") private String routeName;
-    @Field("hasParentRoute") private Boolean hasParentRoute;
+    @Field("hasParentRoute") private final Boolean hasParentRoute;
     @Field("parentRouteName") private String parentRouteName;
     @Field("parentRouteId") private ObjectId parentRouteId;
     @Field("routeDescription") private String routeDescription;
@@ -82,8 +81,6 @@ public class CompletedRoute implements RouteMarker {
         Path tempFile = Files.createTempFile("gpx", ".gpx");
         Files.writeString(tempFile, routeGpxString);
 
-        String fileContent = Files.readString(tempFile);
-
         GPX gpx = GPX.read(tempFile);
 
         // Delete the temporary file
@@ -103,7 +100,7 @@ public class CompletedRoute implements RouteMarker {
         }
     }
 
-    public String getRouteGpxString() throws IOException {
+    public String getRouteGpxString() {
         return this.routeGpxString;
     }
 

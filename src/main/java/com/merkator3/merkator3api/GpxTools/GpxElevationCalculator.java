@@ -3,8 +3,6 @@ package com.merkator3.merkator3api.GpxTools;
 import io.jenetics.jpx.*;
 import org.apache.commons.math3.util.Precision;
 
-import java.util.Optional;
-
 public class GpxElevationCalculator {
     public int calculateElevationGain(GPX gpx) {
         int[] totalElevationGain = {0};
