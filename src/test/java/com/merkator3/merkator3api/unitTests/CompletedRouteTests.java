@@ -25,6 +25,7 @@ public class CompletedRouteTests {
     @BeforeEach
     void createRoute(){
         testCompletedRoute = new CompletedRoute("testRoute", false);
+        testCompletedRoute.setId(new ObjectId());
     }
 
     @Test

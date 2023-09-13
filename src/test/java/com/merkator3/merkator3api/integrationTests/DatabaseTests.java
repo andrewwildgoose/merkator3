@@ -32,7 +32,7 @@ public class DatabaseTests {
 
     @AfterEach
     void removeUser() {
-        if (userRepository.findByEmail("testUser@google.com") == null){
+        if (userRepository.findByEmail("testUser@google.com") != null){
             userRepository.delete(testMerkatorUser);
         }
     }

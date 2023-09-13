@@ -37,13 +37,13 @@ public class MerkatorUserServiceTests {
     @Test
     void createUserTest() {
         userService.createUser("merkatorUser1@google.com", "1234");
-        Assertions.assertEquals(userRepository.findByEmail("merkatorUser1@google.com").getUsername(), "merkatorUser1");
+        Assertions.assertEquals(userRepository.findByEmail("merkatorUser1@google.com").getUsername(), "merkatorUser1@google.com");
     }
 
     @Test
     void getUserTest() {
         userService.createUser("merkatorUser2@google.com", "1234");
-        ObjectId testUserId = userRepository.findByEmail("\"merkatorUser2@google.com\"").getId();
+        ObjectId testUserId = userRepository.findByEmail("merkatorUser2@google.com").getId();
         MerkatorUser testMerkatorUser = userService.getUser(testUserId);
         Assertions.assertEquals(testMerkatorUser.getId(),  testUserId);
     }

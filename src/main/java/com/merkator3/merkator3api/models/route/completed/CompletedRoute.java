@@ -21,8 +21,6 @@ public class CompletedRoute implements RouteMarker {
     @Id
     private ObjectId id;
     @Field("routeName") private String routeName;
-
-
     @Field("hasParentRoute") private Boolean hasParentRoute;
     @Field("parentRouteName") private String parentRouteName;
     @Field("parentRouteId") private ObjectId parentRouteId;
@@ -38,6 +36,10 @@ public class CompletedRoute implements RouteMarker {
 
     public ObjectId getId() {
         return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public String getRouteName() {

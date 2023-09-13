@@ -27,9 +27,6 @@ public class CompletedTripController {
     private UserService userService;
 
     @Autowired
-    private RouteService routeService;
-
-    @Autowired
     private TripService tripService;
 
     @Autowired
