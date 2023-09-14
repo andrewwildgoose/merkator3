@@ -11,4 +11,6 @@ public interface RouteMarker {
     List<Integer> getMapLineColor();
 
     void setMapLineColor(int red, int green, int blue);
+
+    String getRouteGpxString();
 }

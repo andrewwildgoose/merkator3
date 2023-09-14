@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Document(collection = "completedRoutes")
 
@@ -92,9 +93,8 @@ public class CompletedRoute implements RouteMarker {
 
     // Set's the simple version of the GPX information as a String for use, if required, by the front end.
     public void setRouteGpxString(Path path) {
-        try {
-            this.routeGpxString = Files.lines(path)
-                    .collect(Collectors.joining("\n"));
+        try (Stream<String> lines = Files.lines(path)) {
+            this.routeGpxString = lines.collect(Collectors.joining("\n"));
         } catch (IOException e) {
             e.printStackTrace();
         }

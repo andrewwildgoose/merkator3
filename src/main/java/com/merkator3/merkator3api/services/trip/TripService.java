@@ -5,7 +5,10 @@ import com.merkator3.merkator3api.models.route.planned.RouteMapping;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
 import com.merkator3.merkator3api.models.trip.TripMarker;
 import com.merkator3.merkator3api.models.trip.planned.TripResponse;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import org.bson.types.ObjectId;
+
+import java.io.IOException;
 import java.util.List;
 
 public interface TripService {
@@ -22,11 +25,13 @@ public interface TripService {
 
     boolean tripBelongsToUser(ObjectId id, ObjectId tripID);
 
-    boolean deleteTrip(ObjectId tripId);
+    boolean deleteTrip(MerkatorUser user, ObjectId tripId);
 
     List<RouteMapping> getRouteMapping(ObjectId tripId);
 
     <T extends TripMarker> List<String> getTripGpxStrings(T trip);
+
+    String getRouteGpxAsJSON(Route route) throws IOException;
 
     <T extends TripMarker> List<List<Integer>> getTripRouteColours(T trip);
 

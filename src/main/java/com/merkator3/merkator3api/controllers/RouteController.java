@@ -4,6 +4,7 @@ import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.models.route.planned.RouteResponse;
 import com.merkator3.merkator3api.services.route.RouteService;
 import com.merkator3.merkator3api.services.user.UserService;
+import io.jsonwebtoken.lang.Assert;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,17 @@ import java.util.List;
 @RequestMapping("/merkator/user")
 public class RouteController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+    private final RouteService routeService;
 
     @Autowired
-    private RouteService routeService;
+    public RouteController(UserService userService, RouteService routeService) {
+        Assert.notNull(userService, "userService must not be null");
+        Assert.notNull(routeService, "routeService must not be null");
+        this.userService = userService;
+        this.routeService = routeService;
+    }
 
     // Return a list of the user's routes
     @GetMapping("/routes")
@@ -58,7 +65,6 @@ public class RouteController {
         }
     }
 
-
     @GetMapping("/route/{id}")
     public ResponseEntity<RouteResponse> getRoute(@PathVariable("id") ObjectId routeId) throws IOException {
         RouteResponse routeResponse = routeService.getRouteResponse(routeId);
@@ -67,14 +73,14 @@ public class RouteController {
 
     @DeleteMapping("/route/{routeId}")
     public ResponseEntity<String> deleteRoute(@AuthenticationPrincipal UserDetails userDetails,
-                                              @PathVariable("routeId") ObjectId routeId) {
+                                                 @PathVariable("routeId") ObjectId routeId) {
         MerkatorUser user = userService.findByEmail(userDetails.getUsername());
 
         if (!routeService.routeBelongsToUser(user.getId(), routeId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Route does not belong to the user.");
         }
 
-        boolean success = userService.deleteRoute(user.getId(), routeId);
+        boolean success = routeService.deleteRoute(user, routeId);
         if (success) {
             return ResponseEntity.ok("Route deleted successfully.");
         } else {

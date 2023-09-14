@@ -95,6 +95,12 @@
             <groupId>com.mapbox.mapboxsdk</groupId>
             <artifactId>mapbox-sdk-services</artifactId>
             <version>5.9.0-alpha.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>androidx.annotation</groupId>
+                    <artifactId>annotation</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.mapbox.mapboxsdk</groupId>

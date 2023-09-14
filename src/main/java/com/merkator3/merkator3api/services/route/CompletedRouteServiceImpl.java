@@ -3,6 +3,7 @@ package com.merkator3.merkator3api.services.route;
 import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import com.merkator3.merkator3api.repositories.CompletedRouteRepository;
+import io.jsonwebtoken.lang.Assert;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,15 @@ import static com.merkator3.merkator3api.services.route.RouteServiceImpl.convert
 @Service
 public class CompletedRouteServiceImpl implements CompletedRouteService {
 
+
+    private final CompletedRouteRepository completedRouteRepository;
     @Autowired
-    private CompletedRouteRepository completedRouteRepository;
+    public CompletedRouteServiceImpl(CompletedRouteRepository completedRouteRepository) {
+        Assert.notNull(completedRouteRepository, "completedRouteRepository must not be null");
+        this.completedRouteRepository = completedRouteRepository;
+    }
     @Override
-    public CompletedRoute getCompletedRoute(ObjectId id) throws IOException {
+    public CompletedRoute getCompletedRoute(ObjectId id){
         return completedRouteRepository.findById(id);
     }
     @Override

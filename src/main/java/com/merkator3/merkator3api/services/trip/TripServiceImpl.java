@@ -1,5 +1,8 @@
 package com.merkator3.merkator3api.services.trip;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.StatTools.TripCalculator;
 import com.merkator3.merkator3api.models.route.planned.Route;
@@ -11,11 +14,10 @@ import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.TripRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
-import com.merkator3.merkator3api.services.route.RouteService;
+import io.jsonwebtoken.lang.Assert;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,25 +30,25 @@ import java.util.stream.Collectors;
 @DependsOn({"tripRepository", "routeRepository", "userRepository"})
 public class TripServiceImpl implements TripService {
 
-    @Autowired
-    private  TripRepository tripRepository;
-    @Autowired
-    private RouteRepository routeRepository;
-    @Autowired
+
+    private final TripRepository tripRepository;
+
+    private final RouteRepository routeRepository;
+
     private final UserRepository userRepository;
-    @Autowired
-    private final RouteService routeService;
     @Value("${merkator.api.mapBoxKey}")
     private String mapBoxKey;
     private final TripCalculator tripCalc = new TripCalculator();
-    public TripServiceImpl(TripRepository tripRepository, RouteRepository routeRepository, UserRepository userRepository,
-                           RouteService routeService) {
+    @Autowired
+    public TripServiceImpl(TripRepository tripRepository, RouteRepository routeRepository, UserRepository userRepository) {
+        Assert.notNull(tripRepository, "tripRepository must not be null");
+        Assert.notNull(userRepository, "userRepository must not be null");
+        Assert.notNull(routeRepository, "routeRepository must not be null");
         this.tripRepository = tripRepository;
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
-        this.routeService = routeService;
-
     }
+
     @Override
     public ObjectId addTrip(ObjectId userID, String tripName) {
         // create and save the trip to the repo
@@ -130,12 +132,11 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public boolean deleteTrip(ObjectId tripId) {
+    public boolean deleteTrip(MerkatorUser user, ObjectId tripId) {
         try {
-            Trip trip = tripRepository.findById(tripId);
-            if (trip == null) {
-                return false; // Route not found
-            }
+            // Remove the trip from the user's trip list
+            user.getUserTrips().remove(tripId);
+            userRepository.save(user);
             // Remove route from route repository
             tripRepository.deleteById(String.valueOf(tripId));
             return true; // Route deleted successfully
@@ -160,12 +161,25 @@ public class TripServiceImpl implements TripService {
                 .map(route -> routeRepository.findById(route))
                 .map(route -> {
                     try {
-                        return routeService.getRouteGpxAsJSON(route.getId());
-                    } catch (IOException | JSONException e) {
+                        return getRouteGpxAsJSON(route);
+                    } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getRouteGpxAsJSON(Route route) throws IOException {
+        String routeGpxString = route.getRouteGpxString();
+        return convertXmlToJson(routeGpxString);
+    }
+
+    public static String convertXmlToJson(String xml) throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+        JsonNode node = xmlMapper.readTree(xml.getBytes());
+        ObjectMapper jsonMapper = new ObjectMapper();
+        return jsonMapper.writeValueAsString(node);
     }
 
     @Override

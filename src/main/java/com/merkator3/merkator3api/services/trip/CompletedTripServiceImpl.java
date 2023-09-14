@@ -1,17 +1,21 @@
 package com.merkator3.merkator3api.services.trip;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.merkator3.merkator3api.MapTools.MapBuilder;
 import com.merkator3.merkator3api.StatTools.CompletedTripCalculator;
 import com.merkator3.merkator3api.StatTools.TripCalculator;
 import com.merkator3.merkator3api.models.route.RouteMarker;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
 import com.merkator3.merkator3api.models.route.planned.Route;
+import com.merkator3.merkator3api.models.trip.TripMarker;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTripResponse;
 import com.merkator3.merkator3api.models.trip.planned.Trip;
 import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.repositories.*;
-import com.merkator3.merkator3api.services.route.CompletedRouteService;
+import io.jsonwebtoken.lang.Assert;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,35 +35,32 @@ import java.util.stream.Collectors;
 @DependsOn({"tripRepository", "routeRepository", "completedTripRepository", "completedRouteRepository"})
 public class CompletedTripServiceImpl implements CompletedTripService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CompletedTripRepository completedTripRepository;
-    @Autowired
-    private CompletedRouteRepository completedRouteRepository;
-    @Autowired
-    private TripRepository tripRepository;
-    @Autowired
-    private RouteRepository routeRepository;
-    @Autowired
-    private TripService tripService;
-    @Autowired
-    private CompletedRouteService completedRouteService;
+
+    private final UserRepository userRepository;
+    private final CompletedTripRepository completedTripRepository;
+    private final CompletedRouteRepository completedRouteRepository;
+    private final TripRepository tripRepository;
+    private final RouteRepository routeRepository;
     @Value("${merkator.api.mapBoxKey}")
     private String mapBoxKey;
     private final TripCalculator tripCalc = new TripCalculator();
     private final CompletedTripCalculator compTripCalc = new CompletedTripCalculator();
+
+    @Autowired
     public CompletedTripServiceImpl(UserRepository userRepository, CompletedTripRepository completedTripRepository,
                                     TripRepository tripRepository, RouteRepository routeRepository,
-                                    CompletedRouteRepository completedRouteRepository, TripService tripService,
-                                    CompletedRouteService completedRouteService) {
+                                    CompletedRouteRepository completedRouteRepository) {
+        Assert.notNull(userRepository, "userRepository must not be null");
+        Assert.notNull(completedTripRepository, "completedTripRepository must not be null");
+        Assert.notNull(completedRouteRepository, "completedRouteRepository must not be null");
+        Assert.notNull(tripRepository, "tripRepository must not be null");
+        Assert.notNull(routeRepository, "routeRepository must not be null");
         this.userRepository = userRepository;
         this.completedTripRepository = completedTripRepository;
         this.completedRouteRepository = completedRouteRepository;
         this.tripRepository = tripRepository;
         this.routeRepository = routeRepository;
-        this.tripService = tripService;
-        this.completedRouteService = completedRouteService;
+
     }
 
     @Override
@@ -73,7 +74,7 @@ public class CompletedTripServiceImpl implements CompletedTripService {
             throws IOException {
         Trip parentTrip = tripRepository.findById(tripId);
         MerkatorUser user = userRepository.findById(userID);
-        List<Route> plannedRoutes = tripService.getTripRoutes(parentTrip);
+        List<Route> plannedRoutes = getTripPlannedRoutes(parentTrip);
 
 
         // Create completed trip and set its attributes
@@ -81,7 +82,7 @@ public class CompletedTripServiceImpl implements CompletedTripService {
         completedTrip.setTripDescription("Completed trip based on " + parentTrip.getTripName());
         completedTrip.setParentTripId(tripId);
         completedTrip.setParentTripName(parentTrip.getTripName());
-        completedTrip.setTripRoutes(tripService.getTripRoutes(parentTrip));
+        completedTrip.setTripRoutes(plannedRoutes);
         List<CompletedRoute> completedRoutes = createCompletedRoutes(routeId, file);
         completedTrip.setCompletedRoutes(completedRoutes);
 
@@ -173,7 +174,7 @@ public class CompletedTripServiceImpl implements CompletedTripService {
                 completedTrip.getTripAvgSpeedMoving(),
                 completedTrip.getTripRouteNames(),
                 completedTrip.getTripCompletedRouteNames(),
-                tripService.getTripGpxStrings(completedTrip),
+                getTripPlannedGpxStrings(completedTrip),
                 completedTrip.getTripRouteColours(),
                 getTripCompletedGpxStrings(completedTrip),
                 completedTrip.getTripCompletedRouteColours(),
@@ -228,12 +229,39 @@ public class CompletedTripServiceImpl implements CompletedTripService {
     }
 
     @Override
+    public <T extends TripMarker> List<String> getTripPlannedGpxStrings(T trip) {
+        return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
+                .map(route -> {
+                    try {
+                        return getRouteGpxAsJSON(route);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends RouteMarker> String getRouteGpxAsJSON(T route) throws IOException {
+        String routeGpxString = route.getRouteGpxString();
+        return convertXmlToJson(routeGpxString);
+    }
+
+    public static String convertXmlToJson(String xml) throws IOException {
+        XmlMapper xmlMapper = new XmlMapper();
+        JsonNode node = xmlMapper.readTree(xml.getBytes());
+        ObjectMapper jsonMapper = new ObjectMapper();
+        return jsonMapper.writeValueAsString(node);
+    }
+
+    @Override
     public List<String> getTripCompletedGpxStrings(CompletedTrip trip) {
         return trip.getCompletedRoutes().stream()
                 .map(route -> completedRouteRepository.findById(route))
                 .map(route -> {
                     try {
-                        return completedRouteService.getRouteGpxAsJSON(route.getId());
+                        return getRouteGpxAsJSON(route);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -242,18 +270,11 @@ public class CompletedTripServiceImpl implements CompletedTripService {
     }
 
     public void addCompletedRoute(CompletedRoute completedRoute, CompletedTrip trip) {
-
         ObjectId parentRouteId = completedRoute.getParentRouteId();
 
         // Check if a completed route with the same parentRouteId already exists
         Optional<CompletedRoute> existingCompletedRouteOptional = trip.getCompletedRoutes().stream()
-                .map(route -> {
-                    try {
-                        return completedRouteService.getCompletedRoute(route);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .map(route -> completedRouteRepository.findById(route))
                 .filter(route -> route.getParentRouteId().equals(parentRouteId))
                 .findFirst();
 
@@ -276,6 +297,12 @@ public class CompletedTripServiceImpl implements CompletedTripService {
     }
 
     @Override
+    public <T extends TripMarker> List<Route> getTripPlannedRoutes(T trip) {
+        return trip.getTripRoutes().stream()
+                .map(route -> routeRepository.findById(route))
+                .collect(Collectors.toList());
+    }
+    @Override
     public List<CompletedTrip> getUserCompletedTrips(ObjectId userId) {
         MerkatorUser user = userRepository.findById(userId);
         List<ObjectId> userCompTripIds = user.getUserCompletedTrips();
@@ -286,13 +313,20 @@ public class CompletedTripServiceImpl implements CompletedTripService {
     }
 
     @Override
-    public boolean deleteTrip(ObjectId completedTripId) {
+    public boolean deleteTrip(MerkatorUser user, ObjectId completedTripId) {
         try {
-            CompletedTrip completedTrip = completedTripRepository.findById(completedTripId);
-            if (completedTripId == null) {
-                return false; // Route not found
+            // Remove the trip from the user's completed trip list
+            user.getUserCompletedTrips().remove(completedTripId);
+            userRepository.save(user);
+
+            // Delete the completed routes associated with the trip
+            CompletedTrip compTripForDeletion = completedTripRepository.findById(completedTripId);
+            List<ObjectId> compRoutesForDeletion = compTripForDeletion.getCompletedRoutes();
+            for (ObjectId id : compRoutesForDeletion) {
+                completedRouteRepository.deleteById(id.toString());
             }
-            // Remove route from route repository
+
+            // Delete the completed trip
             completedTripRepository.deleteById(String.valueOf(completedTripId));
             return true; // Route deleted successfully
         } catch (Exception e) {

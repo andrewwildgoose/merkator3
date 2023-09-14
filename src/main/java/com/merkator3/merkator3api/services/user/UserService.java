@@ -12,10 +12,4 @@ public interface UserService {
     MerkatorUser getUser(ObjectId userId);
 
     MerkatorUser findByEmail(String email);
-
-    boolean deleteRoute(ObjectId userId, ObjectId routeId);
-
-    boolean deleteTrip(ObjectId userId, ObjectId tripId);
-
-    boolean deleteCompletedTrip(ObjectId id, ObjectId completedTripId);
 }

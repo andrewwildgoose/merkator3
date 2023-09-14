@@ -3,11 +3,6 @@ package com.merkator3.merkator3api.StatTools;
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
 import com.merkator3.merkator3api.models.route.RouteMarker;
-import com.merkator3.merkator3api.models.route.planned.Route;
-import com.merkator3.merkator3api.models.trip.TripMarker;
-import com.merkator3.merkator3api.services.trip.TripService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -16,9 +11,9 @@ import java.util.List;
 public class TripCalculator {
 
 
-    GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
+    final GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
 
-    GpxElevationCalculator elevCalc = new GpxElevationCalculator();
+    final GpxElevationCalculator elevCalc = new GpxElevationCalculator();
 
     public <R extends RouteMarker> Double totalDistance(List<R> tripRoutes) {
 

@@ -2,8 +2,11 @@ package com.merkator3.merkator3api.services.trip;
 
 import com.merkator3.merkator3api.models.route.RouteMarker;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
+import com.merkator3.merkator3api.models.route.planned.Route;
+import com.merkator3.merkator3api.models.trip.TripMarker;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.trip.completed.CompletedTripResponse;
+import com.merkator3.merkator3api.models.user.MerkatorUser;
 import org.bson.types.ObjectId;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,7 +15,6 @@ import java.util.List;
 
 public interface CompletedTripService {
     CompletedTripResponse tripCompletionError(ObjectId tripId);
-
 
     // Method to handle creating of a new completed trip and return it to the controller.
     String handleTripCompletion(ObjectId userID, ObjectId tripId, List<String> routeId, List<MultipartFile> file)
@@ -25,11 +27,17 @@ public interface CompletedTripService {
     List<CompletedRoute> createCompletedRoutes(List<String> routeIds, List<MultipartFile> gpxFiles)
             throws IOException;
 
+    <T extends TripMarker> List<String> getTripPlannedGpxStrings(T trip);
+
+    <T extends RouteMarker> String getRouteGpxAsJSON(T route) throws IOException;
+
     List<String> getTripCompletedGpxStrings(CompletedTrip trip);
 
     void setTripStaticMapUrl(String mapBoxKey, CompletedTrip trip, List<RouteMarker> combinedRoutes);
 
+    <T extends TripMarker> List<Route> getTripPlannedRoutes(T trip);
+
     List<CompletedTrip> getUserCompletedTrips(ObjectId id);
 
-    boolean deleteTrip(ObjectId completedTripId);
+    boolean deleteTrip(MerkatorUser user, ObjectId completedTripId);
 }

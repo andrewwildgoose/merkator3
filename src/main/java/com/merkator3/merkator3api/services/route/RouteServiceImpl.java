@@ -14,10 +14,10 @@ import com.merkator3.merkator3api.repositories.RouteRepository;
 import com.merkator3.merkator3api.repositories.UserRepository;
 import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.Metadata;
+import io.jsonwebtoken.lang.Assert;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +33,9 @@ import java.util.stream.Collectors;
 @DependsOn({"routeRepository", "userRepository"})
 public class RouteServiceImpl implements RouteService{
 
-    @Autowired
-    private RouteRepository routeRepository;
-    @Autowired
+
+    private final RouteRepository routeRepository;
+
     private final UserRepository  userRepository;
     private final GpxDistanceCalculator gpxDistCalc = new GpxDistanceCalculator();
     private final GpxElevationCalculator gpxElevCalc = new GpxElevationCalculator();
@@ -43,7 +43,10 @@ public class RouteServiceImpl implements RouteService{
     @Value("${merkator.api.mapBoxKey}")
     private String mapBoxKey;
 
+    @Autowired
     public RouteServiceImpl(RouteRepository routeRepository, UserRepository userRepository) {
+        Assert.notNull(userRepository, "userRepository must not be null");
+        Assert.notNull(routeRepository, "routeRepository must not be null");
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
     }
@@ -68,12 +71,12 @@ public class RouteServiceImpl implements RouteService{
     }
 
     @Override
-    public Route getRoute(ObjectId id) throws IOException {
+    public Route getRoute(ObjectId id){
         return routeRepository.findById(id);
     }
 
     @Override
-    public Map<String, String> getRouteDetails(ObjectId id) throws IOException, JSONException {
+    public Map<String, String> getRouteDetails(ObjectId id) {
         Route route = routeRepository.findById(id);
         Map<String, String> jsonMap = new HashMap<>();
         jsonMap.put("route_name", route.getRouteName());
@@ -82,7 +85,7 @@ public class RouteServiceImpl implements RouteService{
     }
 
     @Override
-    public String getRouteGpxAsJSON(ObjectId id) throws IOException, JSONException {
+    public String getRouteGpxAsJSON(ObjectId id) throws IOException {
         Route route = routeRepository.findById(id);
         String routeGpxString = route.getRouteGpxString();
         return convertXmlToJson(routeGpxString);
@@ -119,7 +122,7 @@ public class RouteServiceImpl implements RouteService{
                     getRouteStaticMapURL(route, mapBoxKey),
                     route.getMapLineColor()
             );
-        } catch (IOException | JSONException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -149,12 +152,11 @@ public class RouteServiceImpl implements RouteService{
     }
 
     @Override
-    public boolean deleteRoute(ObjectId routeId) {
+    public boolean deleteRoute(MerkatorUser user, ObjectId routeId) {
         try {
-            Route route = routeRepository.findById(routeId);
-            if (route == null) {
-                return false; // Route not found
-            }
+            // Remove route from user's route list
+            user.getUserRoutes().remove(routeId);
+            userRepository.save(user);
             // Remove route from route repository
             routeRepository.deleteById(String.valueOf(routeId));
             return true; // Route deleted successfully

@@ -6,6 +6,7 @@ import com.merkator3.merkator3api.models.user.MerkatorUser;
 import com.merkator3.merkator3api.services.trip.CompletedTripService;
 import com.merkator3.merkator3api.services.trip.TripService;
 import com.merkator3.merkator3api.services.user.UserService;
+import io.jsonwebtoken.lang.Assert;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,14 +23,23 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/merkator/user/")
 public class CompletedTripController {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+
+    private final TripService tripService;
+
+    private final CompletedTripService completedTripService;
 
     @Autowired
-    private TripService tripService;
-
-    @Autowired
-    private CompletedTripService completedTripService;
+    public CompletedTripController(UserService userService, TripService tripService, CompletedTripService completedTripService) {
+        Assert.notNull(userService, "userService must not be null");
+        Assert.notNull(tripService, "tripService must not be null");
+        Assert.notNull(completedTripService, "completedTripService must not be null");
+        this.userService = userService;
+        this.tripService = tripService;
+        this.completedTripService = completedTripService;
+    }
 
     @GetMapping("/completed_trips")
     public ResponseEntity<List<CompletedTripResponse>> getCompletedTrips(@AuthenticationPrincipal UserDetails userDetails) {
@@ -74,14 +84,14 @@ public class CompletedTripController {
 
     @DeleteMapping("/completed_trip/{id}")
     public ResponseEntity<String> deleteTrip(@AuthenticationPrincipal UserDetails userDetails,
-                                             @PathVariable("id") ObjectId completedTripId) {
+                                                @PathVariable("id") ObjectId completedTripId) {
         MerkatorUser user = userService.findByEmail(userDetails.getUsername());
 
         if (!completedTripService.tripBelongsToUser(user.getId(), completedTripId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Trip does not belong to the user.");
         }
 
-        boolean success = userService.deleteCompletedTrip(user.getId(), completedTripId);
+        boolean success = completedTripService.deleteTrip(user, completedTripId);
         if (success) {
             return ResponseEntity.ok("Trip deleted successfully.");
         } else {

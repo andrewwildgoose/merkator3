@@ -22,7 +22,7 @@ public class GpxBuilder {
                 segmentBuilder.addPoint(pointBuilder -> pointBuilder
                                 .lat(point.getLatitude())
                                 .lon(point.getLongitude())
-                                .ele(point.getElevation().get()));
+                                .ele(point.getElevation().orElseThrow()));
                 }
             }));
 

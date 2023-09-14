@@ -14,7 +14,7 @@ public class GpxElevationCalculator {
                             .filter(waypoint -> waypoint.getElevation().isPresent())
                             .forEach(waypoint -> {
                                 if (previousWaypoint[0] != null) {
-                                    int elevationDifference = waypoint.getElevation().get().intValue() - previousWaypoint[0].getElevation().get().intValue();
+                                    int elevationDifference = waypoint.getElevation().get().intValue() - previousWaypoint[0].getElevation().orElseThrow().intValue();
                                     if (elevationDifference > 0) {
                                         totalElevationGain[0] += elevationDifference;
                                     }
@@ -35,7 +35,7 @@ public class GpxElevationCalculator {
                             .filter(waypoint -> waypoint.getElevation().isPresent())
                             .forEach(waypoint -> {
                                 if (previousWaypoint[0] != null) {
-                                    int elevationDifference = waypoint.getElevation().get().intValue() - previousWaypoint[0].getElevation().get().intValue();
+                                    int elevationDifference = waypoint.getElevation().get().intValue() - previousWaypoint[0].getElevation().orElseThrow().intValue();
                                     if (elevationDifference < 0) {
                                         totalElevationLoss[0] += elevationDifference;
                                     }

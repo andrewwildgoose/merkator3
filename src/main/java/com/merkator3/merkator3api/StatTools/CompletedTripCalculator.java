@@ -2,15 +2,12 @@ package com.merkator3.merkator3api.StatTools;
 
 import com.merkator3.merkator3api.GpxTools.GpxDistanceCalculator;
 import com.merkator3.merkator3api.GpxTools.GpxElevationCalculator;
-import com.merkator3.merkator3api.models.trip.completed.CompletedTrip;
 import com.merkator3.merkator3api.models.route.completed.CompletedRoute;
-import com.merkator3.merkator3api.services.route.CompletedRouteService;
-import com.merkator3.merkator3api.services.trip.CompletedTripService;
+
 import io.jenetics.jpx.GPX;
 import io.jenetics.jpx.WayPoint;
 import org.apache.commons.math3.util.Precision;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -28,9 +25,9 @@ for a stage */
 
 public class CompletedTripCalculator {
 
-    GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
+    final GpxDistanceCalculator distCalc = new GpxDistanceCalculator();
 
-    GpxElevationCalculator elevCalc = new GpxElevationCalculator();
+    final GpxElevationCalculator elevCalc = new GpxElevationCalculator();
 
     public Double totalCompletedDistance(List<CompletedRoute> tripCompletedRoutes) {
 
@@ -117,8 +114,10 @@ public class CompletedTripCalculator {
                     if (!wayPoint.getLatitude().equals(previousWaypoint.getLatitude()) ||
                             !wayPoint.getLongitude().equals(previousWaypoint.getLongitude())) {
                         // Calculate the duration between waypoints with changes in location and add it to the total duration
-                        Duration duration = Duration.between(previousWaypoint.getTime().get(), time.get());
-                        totalDuration = totalDuration.plus(duration);
+                        if (previousWaypoint.getTime().isPresent()) {
+                            Duration duration = Duration.between(previousWaypoint.getTime().get(), time.get());
+                            totalDuration = totalDuration.plus(duration);
+                        }
                     }
                 }
                 previousWaypoint = wayPoint;

@@ -94,10 +94,10 @@ public class TripIntegrationTests {
     // remove test user, trip & routes
     @AfterEach
     void cleanUp(){
-        userService.deleteRoute(testUser.getId(), testRoute1.getId());
-        userService.deleteRoute(testUser.getId(), testRoute2.getId());
-        userService.deleteRoute(testUser.getId(),testRoute3.getId());
-        userService.deleteTrip(testUser.getId(), testPlannedTrip1.getId());
+        routeService.deleteRoute(testUser, testRoute1.getId());
+        routeService.deleteRoute(testUser, testRoute2.getId());
+        routeService.deleteRoute(testUser,testRoute3.getId());
+        tripService.deleteTrip(testUser, testPlannedTrip1.getId());
         userService.deleteUser(testUser.getId());
 
     }

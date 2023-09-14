@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public interface CompletedRouteService {
 
-    CompletedRoute getCompletedRoute(ObjectId id) throws IOException;
+    CompletedRoute getCompletedRoute(ObjectId id);
 
     String getRouteGpxAsJSON(ObjectId id) throws IOException;
 
