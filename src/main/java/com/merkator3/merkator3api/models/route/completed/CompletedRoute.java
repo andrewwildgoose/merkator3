@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Document representing a Completed Route on the database
+ */
+
 @Document(collection = "completedRoutes")
 
 public class CompletedRoute implements RouteMarker {

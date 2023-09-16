@@ -1,5 +1,9 @@
 package com.merkator3.merkator3api.models;
 
+/**
+ * Representation of Coordinate objects
+ */
+
 public class Coordinate {
     private final double latitude;
     private final double longitude;

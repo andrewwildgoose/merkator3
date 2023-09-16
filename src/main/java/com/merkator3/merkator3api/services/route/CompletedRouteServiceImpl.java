@@ -13,6 +13,10 @@ import java.util.List;
 
 import static com.merkator3.merkator3api.services.route.RouteServiceImpl.convertXmlToJson;
 
+/**
+ * Service providing for CompletedRoutes. Used mainly in the process of completing a trip.
+ */
+
 @Service
 public class CompletedRouteServiceImpl implements CompletedRouteService {
 

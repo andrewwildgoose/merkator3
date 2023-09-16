@@ -13,6 +13,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Interface defining the Completed Trip Services
+ */
+
 public interface CompletedTripService {
     CompletedTripResponse tripCompletionError(ObjectId tripId);
 

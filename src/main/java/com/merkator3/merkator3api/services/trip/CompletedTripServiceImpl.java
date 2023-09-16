@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Service providing for CompletedTrip related requests in the CompletedTripController
+ */
+
 @Service
 @DependsOn({"tripRepository", "routeRepository", "completedTripRepository", "completedRouteRepository"})
 public class CompletedTripServiceImpl implements CompletedTripService {

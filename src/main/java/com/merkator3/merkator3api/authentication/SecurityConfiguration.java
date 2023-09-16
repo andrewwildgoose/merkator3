@@ -14,6 +14,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+
+/**
+ * Configuration for security process, allows any request on the auth path
+ * but requires authentication for all other routes
+ */
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor

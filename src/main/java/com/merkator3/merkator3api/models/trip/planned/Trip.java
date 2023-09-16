@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * A PlannedTrip is a collection of Routes which the user has not yet undertaken
- * which they want to analyse together.
+ * Document representing a planned Trip on the database
  */
+
 @Document(collection = "trips")
 public class Trip implements TripMarker {
 

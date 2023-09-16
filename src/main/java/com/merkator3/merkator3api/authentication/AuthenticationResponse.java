@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Response format for a successful authentication
+ */
+
 @Data
 @Builder
 @AllArgsConstructor

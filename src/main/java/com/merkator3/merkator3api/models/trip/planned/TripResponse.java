@@ -9,6 +9,11 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 
+/**
+ * Representations of different responses that can be sent
+ * to the front end when requesting data about a planned Trip.
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

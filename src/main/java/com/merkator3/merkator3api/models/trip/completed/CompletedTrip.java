@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * A CompletedTrip is a collection of Routes of which the user has undertaken at least one
- * which they want to analyse together.
+ * Document representing a Completed Trip on the database
  */
+
 @Document(collection = "completedTrips")
 public class CompletedTrip implements TripMarker {
 

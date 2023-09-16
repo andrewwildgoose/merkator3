@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data format for a user making an authentication request by logging in
+ */
+
 @Data
 @Builder
 @AllArgsConstructor

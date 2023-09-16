@@ -22,6 +22,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller handling all API requests for planned trips
+ */
+
 @RestController
 @RequestMapping("/merkator/user")
 public class TripController {

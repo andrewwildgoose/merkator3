@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service providing for User related requests in the UserController
+ */
 
 @Service
 @DependsOn("userRepository")

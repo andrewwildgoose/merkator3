@@ -4,6 +4,10 @@ import org.bson.types.ObjectId;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Representation of a request to add a Route to a Trip on the database
+ */
+
 @Data
 @Builder
 public class AddRouteToTripRequest {

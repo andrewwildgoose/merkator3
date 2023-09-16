@@ -6,6 +6,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+/**
+ * Repository representing the Completed Routes collection on the database
+ */
+
 @RepositoryRestResource(collectionResourceRel = "completedRoutes", path = "completedRoutes")
 public interface CompletedRouteRepository extends MongoRepository<CompletedRoute, String> {
 

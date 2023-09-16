@@ -6,6 +6,10 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+/**
+ * Repository representing the planned Trips collection on the database
+ */
+
 @RepositoryRestResource(collectionResourceRel = "trips", path = "trips")
 public interface TripRepository extends MongoRepository<Trip, String> {
     Trip findByTripName(@Param("trip") String trip);

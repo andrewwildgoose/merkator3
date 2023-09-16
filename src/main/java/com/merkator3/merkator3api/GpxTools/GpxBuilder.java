@@ -9,7 +9,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
-// Class for building GPX objects from a given list of points
+/**
+ * Class for building GPX objects from a given list of points
+ */
+
 public class GpxBuilder {
 
 

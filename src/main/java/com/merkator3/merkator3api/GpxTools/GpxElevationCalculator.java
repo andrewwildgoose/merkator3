@@ -3,6 +3,10 @@ package com.merkator3.merkator3api.GpxTools;
 import io.jenetics.jpx.*;
 import org.apache.commons.math3.util.Precision;
 
+/**
+ * Class for calculating the route elevation gain and loss of a given GPX object
+ */
+
 public class GpxElevationCalculator {
     public int calculateElevationGain(GPX gpx) {
         int[] totalElevationGain = {0};

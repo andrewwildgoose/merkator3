@@ -2,6 +2,10 @@ package com.merkator3.merkator3api.StatTools;
 
 import java.util.List;
 
+/**
+ * Utility class for calculating totals across multiple values
+ */
+
 public class TotalCalculator {
 
     public static double calculateTotal(List<Double> stages) {

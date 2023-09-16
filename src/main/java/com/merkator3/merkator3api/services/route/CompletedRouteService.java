@@ -5,6 +5,10 @@ import org.bson.types.ObjectId;
 
 import java.io.IOException;
 
+/**
+ * Interface defining the Completed Route Services
+ */
+
 public interface CompletedRouteService {
 
     CompletedRoute getCompletedRoute(ObjectId id);

@@ -7,6 +7,10 @@ import org.apache.commons.math3.util.Precision;
 
 import java.util.stream.Stream;
 
+/**
+ * Class for calculating the route distance of a given GPX object
+ */
+
 public class GpxDistanceCalculator {
 
     public Length calculateDistance(GPX gpx){

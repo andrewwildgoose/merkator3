@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Representation of the planned routes on a planned trip, sent to the front end when completing a trip
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

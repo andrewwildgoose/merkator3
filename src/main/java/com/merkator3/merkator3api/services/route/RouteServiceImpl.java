@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Service providing for Route related requests in the RouteController
+ */
+
 @Service
 @DependsOn({"routeRepository", "userRepository"})
 public class RouteServiceImpl implements RouteService{

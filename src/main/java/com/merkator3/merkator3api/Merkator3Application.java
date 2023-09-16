@@ -7,10 +7,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 @EnableMongoRepositories
 public class Merkator3Application {
-
     public static void main(String[] args) {
         SpringApplication.run(Merkator3Application.class, args);
     }
-
-
 }

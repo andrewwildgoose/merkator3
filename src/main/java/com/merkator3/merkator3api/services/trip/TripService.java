@@ -11,6 +11,10 @@ import org.bson.types.ObjectId;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Interface defining the Trip Services
+ */
+
 public interface TripService {
 
     ObjectId addTrip(ObjectId userID, String tripName);

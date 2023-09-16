@@ -12,6 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * Document representing a Route on the database
+ */
 
 @Document(collection = "routes")
 public class Route implements RouteMarker {

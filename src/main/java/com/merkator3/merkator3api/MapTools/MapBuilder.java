@@ -22,6 +22,10 @@ import java.util.List;
 
 import static com.merkator3.merkator3api.GpxTools.GpxReader.extractCoordinatesFromGpx;
 
+/**
+ * Class for building static map images for display on the front end when interactive map is not required.
+ */
+
 public class MapBuilder {
 
 

@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller handling all API requests for completed trips
+ */
+
 @RestController
 @RequestMapping("/merkator/user/")
 public class CompletedTripController {

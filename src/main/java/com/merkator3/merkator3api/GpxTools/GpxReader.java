@@ -8,6 +8,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Class for manipulating .gpx files
+ */
+
 public class GpxReader {
 
     // method used to obtain list of WayPoints from a file path.

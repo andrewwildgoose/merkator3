@@ -26,6 +26,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service providing for Trip related requests in the TripController
+ */
+
 @Service
 @DependsOn({"tripRepository", "routeRepository", "userRepository"})
 public class TripServiceImpl implements TripService {
