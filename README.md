@@ -1,4 +1,4 @@
-# merkator front end
+# merkator back end
 
 This repo contains the back end of the merkator application.  This application provides a solution to enable the adventure enthusiasts to plan a trip which may last over several days or contain several routes within it.
 
